@@ -4,3 +4,7 @@
 TEST_CASE("Sample test") {
   CHECK(true);
 }
+
+TEST_CASE("Sample test 2") {
+  CHECK(false);
+}
