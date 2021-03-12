@@ -1,22 +1,9 @@
+CMAKE_MINIMUM_REQUIRED(VERSION 3.11)
+
 PROJECT(Lab)
 
-add_subdirectory(src)
+ADD_SUBDIRECTORY(src)
+ADD_SUBDIRECTORY(tests)
 
-include(ExternalProject)
-find_package(Git REQUIRED)
-
-ExternalProject_Add(
-        doctest
-        PREFIX ${CMAKE_BINARY_DIR}/doctest
-        GIT_REPOSITORY https://github.com/onqtam/doctest.git
-        TIMEOUT 10
-        UPDATE_COMMAND ${GIT_EXECUTABLE} pull
-        CONFIGURE_COMMAND ""
-        BUILD_COMMAND ""
-        INSTALL_COMMAND ""
-        LOG_DOWNLOAD ON
-)
-
-# Expose required variable (DOCTEST_INCLUDE_DIR) to parent scope
-ExternalProject_Get_Property(doctest source_dir)
-set(DOCTEST_INCLUDE_DIR ${source_dir}/doctest CACHE INTERNAL "Path to include folder for doctest")
+SET(GCC_COVERAGE_COMPILE_FLAGS "-Wall -Wextra -g")
+SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${GCC_COVERAGE_COMPILE_FLAGS} ")

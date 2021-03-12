@@ -1,9 +1,10 @@
-//
-// Created by Matteo Bonacini on 02/03/2021.
-//
 #include <iostream>
+#include <vector>
+
 using namespace std;
 
 int main() {
-  cout << "ciao";
+  int a[] = {0, 1, 2, 3};
+  int b[]{0, 1, 2, 3};
+  cout << "Ciao";
 }

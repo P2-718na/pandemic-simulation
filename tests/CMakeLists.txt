@@ -1,0 +1,3 @@
+ADD_EXECUTABLE(sampleTest ./sample.test.cpp)
+
+SET_PROPERTY(TARGET sampleTest PROPERTY CXX_STANDARD 14)
