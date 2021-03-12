@@ -1,0 +1,8 @@
+*.out
+build
+cmake-build-debug
+CMakeFiles
+doctest
+.idea
+.DS_Store
+*.db
