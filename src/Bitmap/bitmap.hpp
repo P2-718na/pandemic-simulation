@@ -1,36 +1,57 @@
 #pragma once
 #include "wintypes.hpp"
 
+#include <iostream>
+#include <string>
+
+#define BITMAPFILEHEADER_SIZE_BYTES 14
+#define BITMAPINFOHEADER_SIZE_BYTES 40
+
+enum {
+  BI_RGB = 0,
+  BI_RLE8 = 1,
+  BI_RLE4 = 2,
+  BI_BITFIELDS = 3,
+  BI_JPEG = 4,
+  BI_PNG = 5
+};
+
 typedef struct tagBITMAPFILEHEADER {
-  WORD  bfType;
-  DWORD bfSize;
-  WORD  bfReserved1;
-  WORD  bfReserved2;
-  DWORD bfOffBits;
-} BITMAPFILEHEADER, *LPBITMAPFILEHEADER, *PBITMAPFILEHEADER;
+  WORD  bfType{};
+  DWORD bfSize{};
+  WORD  bfReserved1{};
+  WORD  bfReserved2{};
+  DWORD bfOffBits{};
+} BITMAPFILEHEADER;
 
 typedef struct tagBITMAPINFOHEADER {
-  DWORD biSize;
-  LONG  biWidth;
-  LONG  biHeight;
-  WORD  biPlanes;
-  WORD  biBitCount;
-  DWORD biCompression;
-  DWORD biSizeImage;
-  LONG  biXPelsPerMeter;
-  LONG  biYPelsPerMeter;
-  DWORD biClrUsed;
-  DWORD biClrImportant;
-} BITMAPINFOHEADER, *PBITMAPINFOHEADER;
+  DWORD biSize{};
+  LONG  biWidth{};
+  LONG  biHeight{};
+  WORD  biPlanes{};
+  WORD  biBitCount{};
+  DWORD biCompression{};
+  DWORD biSizeImage{};
+  LONG  biXPelsPerMeter{};
+  LONG  biYPelsPerMeter{};
+  DWORD biClrUsed{};
+  DWORD biClrImportant{};
+} BITMAPINFOHEADER;
 
 class Bitmap {
-  BITMAPFILEHEADER fileHeader;
-  BITMAPINFOHEADER infoHeader;
+  BITMAPFILEHEADER _fileHeader;
+  BITMAPINFOHEADER _infoHeader;
 
   // todo allocate image dynamically (probably best is a single dimension array)
   //  remember to deassign memory
 
+  bool _readHeaders(std::ifstream &ifs);
+  bool _readBitfield(std::ifstream &ifs);
+
   public:
-  Bitmap();
+  explicit Bitmap(const std::string &fileName);
   //~Bitmap();
+
+  int width() const;
+  int height() const;
 };

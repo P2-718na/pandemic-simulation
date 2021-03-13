@@ -1,10 +1,8 @@
 #include <iostream>
 #include "bitmap.hpp"
 
-using namespace std;
-
 int main() {
-  Bitmap bitmap;
+  Bitmap bitmap("test.bmp");
 
-  cout << "Ciao";
+  std::cout << bitmap.height();
 }
