@@ -457,17 +457,7 @@ DOCTEST_INTERFACE extern bool is_running_in_test;
 //              and the "is small" bit remains "0" ("as well as the capacity left") so its OK
 // Idea taken from this lecture about the string implementation of facebook/folly - fbstring
 // https://www.youtube.com/watch?v=kPR8h4-qZdk
-// TODO:
-// - optimizations - like not deleting memory unnecessarily in operator= and etc.
-// - resize/reserve/clear
-// - substr
-// - replace
-// - back/front
-// - iterator stuff
-// - find & friends
-// - push_back/pop_back
-// - assign/insert/erase
-// - relational operators as free functions - taking const char* as one of the params
+
 class DOCTEST_INTERFACE String
 {
     static const unsigned len  = 24;      //!OCLINT avoid private static members
@@ -3157,8 +3147,6 @@ typedef timer_large_integer::type ticks_t;
     ContextState* g_cs = nullptr;
 
     // used to avoid locks for the debug output
-    // TODO: figure out if this is indeed necessary/correct - seems like either there still
-    // could be a race or that there wouldn't be a race even if using the context directly
     DOCTEST_THREAD_LOCAL bool g_no_colors;
 
 #endif // DOCTEST_CONFIG_DISABLE
@@ -4357,7 +4345,7 @@ namespace {
 #ifdef DOCTEST_PLATFORM_WINDOWS
 #define DOCTEST_OUTPUT_DEBUG_STRING(text) ::OutputDebugStringA(text)
 #else
-    // TODO: integration with XCode and other IDEs
+
 #define DOCTEST_OUTPUT_DEBUG_STRING(text) // NOLINT(clang-diagnostic-unused-macros)
 #endif // Platform
 
@@ -5017,7 +5005,6 @@ namespace {
             if(opt.no_version == false)
                 xml.writeAttribute("version", DOCTEST_VERSION_STR);
 
-            // only the consequential ones (TODO: filters)
             xml.scopedElement("Options")
                     .writeAttribute("order_by", opt.order_by.c_str())
                     .writeAttribute("rand_seed", opt.rand_seed)
@@ -5195,11 +5182,6 @@ namespace {
         }
     }
 
-    // TODO:
-    // - log_message()
-    // - respond to queries
-    // - honor remaining options
-    // - more attributes in tags
     struct JUnitReporter : public IReporter
     {
         XmlWriter  xml;
@@ -6028,8 +6010,6 @@ namespace {
                 }
             }
         } else {
-            // integer
-            // TODO: change this to use std::stoi or something else! currently it uses undefined behavior - assumes '0' on failed parse...
             int theInt = std::atoi(parsedValue.c_str()); // NOLINT
             if(theInt != 0) {
                 res = theInt; //!OCLINT parameter reassignment
@@ -6262,8 +6242,6 @@ int Context::run() {
         if(matchesAny(curr.first.second.c_str(), p->filters[8], false, p->case_sensitive))
             p->reporters_currently_used.push_back(curr.second(*g_cs));
     }
-
-    // TODO: check if there is nothing in reporters_currently_used
 
     // prepend all listeners
     for(auto& curr : getListeners())

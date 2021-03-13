@@ -1,0 +1,28 @@
+-covid simulation:
+    -map with heatpoints
+    -restaurants, schools, workplaces (each with different parameters)
+    -(maybe) means of transport
+    -curfew
+
+-Get a sample database of a population
+-Each home will house a family
+-Run simulation based on family (different workplaces, schools etc.)
+-see result
+
+will need to implement:
+    -map import algorithm
+    -pathfinding algorithm (maybe using means of transport as well)
+    -find a suitable database
+    -find covid-related spread data
+
+
+    (maybe only relevant data is rt-index? This could lead to a way simpler project:
+        -random cells, people move, each infected person has rt-index percentage of infecting someone else. rt
+        will need to be either a derivative or be found. This could be way easier.
+
+first things to do:
+    -develop simpler version with random pathfinding and heatmap (something simple, maybe add weighted paths to simulate
+    means of transportation):
+        -image reading
+        -pathfinding system
+    -go next
