@@ -49,6 +49,7 @@ class Bitmap {
   BITMAPFILEHEADER _fileHeader;
   BITMAPINFOHEADER _infoHeader;
 
+  // todo maybe rename this to smth like rgbField
   BYTE* _bitField;
 
   bool _readHeaders(std::ifstream &ifs);

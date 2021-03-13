@@ -154,6 +154,7 @@ Pixel Bitmap::at(const int &x, const int &y) const {
   // Todo check if image is top-down or bottom-up. Assuming bottom-up for now.
   const int y_ = this->height() - 1 - y;
 
+  // Save pixels to array. Note that R and B are switched.
   BYTE* pixel = this->_bitField + (x + this->width() * y_) * 3;
   return {*pixel, *(pixel + 1), *(pixel + 2)};
 }
