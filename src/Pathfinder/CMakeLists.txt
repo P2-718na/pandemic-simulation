@@ -1,0 +1,1 @@
+ADD_LIBRARY(Pathfinder STATIC pathfinder.cpp)
