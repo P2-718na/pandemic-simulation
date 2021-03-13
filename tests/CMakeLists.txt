@@ -1,3 +1,1 @@
 ADD_EXECUTABLE(tests ./sample.test.cpp)
-
-SET_PROPERTY(TARGET tests PROPERTY CXX_STANDARD 14)

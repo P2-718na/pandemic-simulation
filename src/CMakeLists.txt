@@ -1,3 +1,11 @@
-add_executable(lab main.cpp)
+ADD_EXECUTABLE(lab main.cpp)
 
-SET_PROPERTY(TARGET lab PROPERTY CXX_STANDARD 14)
+INCLUDE_DIRECTORIES(
+        lab PUBLIC
+        "${PROJECT_SOURCE_DIR}/src"
+        "${PROJECT_SOURCE_DIR}/src/Bitmap"
+)
+
+ADD_SUBDIRECTORY(Bitmap)
+
+TARGET_LINK_LIBRARIES(lab Bitmap)
