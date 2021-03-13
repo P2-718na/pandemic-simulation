@@ -1,12 +1,23 @@
 #include "bitmap.hpp"
 #include <fstream>
 
+std::ostream& operator<<(std::ostream& lhs, const Pixel& rhs) {
+  lhs << "(" << rhs.r << ", " << rhs.g << ", " << rhs.b << ")";
+  return lhs;
+}
+
 Bitmap::Bitmap(const std::string &fileName) {
   // Open file for reading
   std::ifstream ifs(fileName);
 
+  if (!ifs) {
+    throw std::runtime_error("Can't open bmp file.");
+  }
   if (!_readHeaders(ifs)) {
-    throw std::runtime_error("Can't open bitmap file.");
+    throw std::runtime_error("Wrong bmp file headers.");
+  };
+  if (!_readBitfield(ifs)) {
+    throw std::runtime_error("Error reading bitfield.");
   };
 }
 
@@ -41,7 +52,7 @@ bool Bitmap::_readHeaders(std::ifstream &ifs) {
 
   // The offset, in bytes, from the beginning of the BITMAPFILEHEADER structure
   // to the bitmap bits.
-  this->_fileHeader.bfOffBits = *((DWORD*)&buffer[6]);
+  this->_fileHeader.bfOffBits = *((DWORD*)&buffer[10]);
 
   // Delete old buffer and allocate new one. File is variable. 40 For Windows NT
   delete[] buffer;
@@ -100,14 +111,53 @@ bool Bitmap::_readHeaders(std::ifstream &ifs) {
 }
 
 bool Bitmap::_readBitfield(std::ifstream &ifs) {
+  const int width_ = this->width();
+  const int height_ = this->height();
 
+  this->_bitField = new BYTE[width_ * height_ * 3];
+
+  //Skip to begin of bitfield
+  ifs.seekg(this->_fileHeader.bfOffBits);
+
+  // todo check negative height or remove from support.
+  // todo (maybe) change and use pixel struct. Prolly not needed since
+  //  pointer arithmetic is fast
+
+  // If byte width is not a multiple of 4, rows get padded with null bytes
+  const int paddingBytes = 4 - (this->width() * 3) % 4;
+
+  // Read data and discard padding bytes
+  for (int i = 0; i < height_; i++) {
+    if (!ifs.read((char*)this->_bitField + (i * width_) * 3, width_ * 3)) {
+      return false;
+    }
+
+    ifs.ignore(paddingBytes);
+  }
+
+  return true;
 }
 
 int Bitmap::width() const {
   return (int)this->_infoHeader.biWidth;
 }
-
 int Bitmap::height() const {
   const LONG height = this->_infoHeader.biHeight;
   return  (int)(height > 0 ? height : -height);
+}
+
+Pixel Bitmap::at(const int &x, const int &y) const {
+  if (x >= this->width() || y >= this->height()) {
+    throw std::runtime_error("Trying to access invalid pixel in bmp.");
+  }
+
+  // Todo check if image is top-down or bottom-up. Assuming bottom-up for now.
+  const int y_ = this->height() - 1 - y;
+
+  BYTE* pixel = this->_bitField + (x + this->width() * y_) * 3;
+  return {*pixel, *(pixel + 1), *(pixel + 2)};
+}
+
+Bitmap::~Bitmap() {
+  delete[] this->_bitField;
 }

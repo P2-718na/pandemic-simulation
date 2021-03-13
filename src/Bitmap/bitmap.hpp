@@ -23,7 +23,6 @@ typedef struct tagBITMAPFILEHEADER {
   WORD  bfReserved2{};
   DWORD bfOffBits{};
 } BITMAPFILEHEADER;
-
 typedef struct tagBITMAPINFOHEADER {
   DWORD biSize{};
   LONG  biWidth{};
@@ -38,20 +37,29 @@ typedef struct tagBITMAPINFOHEADER {
   DWORD biClrImportant{};
 } BITMAPINFOHEADER;
 
+struct Pixel {
+  int b{};
+  int g{};
+  int r{};
+};
+
+std::ostream& operator<<(std::ostream& lhs, const Pixel& rhs);
+
 class Bitmap {
   BITMAPFILEHEADER _fileHeader;
   BITMAPINFOHEADER _infoHeader;
 
-  // todo allocate image dynamically (probably best is a single dimension array)
-  //  remember to deassign memory
+  BYTE* _bitField;
 
   bool _readHeaders(std::ifstream &ifs);
   bool _readBitfield(std::ifstream &ifs);
 
   public:
   explicit Bitmap(const std::string &fileName);
-  //~Bitmap();
+  ~Bitmap();
 
   int width() const;
   int height() const;
+
+  Pixel at(const int &x, const int &y) const;
 };

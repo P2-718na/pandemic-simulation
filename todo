@@ -26,3 +26,7 @@ first things to do:
         -image reading
         -pathfinding system
     -go next
+
+
+General todos:
+    - change cast to c++ style cast (maybe, maybe not)
