@@ -27,6 +27,14 @@ void Entity::loop() {
   }
 }
 
+int Entity::posX() const {
+  return this->_posX;
+}
+
+int Entity::posY() const {
+  return this->_posY;
+}
+
 void Entity::moveTo(int destX, int destY) {
   this->pathfinder.init(this->_posX, this->_posY, destX, destY);
   this->_status = pathing;

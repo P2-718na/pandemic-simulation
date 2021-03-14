@@ -17,6 +17,7 @@ class Entity {
  public:
   Entity(int posX, int posY, void (*next)(Entity*));
   void moveTo(int destX, int destY);
-
+  int posX() const;
+  int posY() const;
   void loop();
 };
