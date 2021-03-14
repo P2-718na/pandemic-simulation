@@ -31,7 +31,7 @@ bool Pathfinder::_calcPath() {
 
     if (currentY < this->_endY) {
       ++currentY;
-    } else if (currentX > this->_endY) {
+    } else if (currentY > this->_endY) {
       --currentY;
     }
 
