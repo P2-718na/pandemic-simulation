@@ -35,4 +35,5 @@ class Pathfinder {
   );
   std::vector<int*> getPath() const;
   int* step();
+  bool isArrived();
 };

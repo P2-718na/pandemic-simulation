@@ -16,8 +16,8 @@ void Pathfinder::_init(const int &startX, const int &startY, const int &endX, co
 }
 
 bool Pathfinder::_calcPath() {
-  // add first node
-  this->_path.push_back(new int[2] {this->_startX, this->_startY});
+  // don't add first node
+  // this->_path.push_back(new int[2] {this->_startX, this->_startY});
 
   int currentX = this->_startX;
   int currentY = this->_startY;
@@ -79,13 +79,14 @@ int* Pathfinder::step() {
     throw std::runtime_error("Pathfinder not initialised.");
   }
 
-  // Skip first step (starting position)
-  ++(this->_step);
-
-  const int lastStep = (int)this->_path.size() - 1;
-  if (this->_step > lastStep) {
-    return this->_path[lastStep];
+  const int totalStepCount = (int)this->_path.size();
+  if (this->_step >= totalStepCount) {
+    return this->_path[totalStepCount];
   }
 
-  return this->_path[this->_step];
+  return this->_path[this->_step++];
+}
+
+bool Pathfinder::isArrived() {
+  return this->_step >= this->_path.size() - 1;
 }
