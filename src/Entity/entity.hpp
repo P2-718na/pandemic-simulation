@@ -15,7 +15,9 @@ class Entity {
   void (*_next)(Entity*);
 
  public:
+  Entity(int posX, int posY);
   Entity(int posX, int posY, void (*next)(Entity*));
+
   void moveTo(int destX, int destY);
   int posX() const;
   int posY() const;

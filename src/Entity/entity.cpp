@@ -1,11 +1,17 @@
 #include "entity.hpp"
 #include "ai.hpp"
 
-Entity::Entity(int posX, int posY, void (*next)(Entity*))
+Entity::Entity(int posX, int posY)
   : _posX{posX}
   , _posY{posY}
-  , _next{next}
+  , _next(nullAi)
 {}
+
+Entity::Entity(int posX, int posY, void (*next)(Entity*))
+  : Entity(posX, posY)
+{
+  this->_next = next;
+}
 
 void Entity::loop() {
   switch (this->_status) {
