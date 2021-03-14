@@ -13,6 +13,7 @@ Entity::Entity(int posX, int posY, void (*next)(Entity*))
   this->_next = next;
 }
 
+//todo move this to loop ai file
 void Entity::loop() {
   switch (this->_status) {
     case pathing:
@@ -42,6 +43,9 @@ int Entity::posY() const {
 }
 
 void Entity::moveTo(int destX, int destY) {
+  //TODO sistemare questa roba.
+  this->pathfinder = Pathfinder();
   this->pathfinder.init(this->_posX, this->_posY, destX, destY);
+
   this->_status = pathing;
 }
