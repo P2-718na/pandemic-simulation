@@ -11,3 +11,4 @@ ADD_SUBDIRECTORY(Bitmap)
 ADD_SUBDIRECTORY(Pathfinder)
 
 TARGET_LINK_LIBRARIES(lab Bitmap Pathfinder)
+TARGET_LINK_LIBRARIES(lab sfml-graphics sfml-window sfml-audio)

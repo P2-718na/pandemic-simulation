@@ -1,19 +1,29 @@
 #include <iostream>
+#include <SFML/Graphics.hpp>
+
 #include "bitmap.hpp"
 #include "pathfinder.hpp"
 
 int main() {
-  Bitmap bitmap("test.bmp");
-  std::cout << "Width:" << bitmap.width() << "Height:" << bitmap.height() << std::endl;
+  sf::RenderWindow window(sf::VideoMode(800, 800), "covid");
+  sf::Texture img;
+  sf::Sprite sprite;
 
-  std::cout << bitmap.at(9, 8) << " ";
+  img.loadFromFile("./test.bmp");
+  sprite.setTexture(img);
+  sprite.setScale(2, 2);
 
-  Pathfinder pathfinder(0, 0, 6, 9);
+  window.draw(sprite);
+  window.display();
 
-  int* pos;
-  for (int i = 0; i < 10; i++) {
-    pos = pathfinder.step();
+  while (window.isOpen()) {
+    sf::Event event{};
+    while (window.pollEvent(event)) {
+      if (event.type == sf::Event::Closed)
+        window.close();
+    }
 
-    std::cout << pos[0] << " " << pos[1] << std::endl;
+
   }
+  return 0;
 }
