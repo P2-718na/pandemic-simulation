@@ -4,6 +4,7 @@ INCLUDE_DIRECTORIES(
         lab PUBLIC
         "${PROJECT_SOURCE_DIR}/src"
         "${PROJECT_SOURCE_DIR}/src/Bitmap"
+        "${PROJECT_SOURCE_DIR}/src/Pathfinder"
 )
 
 ADD_SUBDIRECTORY(Bitmap)

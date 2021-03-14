@@ -1,0 +1,282 @@
+//Dijkstra.cpp
+
+
+/*
+node methods: pathThrough(int)
+id (int)
+weight(int)
+isNeighbour(int)
+*/
+
+vector<node> done;
+vector<node> toDo;
+vector<int> bwSeq;
+int ** matrix;
+int node_num = 0;
+
+//inizializza la matrice che contiene i nodi a 0
+void initMatrix() {
+  //alloca la memoria per la matrice
+  matrix = new int*[node_num];
+  for (int i = 0; i < node_num; i++)
+    matrix[i] = new int[node_num];
+
+  //inizializza la matrice a 0
+  for (int i = 0; i < node_num; i++) {
+    for (int j = 0; j < node_num; j++) {
+      matrix[i][j] = 0;
+    }
+  }
+}
+
+//legge il file e lo salva nella matrice. Ottiene il numero di nodi e chiama initMatrix()
+void readFile() {
+  vector<int> tmp;
+  int tmp1;
+  fstream fs;
+  fs.open("./input.txt", fstream::in);
+
+  //inizializza la matrice
+  fs >> node_num;
+  initMatrix();
+
+  //legge i caratteri 1 ad 1
+  while (!fs.eof()) {
+    fs >> tmp1;
+    tmp.push_back(tmp1);
+  }
+
+  //salva i caratteri nella matrice
+  initMatrix();
+  for (int j = 0; j < node_num; j++) {
+    for (int i = 0; i < node_num; i++) {
+      matrix[j][i] = tmp[j * node_num + i];
+    }
+  }
+}
+
+//controlla se almeno un nodo ha una connessione al nodo di partenza, e ritorna falso se trova questo.
+bool infLoop(int i) {
+  if (toDo[i].weight() != -1)
+    return false;
+  else if (i == toDo.size() - 1)
+    return true;
+  else
+    return infLoop(i + 1);
+
+}
+
+//sorta il vettore in base al peso dei nodi.
+void sortVector(vector<node>& vect) {
+  for (int i = 0; i < vect.size(); i++) {
+    for (int j = 0; j < vect.size(); j++) {
+      if ((vect[i].weight() > vect[j].weight()) && (i < j)) {
+        swap(vect[i], vect[j]);
+      }
+    }
+  }
+  for (int i = 0; i < vect.size(); i++) {
+    if (vect[i].weight() == -1) {
+      node tmp;
+      tmp = vect[i];
+      vect.erase(vect.begin() + i);
+      vect.push_back(tmp);
+    }
+  }
+}
+
+//sorta il vettore in base all'id dei nodi.
+void sortVectorById(vector<node>& vect) {
+  for (int i = 0; i < vect.size(); i++) {
+    for (int j = 0; j < vect.size(); j++) {
+      if ((vect[i].id() > vect[j].id()) && (i < j)) {
+        swap(vect[i], vect[j]);
+      }
+    }
+  }
+  for (int i = 0; i < vect.size(); i++) {
+    if (vect[i].id() == -1) {
+      node tmp;
+      tmp = vect[i];
+      vect.erase(vect.begin() + i);
+      vect.push_back(tmp);
+    }
+  }
+}
+
+/*
+Inizializzazione dell'algoritmo.
+1a == Poniamo S={1}, T={2,3,...,n}, f(1)=0, J(1)=0.
+1b == Poniamo f(i)=p(1,i), J(i)=1 per tutti i nodi adiacenti ad 1.
+Poniamo f(i)= Inf, per tutti gli altri nodi.
+-----
+La funzione non chiama altre funzioni.
+*/
+void initDijkstra() {
+  //1a
+  {
+    node node;
+    node.id(0);
+    node.weight(0);
+    node.pathThrough(-1);
+    done.push_back(node);
+  }
+  //1b
+  for (int i = 1; i < node_num; i++) {
+    node node;
+    node.id(i);
+    if (node.isNeighbour(0)) {
+      node.pathThrough(0);
+      node.weight(matrix[0][node.id()]);
+    }
+    toDo.push_back(node);
+  }
+  //1c: non necessario, tutti i nodi non adiacenti a 0 hanno già i valori corretti durante l'inizializzazione.
+}
+
+/*
+Algoritmo di Dijkstra
+2.
+a	Se f(i)= Inf per ogni i in T STOP
+b	Troviamo j in T tale che f(j)=min f(i) con i appartenente a T
+c	Poniamo T -= {j} e S += {j}
+d	Se T=Ø STOP
+3.
+a	Per ogni i in T, adiacente a j e tale che f(i)>f(j)+p(j,i) poniamo:
+		f(i)=f(j)+p(j,i)
+		J(i)=j
+b	goto 2
+-----
+chiama la funzione infLoop(0);
+chiama sortVector();
+2 == errore: nessun nodo è collegato al nodo di partenza.
+0 == ricursione finita.
+*/
+int dijkstra() {
+  while (true) {
+    //2a
+    if (infLoop(0))
+      return 2;
+
+    //2b
+    sortVector(toDo);
+
+    //2c
+    node tmp = toDo[0];
+    toDo.erase(toDo.begin());
+    done.push_back(tmp);
+
+    //2d
+    if (toDo.empty())
+      return 0;
+
+    //3a
+    for (node& i : toDo) {
+      if (i.isNeighbour(tmp.id()) && (((i.weight() == -1)? true:(i.weight() > (tmp.weight() + matrix[tmp.id()][i.id()]))))) {
+        i.weight(tmp.weight() + matrix[tmp.id()][i.id()]);
+        i.pathThrough(tmp.id());
+      }
+    }
+
+    //3b
+  }
+}
+
+
+int main() {
+
+  initDijkstra();
+  cout << "Dijkstra ending: " << ((dijkstra() == 0)? "'Correct ending.'":"'End node not connected to start node.'") << endl << endl;
+
+  sortVectorById(done);
+
+
+  bwSeq.push_back(done[done.size() -1].id());
+  for (int i = done.size() - 1; i >= 0; i = done[i].pathThrough())
+    bwSeq.push_back(done[i].pathThrough());
+
+  cout << "Node list (backwards): ";
+  for (int& i : bwSeq)
+    cout << ((i == -1) ? "" : to_string(i)) << " ";
+  cout << endl << "Total cost: " << (done[node_num - 1].weight()) << endl;
+}
+
+
+
+
+
+
+
+
+//node.hpp
+#ifndef __node__
+#define __node__
+
+extern int ** matrix;
+
+class node {
+ private:
+  int p;
+  int w;
+  int i;
+ public:
+  //cosntructor
+  node();
+
+  //mutator
+  void pathThrough(int newPath);
+  void weight(int newWeight);
+  void id(int newId);
+
+  //accessor
+  int pathThrough();
+  int weight();
+  int id();
+
+  //methods
+  bool isNeighbour(int node);
+};
+
+#endif
+
+
+//node.cpp
+#include "node.h"
+#include <limits>
+
+//constructor
+node::node() {
+  p = -1;
+  w = std::numeric_limits<int>::max();
+  i = -1;
+}
+
+//mutator
+void node::pathThrough(int newPath) {
+  p = newPath;
+}
+void node::weight(int newWeight) {
+  w = newWeight;
+}
+void node::id(int newId) {
+  i = newId;
+}
+
+//accessor
+int node::pathThrough() {
+  return p;
+}
+int node::weight() {
+  return w;
+}
+int node::id() {
+  return i;
+}
+
+//methods
+bool node::isNeighbour(int node) {
+  if (matrix[i][node] != 0)
+    return true;
+  else
+    return false;
+}
