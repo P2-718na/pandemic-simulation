@@ -6,17 +6,33 @@ class Pathfinder {
   int _startY{};
   int _endX{};
   int _endY{};
-
-  int _step{};
+  int _step{-1};
   std::vector<int*> _path;
 
+  void _init(
+    const int &startX,
+    const int &startY,
+    const int &endX,
+    const int &endY
+  );
   bool _calcPath();
 
  public:
-  //Pathfinder();
-  Pathfinder(int startX, int startY, int endX, int endY);
+  Pathfinder();
+  Pathfinder(
+    const int &startX,
+    const int &startY,
+    const int &endX,
+    const int &endY
+  );
   ~Pathfinder();
 
+  void init(
+    const int &startX,
+    const int &startY,
+    const int &endX,
+    const int &endY
+  );
   std::vector<int*> getPath() const;
   int* step();
 };

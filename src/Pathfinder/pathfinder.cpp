@@ -1,4 +1,19 @@
 #include "pathfinder.hpp"
+#include <stdexcept>
+
+void Pathfinder::_init(const int &startX, const int &startY, const int &endX, const int &endY) {
+  if (this->_step != -1) {
+   throw std::runtime_error("Already initialised.");
+  }
+
+  this->_startX = startX;
+  this->_startY = startY;
+  this->_endX = endX;
+  this->_endY = endY;
+  this->_step = 0;
+
+  _calcPath();
+}
 
 bool Pathfinder::_calcPath() {
   // add first node
@@ -29,13 +44,15 @@ bool Pathfinder::_calcPath() {
   return true;
 }
 
-Pathfinder::Pathfinder(int startX, int startY, int endX, int endY)
-  : _startX{startX}
-  , _startY{startY}
-  , _endX{endX}
-  , _endY{endY}
-{
-  _calcPath();
+Pathfinder::Pathfinder() = default;
+
+Pathfinder::Pathfinder(
+  const int &startX,
+  const int &startY,
+  const int &endX,
+  const int &endY
+) {
+  this->_init(startX, startY, endX, endY);
 }
 
 Pathfinder::~Pathfinder() {
@@ -44,11 +61,25 @@ Pathfinder::~Pathfinder() {
   }
 }
 
+void Pathfinder::init(
+  const int &startX,
+  const int &startY,
+  const int &endX,
+  const int &endY
+) {
+  return this->_init(startX, startY, endX, endY);
+}
+
 std::vector<int *> Pathfinder::getPath() const {
   return this->_path;
 }
 
 int* Pathfinder::step() {
+  if (this->_step == -1) {
+    throw std::runtime_error("Pathfinder not initialised.");
+  }
+
+  // Skip first step (starting position)
   ++(this->_step);
 
   const int lastStep = (int)this->_path.size() - 1;
