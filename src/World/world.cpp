@@ -3,19 +3,16 @@
 #include <utility>
 
 ////////////////MOVE
-#include <random>
-std::random_device rd{};
-std::mt19937 gen{rd()};
+#include <cstdlib>
 int randint (int min, int max) {
-  std::normal_distribution<> d{((double)(max + min) / 2),100};
-  return d(gen);
+   return rand() % (max - min) + min;
 }
 
 void rand(Entity* _this) {
 
   int x, y;
-  x = randint(0, 800);
-  y = randint(0, 800);
+  x = randint(100, 700);
+  y = randint(100, 700);
 
   _this->moveTo(x, y);
 }
@@ -76,13 +73,13 @@ World::World(int width, int height, int entityCount)
 
 void World::loop() {
   for (auto &entity : this->entities) {
-    // FIXME this causes segfault
-    //this->_entityPreLoop(entity);
+    // FIXME this causes segfault if entity moves to invalid position
+    this->_entityPreLoop(entity);
 
     entity.loop();
 
-    // FIXME this causes segfault
-    // this->_entityPostLoop(entity);
+    // FIXME this causes segfault if entity moves to invalid position
+    this->_entityPostLoop(entity);
   }
 }
 

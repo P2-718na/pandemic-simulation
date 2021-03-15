@@ -5,7 +5,7 @@
 #include "entity.hpp"
 
 struct Tile {
-  float value;
+  float value{};
   std::unordered_map<int, Entity*> entities;
 };
 
