@@ -1,14 +1,15 @@
 #include "entity.hpp"
 #include "ai.hpp"
 
-Entity::Entity(int posX, int posY)
-  : _posX{posX}
+Entity::Entity(int uid, int posX, int posY)
+  : _uid{uid}
+  , _posX{posX}
   , _posY{posY}
   , _next(nullAi)
 {}
 
-Entity::Entity(int posX, int posY, void (*next)(Entity*))
-  : Entity(posX, posY)
+Entity::Entity(int uid, int posX, int posY, void (*next)(Entity*))
+  : Entity(uid, posX, posY)
 {
   this->_next = next;
 }
@@ -34,6 +35,10 @@ void Entity::loop() {
   }
 }
 
+int Entity::uid() const {
+  return this->_uid;
+}
+
 int Entity::posX() const {
   return this->_posX;
 }
@@ -43,7 +48,7 @@ int Entity::posY() const {
 }
 
 void Entity::moveTo(int destX, int destY) {
-  //TODO sistemare questa roba.
+  //TODO controllare memoria qua
   this->pathfinder = Pathfinder();
   this->pathfinder.init(this->_posX, this->_posY, destX, destY);
 

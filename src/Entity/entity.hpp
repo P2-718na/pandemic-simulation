@@ -7,6 +7,7 @@ enum EntityStatus {
 };
 
 class Entity {
+  int _uid;
   int _posX;
   int _posY;
   int _status{};
@@ -15,10 +16,11 @@ class Entity {
   void (*_next)(Entity*);
 
  public:
-  Entity(int posX, int posY);
-  Entity(int posX, int posY, void (*next)(Entity*));
+  Entity(int uid, int posX, int posY);
+  Entity(int uid, int posX, int posY, void (*next)(Entity*));
 
   void moveTo(int destX, int destY);
+  int uid() const;
   int posX() const;
   int posY() const;
   void loop();
