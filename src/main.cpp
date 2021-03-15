@@ -1,31 +1,13 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
 #include <vector>
-#include <random>
 
 #include "entity.hpp"
 #include "pathfinder.hpp"
-
-std::random_device rd{};
-std::mt19937 gen{rd()};
+#include "world.hpp"
 
 // values near the mean are the most likely
 // standard deviation affects the dispersion of generated values from the mean
-
-
-int randint (int min, int max) {
-  std::normal_distribution<> d{((double)(max + min) / 2),100};
-  return d(gen);
-}
-
-void rand(Entity* _this) {
-
-  int x, y;
-  x = randint(0, 800);
-  y = randint(0, 800);
-
-  _this->moveTo(x, y);
-}
 
 int main() {
   sf::RenderWindow window(sf::VideoMode(800, 800), "covid");
@@ -36,12 +18,13 @@ int main() {
   background.setTexture(backgroundTexture);
   background.setScale(2, 2);
 
-  std::vector<Entity> entities(2000, {10, 10, rand});
-  sf::VertexArray _entities(sf::Points, 2000);
+  sf::VertexArray _entities(sf::Points, 10000);
 
-  for (int i = 0; i < 2000; i++) {
+  for (int i = 0; i < 10000; i++) {
     _entities[i].color = sf::Color::Red;
   }
+
+  World world(800, 800, 10000);
 
   while (window.isOpen()) {
     sf::Event event{};
@@ -52,10 +35,11 @@ int main() {
 
     //window.clear();
     window.draw(background);
+    world.loop();
 
-    for (int i = 0; i < 2000; i++) {
-      auto e = &entities[i];
-      e->loop();
+    for (int i = 0; i < 10000; i++) {
+      auto e = &world.entities[i];
+      //printf("entity %d is at pos x:%d, y:%d", i, e->posX(), e->posY());
       _entities[i].position = sf::Vector2f(e->posX(), e->posY());
     }
 
