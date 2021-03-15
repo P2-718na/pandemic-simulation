@@ -1,1 +1,1 @@
-ADD_LIBRARY(Entity STATIC entity.cpp ai.cpp)
+ADD_LIBRARY(World STATIC world.cpp)
