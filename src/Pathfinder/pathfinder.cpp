@@ -1,5 +1,6 @@
 #include "pathfinder.hpp"
 #include <stdexcept>
+#include <vector>
 
 void Pathfinder::_init(const int &startX, const int &startY, const int &endX, const int &endY) {
   if (this->_step != -1) {
@@ -35,11 +36,11 @@ bool Pathfinder::_calcPath() {
       --currentY;
     }
 
-    this->_path.push_back(new int[2] {currentX, currentY});
+    this->_path.push_back(std::vector<int>{currentX, currentY});
   }
 
   // add last node
-  this->_path.push_back(new int[2] {this->_endX, this->_endY});
+  this->_path.push_back(std::vector<int>{this->_endX, this->_endY});
 
   return true;
 }
@@ -55,12 +56,6 @@ Pathfinder::Pathfinder(
   this->_init(startX, startY, endX, endY);
 }
 
-Pathfinder::~Pathfinder() {
-  for (auto i : this->_path) {
-    delete[] i;
-  }
-}
-
 void Pathfinder::init(
   const int &startX,
   const int &startY,
@@ -70,11 +65,11 @@ void Pathfinder::init(
   return this->_init(startX, startY, endX, endY);
 }
 
-std::vector<int *> Pathfinder::getPath() const {
+std::vector<std::vector<int>> Pathfinder::getPath() const {
   return this->_path;
 }
 
-int* Pathfinder::step() {
+std::vector<int> Pathfinder::step() {
   if (this->_step == -1) {
     throw std::runtime_error("Pathfinder not initialised.");
   }

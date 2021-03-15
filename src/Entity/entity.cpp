@@ -1,3 +1,5 @@
+#include <vector>
+
 #include "entity.hpp"
 #include "ai.hpp"
 
@@ -19,7 +21,7 @@ void Entity::loop() {
   switch (this->_status) {
     case pathing:
       if (!this->pathfinder.isArrived()) {
-        int* nextStep = this->pathfinder.step();
+        std::vector<int> nextStep = this->pathfinder.step();
         this->_posX = nextStep[0];
         this->_posY = nextStep[1];
       } else {
@@ -48,9 +50,10 @@ int Entity::posY() const {
 }
 
 void Entity::moveTo(int destX, int destY) {
-  //TODO controllare memoria qua
-  this->pathfinder = Pathfinder();
-  this->pathfinder.init(this->_posX, this->_posY, destX, destY);
+  // fixme this is only a temp fix for memleak. Needs to be changed
+  Pathfinder temp;
+  temp.init(this->_posX, this->_posY, destX, destY);
+  this->pathfinder = temp;
 
   this->_status = pathing;
 }

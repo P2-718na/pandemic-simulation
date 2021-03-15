@@ -7,7 +7,7 @@ class Pathfinder {
   int _endX{};
   int _endY{};
   int _step{-1};
-  std::vector<int*> _path;
+  std::vector<std::vector<int>> _path;
 
   void _init(
     const int &startX,
@@ -18,6 +18,7 @@ class Pathfinder {
   bool _calcPath();
 
  public:
+  // todo fratm riscrivi sta roba 🤡
   Pathfinder();
   Pathfinder(
     const int &startX,
@@ -25,7 +26,6 @@ class Pathfinder {
     const int &endX,
     const int &endY
   );
-  ~Pathfinder();
 
   void init(
     const int &startX,
@@ -33,7 +33,8 @@ class Pathfinder {
     const int &endX,
     const int &endY
   );
-  std::vector<int*> getPath() const;
-  int* step();
+
+  std::vector<std::vector<int>> getPath() const;
+  std::vector<int> step();
   bool isArrived();
 };
