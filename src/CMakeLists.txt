@@ -12,5 +12,5 @@ ADD_SUBDIRECTORY(Pathfinder)
 ADD_SUBDIRECTORY(Entity)
 ADD_SUBDIRECTORY(World)
 
-TARGET_LINK_LIBRARIES(lab Pathfinder Entity World)
+TARGET_LINK_LIBRARIES(lab Entity Pathfinder World)
 TARGET_LINK_LIBRARIES(lab sfml-graphics sfml-window sfml-audio)

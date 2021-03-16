@@ -18,13 +18,13 @@ int main() {
   background.setTexture(backgroundTexture);
   background.setScale(2, 2);
 
-  sf::VertexArray _entities(sf::Points, 10000);
+  sf::VertexArray _entities(sf::Points, 100);
 
-  for (int i = 0; i < 10000; i++) {
+  for (int i = 0; i < 100; i++) {
     _entities[i].color = sf::Color::Red;
   }
 
-  World world(800, 800, 10000);
+  World world(800, 800, 100);
 
   while (window.isOpen()) {
     sf::Event event{};
@@ -37,7 +37,7 @@ int main() {
     window.draw(background);
     world.loop();
 
-    for (int i = 0; i < 10000; i++) {
+    for (int i = 0; i < 100; i++) {
       auto e = &world.entities[i];
       //printf("entity %d is at pos x:%d, y:%d", i, e->posX(), e->posY());
       _entities[i].position = sf::Vector2f(e->posX(), e->posY());

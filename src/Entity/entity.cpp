@@ -1,5 +1,3 @@
-#include <vector>
-
 #include "entity.hpp"
 #include "ai.hpp"
 
@@ -50,10 +48,7 @@ int Entity::posY() const {
 }
 
 void Entity::moveTo(int destX, int destY) {
-  // fixme this is only a temp fix for memleak. Needs to be changed
-  Pathfinder temp;
-  temp.init(this->_posX, this->_posY, destX, destY);
-  this->pathfinder = temp;
+  this->pathfinder = Pathfinder{this->_posX, this->_posY, destX, destY};
 
   this->_status = pathing;
 }

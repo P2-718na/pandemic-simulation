@@ -7,7 +7,7 @@ class Pathfinder {
   int _endX{};
   int _endY{};
   int _step{-1};
-  std::vector<std::vector<int>> _path;
+  std::vector<std::vector<int>> _path{};
 
   void _init(
     const int &startX,
