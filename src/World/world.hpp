@@ -11,6 +11,8 @@ struct Tile {
 
 class World {
   // per ora questo contiene semplicemente il livello di coviddi
+  int _width;
+  int _height;
   std::vector<std::vector<Tile>> _map;
 
   // Todo there should be some error management here
@@ -24,6 +26,8 @@ class World {
   World(int width, int height);
   World(int width, int height, std::vector<Entity> entities);
   World(int width, int height, int entityCount);
+
+  bool isInside(const Entity &entity) const;
 
   void loop();
 };

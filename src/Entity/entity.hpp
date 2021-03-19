@@ -11,7 +11,6 @@ class Entity {
   int _posX;
   int _posY;
   int _status{};
-  int _daysInfected{};
   Pathfinder pathfinder{};
   void (*_next)(Entity*);
 
