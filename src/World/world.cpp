@@ -10,7 +10,7 @@ void World::_entityPreLoop(Entity &entity) {
     Tile *currentTile = &this->_map[entity.posX()][entity.posY()];
 
     // decrease its value
-    --(currentTile->value);
+    --(currentTile->entityCount);
 
     // remove from map
     currentTile->entities.erase(entity.uid());
@@ -24,7 +24,7 @@ void World::_entityPostLoop(Entity &entity) {
     Tile *currentTile = &this->_map[entity.posX()][entity.posY()];
 
     // increase its value
-    ++(currentTile->value);
+    ++(currentTile->entityCount);
 
     // add in map
     currentTile->entities.insert({entity.uid(), &entity});
@@ -71,6 +71,7 @@ bool World::isInside(const Entity &entity) const {
 }
 
 void World::loop() {
+  ++(this->_minutesPassed);
   for (auto &entity : this->entities) {
     this->_entityPreLoop(entity);
 
@@ -88,9 +89,11 @@ void World::_nextDay() {
   ++(this->_daysPassed);
   this->_minutesPassed = 0;
 
+  printf("New day!");
+
   for (auto &entity : this->entities) {
     if (entity.daysInfected > 14) {
-      entity.daysInfected == 0;
+      entity.daysInfected = 0;
     } else if (entity.daysInfected > 0) {
       entity.daysInfected++;
     }

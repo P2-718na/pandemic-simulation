@@ -8,12 +8,11 @@
 #define MINUTES_IN_A_DAY 1440
 
 struct Tile {
-  float value{};
+  float entityCount{};
   std::unordered_map<int, Entity*> entities;
 };
 
 class World {
-  // per ora questo contiene semplicemente il livello di coviddi
   int _width;
   int _height;
   std::vector<std::vector<Tile>> _map;

@@ -5,6 +5,7 @@
 #include "entity.hpp"
 #include "pathfinder.hpp"
 #include "world.hpp"
+#include "ai.hpp"
 
 // values near the mean are the most likely
 // standard deviation affects the dispersion of generated values from the mean
@@ -20,7 +21,13 @@ int main() {
 
   sf::VertexArray _entities(sf::Points, 1000);
 
-  World world(800, 800, 1000);
+  std::vector<Entity> _e;
+  _e.reserve(1000);
+for (int i = 0; i < 1000; i++)   {
+    _e.emplace_back(i, AI::randInt(100, 700), AI::randInt(100, 700), AI::randomAi);
+    _e[i].daysInfected = AI::randInt(0, 140);
+  }
+  World world(800, 800, _e);
 
   while (window.isOpen()) {
     sf::Event event{};
