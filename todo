@@ -1,5 +1,6 @@
 -covid simulation:
     -map with heatpoints
+    -People will need waypoints to enable for proper ai
     -restaurants, schools, workplaces (each with different parameters)
     -(maybe) means of transport
     -curfew

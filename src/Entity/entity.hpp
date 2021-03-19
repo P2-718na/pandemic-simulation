@@ -15,6 +15,8 @@ class Entity {
   void (*_next)(Entity*);
 
  public:
+  int daysInfected{0};
+
   Entity(int uid, int posX, int posY);
   Entity(int uid, int posX, int posY, void (*next)(Entity*));
 

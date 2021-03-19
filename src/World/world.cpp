@@ -42,7 +42,7 @@ World::World(int width, int height)
   }
 {}
 
-World::World(int width, int height, std::vector<Entity> entities)
+World::World(int width, int height, std::vector<Entity> &entities)
   : World(width, height)
 {
   this->entities = std::move(entities); //todo controlla sta roba
@@ -59,7 +59,7 @@ World::World(int width, int height, int entityCount)
   : World(width, height)
 {
   for (int i = 0; i < entityCount; i++) {
-    this->entities.emplace_back(i, 0, 0, randomAi);
+    this->entities.emplace_back(i, 0, 0, AI::randomAi);
   }
 }
 
@@ -77,6 +77,23 @@ void World::loop() {
     entity.loop();
 
     this->_entityPostLoop(entity);
+  }
+
+  if (this->_minutesPassed >= MINUTES_IN_A_DAY) {
+    return this->_nextDay();
+  }
+}
+
+void World::_nextDay() {
+  ++(this->_daysPassed);
+  this->_minutesPassed = 0;
+
+  for (auto &entity : this->entities) {
+    if (entity.daysInfected > 14) {
+      entity.daysInfected == 0;
+    } else if (entity.daysInfected > 0) {
+      entity.daysInfected++;
+    }
   }
 }
 

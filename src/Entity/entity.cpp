@@ -5,7 +5,7 @@ Entity::Entity(int uid, int posX, int posY)
   : _uid{uid}
   , _posX{posX}
   , _posY{posY}
-  , _next(nullAi)
+  , _next(AI::nullAi)
 {}
 
 Entity::Entity(int uid, int posX, int posY, void (*next)(Entity*))

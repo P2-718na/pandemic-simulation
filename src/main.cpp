@@ -18,13 +18,9 @@ int main() {
   background.setTexture(backgroundTexture);
   background.setScale(2, 2);
 
-  sf::VertexArray _entities(sf::Points, 100);
+  sf::VertexArray _entities(sf::Points, 1000);
 
-  for (int i = 0; i < 100; i++) {
-    _entities[i].color = sf::Color::Red;
-  }
-
-  World world(800, 800, 100);
+  World world(800, 800, 1000);
 
   while (window.isOpen()) {
     sf::Event event{};
@@ -37,10 +33,11 @@ int main() {
     window.draw(background);
     world.loop();
 
-    for (int i = 0; i < 100; i++) {
+    for (int i = 0; i < 1000; i++) {
       auto e = &world.entities[i];
       //printf("entity %d is at pos x:%d, y:%d", i, e->posX(), e->posY());
       _entities[i].position = sf::Vector2f(e->posX(), e->posY());
+      _entities[i].color = e->daysInfected > 0 ? sf::Color::Red : sf::Color::White;
     }
 
     window.draw(_entities);
