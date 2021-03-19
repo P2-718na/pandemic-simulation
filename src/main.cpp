@@ -23,9 +23,10 @@ int main() {
 
   std::vector<Entity> _e;
   _e.reserve(1000);
-for (int i = 0; i < 1000; i++)   {
+  for (int i = 0; i < 1000; i++)   {
+    int _d = AI::randInt(0, 140);
     _e.emplace_back(i, AI::randInt(100, 700), AI::randInt(100, 700), AI::randomAi);
-    _e[i].daysInfected = AI::randInt(0, 140);
+    _e[i].daysInfected = _d > 120 ? 1 : 0;
   }
   World world(800, 800, _e);
 

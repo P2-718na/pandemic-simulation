@@ -15,6 +15,7 @@ class Entity {
   void (*_next)(Entity*);
 
  public:
+  // todo actual function .infected()
   int daysInfected{0};
 
   Entity(int uid, int posX, int posY);
