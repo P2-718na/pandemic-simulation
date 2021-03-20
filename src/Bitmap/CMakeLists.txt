@@ -1,1 +1,0 @@
-ADD_LIBRARY(Bitmap STATIC bitmap.cpp)

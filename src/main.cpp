@@ -3,7 +3,6 @@
 #include <vector>
 #include <random>
 
-#include "bitmap.hpp"
 #include "entity.hpp"
 #include "pathfinder.hpp"
 
