@@ -5,13 +5,13 @@ Entity::Entity(int uid, int posX, int posY)
   : _uid{uid}
   , _posX{posX}
   , _posY{posY}
-  , _next(AI::nullAi)
+  , _nextAI(AI::nullAi)
 {}
 
-Entity::Entity(int uid, int posX, int posY, void (*next)(Entity*))
+Entity::Entity(int uid, int posX, int posY, void (*nextAI)(Entity*))
   : Entity(uid, posX, posY)
 {
-  this->_next = next;
+  this->_nextAI = nextAI;
 }
 
 //todo move this to loop ai file
@@ -28,7 +28,7 @@ void Entity::loop() {
       break;
 
     case still:
-      this->_next(this);
+      this->_nextAI(this);
       break;
     default:
       break;

@@ -11,15 +11,17 @@ class Entity {
   int _posX;
   int _posY;
   int _status{};
+  void (*_nextAI)(Entity*);
+
   Pathfinder pathfinder{};
-  void (*_next)(Entity*);
 
  public:
   // todo actual function .infected()
   int daysInfected{0};
 
+  // Constructors
   Entity(int uid, int posX, int posY);
-  Entity(int uid, int posX, int posY, void (*next)(Entity*));
+  Entity(int uid, int posX, int posY, void (*nextAI)(Entity*));
 
   void moveTo(int destX, int destY);
   int uid() const;
