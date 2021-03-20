@@ -18,3 +18,7 @@ void AI::randomAi(Entity* _this) {
 
   _this->moveTo(x, y);
 }
+
+bool AI::chanceCheck(float chance) {
+  return AI::randInt(0, 100) < (int)(100 * chance);
+}
