@@ -19,14 +19,14 @@ int main() {
   background.setTexture(backgroundTexture);
   background.setScale(2, 2);
 
-  sf::VertexArray _entities(sf::Points, 1000);
+  sf::VertexArray _entities(sf::Points, 5000);
 
   std::vector<Entity> _e;
-  _e.reserve(1000);
-  for (int i = 0; i < 1000; i++)   {
+  _e.reserve(5000);
+  for (int i = 0; i < 5000; i++)   {
     _e.emplace_back(i, AI::randInt(100, 700), AI::randInt(100, 700), AI::randomAi);
   }
-  for (int i = 0; i < 100; i++) {
+  for (int i = 0; i < 50; i++) {
     _e[i].tryInfect();
   }
 
@@ -48,7 +48,7 @@ int main() {
     window.draw(background);
     world.loop();
 
-    for (int i = 0; i < 1000; i++) {
+    for (int i = 0; i < 5000; i++) {
       auto e = &world.entities[i];
       //printf("entity %d is at pos x:%d, y:%d", i, e->posX(), e->posY());
       _entities[i].position = sf::Vector2f(e->posX(), e->posY());
