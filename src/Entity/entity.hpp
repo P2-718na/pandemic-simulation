@@ -13,15 +13,13 @@ class Entity {
   void (*_nextAI)(Entity*);
 
   // Affects virus symptoms and recovery time
-  float _virusBaseResistance{.9};
+  float _virusResistance{.9};
 
   // Base chance to spread virus to nearby entities
-  float _baseSpreadChance{.5};
+  float _virusSpreadChance{.5};
 
   // Base chance to get infected by virus spread
-  float _baseInfectionChance{.8};
-
-  int _age{18};
+  float _infectionChance{.8};
 
   Pathfinder _pathfinder{};
   EntityStatus _status{still};
@@ -37,7 +35,8 @@ class Entity {
   int uid() const;
   int posX() const;
   int posY() const;
-  bool isInfective() const;
+  float baseSpreadChance() const;
+  bool infective() const;
 
   // Methods ///////////////////////////////////////////////////////////////////
   // Entity loop, must be run every game loop

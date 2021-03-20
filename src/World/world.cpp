@@ -13,7 +13,6 @@ void World::_entityPreLoop(Entity &entity) {
     // and remove from active tiles if empty.
     // Count tile with only one entity as inactive, for now
     if (--(currentTile->entityCount) <= 1) {
-      // todo maybe some error handling?
       this->_activeTiles.erase({entity.posX(), entity.posY()});
     }
 
@@ -28,12 +27,15 @@ void World::_entityPostLoop(Entity &entity) {
     // get tile the entity should be in post-loop
     Tile *currentTile = &this->_map[entity.posX()][entity.posY()];
 
-    // increase its value
-    // and add to active tiles
-    // Count tile with only one entity as inactive, for now
-    // todo replace daysinfected with actual .infected funcion (see Entity)
-    if (++(currentTile->entityCount) > 1 && entity.daysInfected > 0) {
-      // todo error handling
+    // increase its entity count  and add to active tiles
+    // Count tile with only one entity as inactive, for now.
+    // Also note that a tile must succeed a spread check in order to make a tile
+    // active.
+    ++(currentTile->entityCount);
+    if (
+      currentTile->entityCount > 1 && entity.infective() &&
+      AI::chanceCheck(entity.baseSpreadChance())
+    ) {
       this->_activeTiles.insert({entity.posX(), entity.posY()});
     }
 
@@ -84,23 +86,25 @@ bool World::isInside(const Entity &entity) const {
 
 void World::loop() {
   ++(this->_minutesPassed);
+
+  // Loop every entity and update position on _map array
   for (auto &entity : this->entities) {
     this->_entityPreLoop(entity);
-
     entity.loop();
-
     this->_entityPostLoop(entity);
   }
 
   // For each entity in tile, spread infection. Note that active tiles are the
   // One where at least one infected person exists, for now.
+  // Also note that an entity must succeed a spread check for a tile to
+  // be considered active
   for (auto &tile : this->_activeTiles) {
     for (auto &entityPtr : this->_map[tile.x][tile.y].entities) {
-      entityPtr->daysInfected = 1;
+      entityPtr->tryInfect();
     }
   }
 
-  // Execute next day logic (Must be last)
+  // Execute next day logic (Must be called last)
   if (this->_minutesPassed >= MINUTES_IN_A_DAY) {
     return this->_nextDay();
   }
@@ -110,25 +114,16 @@ void World::_nextDay() {
   ++(this->_daysPassed);
   this->_minutesPassed = 0;
 
-  printf("New day!\n");
-
-  for (auto &entity : this->entities) {
-    if (entity.daysInfected > 14) {
-      entity.daysInfected = 0;
-    } else if (entity.daysInfected > 0) {
-      entity.daysInfected++;
-    }
-  }
-
   int contagiati = 0;
   for (auto &entity : this->entities) {
-    if (entity.daysInfected > 14) {
+    entity.dayLoop();
 
-    } else if (entity.daysInfected > 0) {
+    if (entity.infective()) {
       contagiati++;
     }
   }
 
+  printf("New day!\n");
   printf("Sani: %d, Contagiati: %d\n", this->entities.size() - contagiati, contagiati);
 }
 

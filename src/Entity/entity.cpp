@@ -28,7 +28,11 @@ int Entity::posY() const {
   return this->_posY;
 }
 
-bool Entity::isInfective() const {
+float Entity::baseSpreadChance() const {
+  return this->_virusSpreadChance;
+}
+
+bool Entity::infective() const {
   return this->_infective;
 }
 
@@ -60,7 +64,7 @@ void Entity::dayLoop() {
   if (
     this->_infective &&
     this->_daysSinceLastInfection > 10 &&
-    AI::chanceCheck(this->_virusBaseResistance)
+    AI::chanceCheck(this->_virusResistance)
   ) {
     this->_infective = false;
   }
@@ -91,7 +95,7 @@ bool Entity::tryInfect() {
 
   // Do infect if never infected before. Also do infect if more than 2 months
   // have passed since last infection. Infection is still affected by chance.
-  if (AI::chanceCheck(this->_baseInfectionChance)) {
+  if (AI::chanceCheck(this->_infectionChance)) {
     this->_daysSinceLastInfection = 1;
     return this->_infective = true;
   }

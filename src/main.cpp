@@ -24,17 +24,24 @@ int main() {
   std::vector<Entity> _e;
   _e.reserve(1000);
   for (int i = 0; i < 1000; i++)   {
-    int _d = AI::randInt(0, 140);
     _e.emplace_back(i, AI::randInt(100, 700), AI::randInt(100, 700), AI::randomAi);
-    _e[i].daysInfected = _d > 120 ? 1 : 0;
   }
-  World world(800, 800, _e);
+  for (int i = 0; i < 100; i++) {
+    _e[i].tryInfect();
+  }
 
+  World world(800, 800, _e);
+  bool draw = true;
   while (window.isOpen()) {
     sf::Event event{};
     while (window.pollEvent(event)) {
-      if (event.type == sf::Event::Closed)
+      if (event.type == sf::Event::Closed) {
         window.close();
+      }
+
+      if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::D) {
+        draw = !draw;
+      }
     }
 
     //window.clear();
@@ -45,12 +52,13 @@ int main() {
       auto e = &world.entities[i];
       //printf("entity %d is at pos x:%d, y:%d", i, e->posX(), e->posY());
       _entities[i].position = sf::Vector2f(e->posX(), e->posY());
-      _entities[i].color = e->daysInfected > 0 ? sf::Color::Red : sf::Color::White;
+      _entities[i].color = e->infective() ? sf::Color::Red : sf::Color::White;
     }
 
-    window.draw(_entities);
-
-    window.display();
+    if (draw) {
+      window.draw(_entities);
+      window.display();
+    }
   }
 
 
