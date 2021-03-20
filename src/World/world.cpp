@@ -1,8 +1,7 @@
 #include "world.hpp"
 #include "ai.hpp"
 
-#include <utility>
-
+// Loops ///////////////////////////////////////////////////////////////////////
 void World::_entityPreLoop(Entity &entity) {
   // If entity is in a valid position, update board
   if (isInside(entity)) {
@@ -44,6 +43,51 @@ void World::_entityPostLoop(Entity &entity) {
   }
 }
 
+void World::_dayLoop() {
+  ++(this->_daysPassed);
+  this->_minutesPassed = 0;
+
+  int contagiati = 0;
+  for (auto &entity : this->entities) {
+    entity.dayLoop();
+
+    if (entity.infective()) {
+      contagiati++;
+    }
+  }
+
+  printf("New day! %d\n", this->_daysPassed);
+  printf("Sani: %d, Contagiati: %d\n", this->entities.size() - contagiati, contagiati);
+}
+
+void World::loop() {
+  ++(this->_minutesPassed);
+
+  // Loop every entity and update position on _map array
+  for (auto &entity : this->entities) {
+    this->_entityPreLoop(entity);
+    entity.loop();
+    this->_entityPostLoop(entity);
+  }
+
+  // For each entity in tile, spread infection. Note that active tiles are the
+  // One where at least one infected person exists, for now.
+  // Also note that an entity must succeed a spread check for a tile to
+  // be considered active
+  for (auto &tile : this->_activeTiles) {
+    for (auto &entityPtr : this->_map[tile.x][tile.y].entities) {
+      entityPtr->tryInfect();
+    }
+  }
+
+  // Execute next day logic (Must be called last)
+  if (this->_minutesPassed >= MINUTES_IN_A_DAY) {
+    return this->_dayLoop();
+  }
+}
+
+
+// Constructors ////////////////////////////////////////////////////////////////
 World::World(int width, int height)
   : _width{width}
   , _height(height)
@@ -77,53 +121,10 @@ World::World(int width, int height, int entityCount)
   }
 }
 
+// Methods /////////////////////////////////////////////////////////////////////
 bool World::isInside(const Entity &entity) const {
   const int posX = entity.posX();
   const int posY = entity.posY();
 
   return posX < this->_width && posX >= 0 && posY < this->_height && posY >= 0;
 }
-
-void World::loop() {
-  ++(this->_minutesPassed);
-
-  // Loop every entity and update position on _map array
-  for (auto &entity : this->entities) {
-    this->_entityPreLoop(entity);
-    entity.loop();
-    this->_entityPostLoop(entity);
-  }
-
-  // For each entity in tile, spread infection. Note that active tiles are the
-  // One where at least one infected person exists, for now.
-  // Also note that an entity must succeed a spread check for a tile to
-  // be considered active
-  for (auto &tile : this->_activeTiles) {
-    for (auto &entityPtr : this->_map[tile.x][tile.y].entities) {
-      entityPtr->tryInfect();
-    }
-  }
-
-  // Execute next day logic (Must be called last)
-  if (this->_minutesPassed >= MINUTES_IN_A_DAY) {
-    return this->_nextDay();
-  }
-}
-
-void World::_nextDay() {
-  ++(this->_daysPassed);
-  this->_minutesPassed = 0;
-
-  int contagiati = 0;
-  for (auto &entity : this->entities) {
-    entity.dayLoop();
-
-    if (entity.infective()) {
-      contagiati++;
-    }
-  }
-
-  printf("New day!\n");
-  printf("Sani: %d, Contagiati: %d\n", this->entities.size() - contagiati, contagiati);
-}
-

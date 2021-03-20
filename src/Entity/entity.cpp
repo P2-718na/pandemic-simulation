@@ -85,10 +85,10 @@ void Entity::moveTo(int destX, int destY) {
 bool Entity::tryInfect() {
   // Do not infect if already infected or if too few time has passed since
   // last infection.
-  // Todo move 60 days to config.
+  // Todo move 30 days to config.
   if (
     this->_infective ||
-    (this->_daysSinceLastInfection < 60 && this->_daysSinceLastInfection != 0)
+    (this->_daysSinceLastInfection < 30 && this->_daysSinceLastInfection != 0)
   ) {
     return false;
   }

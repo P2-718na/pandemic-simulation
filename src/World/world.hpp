@@ -1,6 +1,4 @@
 #pragma once
-#include <vector>
-#include <unordered_map>
 #include <unordered_set>
 
 #include "entity.hpp"
@@ -44,19 +42,22 @@ class World {
   std::unordered_set<Coords, CoordsHasher> _activeTiles;
 
   // Todo there should be some error management here
+  // Loops /////////////////////////////////////////////////////////////////////
   void _entityPreLoop(Entity &entity);
   void _entityPostLoop(Entity &entity);
-  void _nextDay();
+  void _dayLoop();
 
  public:
   // todo decide if this should be public or private
   std::vector<Entity> entities;
+
+  // Constructors //////////////////////////////////////////////////////////////
   //World();
   World(int width, int height);
   World(int width, int height, std::vector<Entity> &entities);
+  World(int width, int height, int entityCount); //this is gonna be removed most likely
 
-  World(int width, int height, int entityCount);
-
+  // Methods ///////////////////////////////////////////////////////////////////
   bool isInside(const Entity &entity) const;
   void loop();
 };
