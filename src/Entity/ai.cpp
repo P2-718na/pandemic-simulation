@@ -1,4 +1,5 @@
 #include "ai.hpp"
+#include <cstdlib>
 
 //todo check this
 int AI::randInt(int min, int max) {

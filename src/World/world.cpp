@@ -119,5 +119,16 @@ void World::_nextDay() {
       entity.daysInfected++;
     }
   }
+
+  int contagiati = 0;
+  for (auto &entity : this->entities) {
+    if (entity.daysInfected > 14) {
+
+    } else if (entity.daysInfected > 0) {
+      contagiati++;
+    }
+  }
+
+  printf("Sani: %d, Contagiati: %d\n", this->entities.size() - contagiati, contagiati);
 }
 
