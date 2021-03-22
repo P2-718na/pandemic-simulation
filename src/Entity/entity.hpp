@@ -11,7 +11,7 @@ class Entity {
 
   // Ai for next() calls
   // todo maybe change in queue system?
-  void (*_nextAI)(Entity*);
+  void (*_nextAI)(Entity*, int);
 
   // Affects virus symptoms and recovery time
   float _virusResistance{.9};
@@ -33,8 +33,11 @@ class Entity {
 
  public:
   // Constructors //////////////////////////////////////////////////////////////
+  // Todo Pathfinder will be map-dependant. It will need to be passed by
+  //  constructor. Also be sure to pass map by referende.
+  //  and implement pathfinder reset method.
   Entity(int uid, int posX, int posY);
-  Entity(int uid, int posX, int posY, void (*nextAI)(Entity*));
+  Entity(int uid, int posX, int posY, void (*nextAI)(Entity*, int));
 
   // Accessors /////////////////////////////////////////////////////////////////
   int uid() const;
@@ -46,7 +49,7 @@ class Entity {
 
   // Methods ///////////////////////////////////////////////////////////////////
   // Entity loop, must be run every game loop
-  void loop();
+  void loop(int time = 0);
   // Entity day loop, must be run every day
   void dayLoop();
 
@@ -55,6 +58,12 @@ class Entity {
 
   // Go home and stay quarantined
   void goHome();
+  // Todo implement methods like goHome(), goWork(), goParty() for AI to call.
+  //  The only class to have access to map should be Pathfinder, Entity will
+  //  only have access to the coords of these places (or to a set of coords)
+  //  and AI will only have access to methods to go to these places.
+  //  AI will also have access to time and will be able to specify additional
+  //  path metadata, like "fastPath, publicTransport..."
 
   // Try to infect this entity. Affected by _infectionBaseResistance
   // and _daysSinceLastInfection

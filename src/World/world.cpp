@@ -65,7 +65,7 @@ void World::loop() {
   // Loop every entity and update position on _map array
   for (auto &entity : this->entities) {
     this->_entityPreLoop(entity);
-    entity.loop();
+    entity.loop(this->_minutesPassed);
     this->_entityPostLoop(entity);
   }
 

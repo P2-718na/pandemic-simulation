@@ -9,9 +9,9 @@ int AI::randInt(int min, int max) {
   return rand() % (max - min) + min;
 }
 
-void AI::nullAi(Entity* _this) {}
+void AI::nullAi(Entity* _this, int time) {}
 
-void AI::randomAi(Entity* _this) {
+void AI::randomAi(Entity* _this, int time) {
   int x, y;
   x = randInt(100, 700);
   y = randInt(100, 700);

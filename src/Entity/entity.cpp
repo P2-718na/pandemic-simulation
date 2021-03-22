@@ -6,10 +6,10 @@ Entity::Entity(int uid, int posX, int posY)
   : _uid{uid}
   , _posX{posX}
   , _posY{posY}
-  , _nextAI(AI::nullAi)
+  , _nextAI{AI::nullAi}
 {}
 
-Entity::Entity(int uid, int posX, int posY, void (*nextAI)(Entity*))
+Entity::Entity(int uid, int posX, int posY, void (*nextAI)(Entity*, int))
   : Entity(uid, posX, posY)
 {
   this->_nextAI = nextAI;
@@ -42,7 +42,7 @@ bool Entity::quarantined() const {
 
 // Loops ///////////////////////////////////////////////////////////////////////
 // NOTICE this can't be moved to AI since it calls private methods.
-void Entity::loop() {
+void Entity::loop(int time) {
   switch (this->_status) {
     case ES::pathing:
       if (!this->_pathfinder.isArrived()) {
@@ -55,7 +55,7 @@ void Entity::loop() {
       break;
 
     case ES::still:
-      this->_nextAI(this);
+      this->_nextAI(this, time);
       break;
 
     // Quarantine status gets applied only when person is already home

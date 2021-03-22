@@ -1,8 +1,12 @@
 #include "entity.hpp"
 
 struct AI {
+  // Utils /////////////////////////////////////////////////////////////////////
   static int randInt(int min, int max);
-  static void nullAi(Entity* _this);
-  static void randomAi(Entity* _this);
   static bool chanceCheck(float chance);
+
+  // Static AI /////////////////////////////////////////////////////////////////
+  static void nullAi(Entity* _this, int time = 0);
+  static void randomAi(Entity* _this, int time = 0);
+
 };
