@@ -126,6 +126,16 @@ int World::time() const {
   return this->_minutesPassed;
 }
 
+std::pair<int, int> World::randomWalkCoords() {
+  return {500, 500}; //todo
+}
+std::pair<int, int> World::randomShopCoords() {
+  return {500, 500}; //todo
+}
+std::pair<int, int> World::randomPartyCoords() {
+  return {500, 500}; //todo
+}
+
 // Methods /////////////////////////////////////////////////////////////////////
 bool World::isInside(const Entity &entity) const {
   const int posX = entity.posX();

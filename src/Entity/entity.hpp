@@ -9,7 +9,7 @@ typedef EntityStatus ES;
 
 class Entity {
   // Todo check this is set before doing anything
-  IWorld* _parent{};
+  IWorld* _world{};
   int _uid;
   int _posX;
   int _posY;
@@ -33,15 +33,16 @@ class Entity {
   Pathfinder _pathfinder{};
   EntityStatus _status{still};
 
-  // Home coordinates
+  // Entity-based POI Coordinates
   std::pair<int, int> _homeLocation{-10, -10};
+  std::pair<int, int> _workLocation{-10, -10};
+  std::pair<int, int> _schoolLocation{-10, -10};
 
  public:
   // Constructors //////////////////////////////////////////////////////////////
   // Todo Pathfinder will be map-dependant. It will need to be passed by
   //  constructor. Also be sure to pass map by referende.
   //  and implement pathfinder reset method.
-  // Todo abstract base class stuff
   Entity(int uid, int posX, int posY);
   Entity(
     int uid,
@@ -59,25 +60,29 @@ class Entity {
   bool infective() const;
   bool quarantined() const;
 
-  // Methods ///////////////////////////////////////////////////////////////////
+  // Loops /////////////////////////////////////////////////////////////////////
   // Entity loop, must be run every game loop
   void loop();
   // Entity day loop, must be run every day
   void dayLoop();
 
+  // Methods ///////////////////////////////////////////////////////////////////
   // Load path to destination
   void moveTo(int destX, int destY);
+  void moveTo(const std::pair<int, int> &destination);
 
-  void goWork();
-  void goHome();
-  void goShopping();
-  void goParty();
   // Todo implement methods like goHome(), goWork(), goParty() for AI to call.
   //  The only class to have access to map should be Pathfinder, Entity will
   //  only have access to the coords of these places (or to a set of coords)
   //  and AI will only have access to methods to go to these places.
   //  AI will also have access to time and will be able to specify additional
   //  path metadata, like "fastPath, publicTransport..."
+  void goHome(); //todo quarantine logic
+  void goWork();
+  void goSchool();
+  void goWalk();
+  void goShop();
+  void goParty();
 
   // Try to infect this entity. Affected by _infectionBaseResistance
   // and _daysSinceLastInfection

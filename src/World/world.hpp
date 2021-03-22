@@ -40,6 +40,11 @@ class World : IWorld{
   // Accessors /////////////////////////////////////////////////////////////////
   int time() const final;
 
+  // todo implement variation for range (maybe just on random walk?)
+  std::pair<int, int> randomWalkCoords() final;
+  std::pair<int, int> randomShopCoords() final;
+  std::pair<int, int> randomPartyCoords() final;
+
   // Methods ///////////////////////////////////////////////////////////////////
   bool isInside(const Entity &entity) const;
   void loop();

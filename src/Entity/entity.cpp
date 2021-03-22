@@ -17,7 +17,7 @@ Entity::Entity(int uid, int posX, int posY, void (*nextAI)(Entity*, int))
 
 // Accessors ///////////////////////////////////////////////////////////////////
 void Entity::setParent(IWorld *parent) {
-  this->_parent = parent;
+  this->_world = parent;
 }
 
 int Entity::uid() const {
@@ -59,7 +59,7 @@ void Entity::loop() {
       break;
 
     case ES::still:
-      this->_nextAI(this, _parent->time());
+      this->_nextAI(this, _world->time());
       break;
 
     // Quarantine status gets applied only when person is already home
@@ -111,9 +111,27 @@ void Entity::moveTo(int destX, int destY) {
 
   this->_status = pathing;
 }
+void Entity::moveTo(const std::pair<int, int> &destination) {
+  return this->moveTo(destination.first, destination.second);
+}
 
 void Entity::goHome() {
-  this->moveTo(this->_homeLocation.first, this->_homeLocation.second);
+  return this->moveTo(this->_homeLocation);
+}
+void Entity::goWork() {
+  return this->moveTo(this->_workLocation);
+}
+void Entity::goSchool() {
+  return this->moveTo(this->_schoolLocation);
+}
+void Entity::goWalk() {
+  return this->moveTo(this->_world->randomWalkCoords());
+}
+void Entity::goShop() {
+  return this->moveTo(this->_world->randomShopCoords());
+}
+void Entity::goParty() {
+  return this->moveTo(this->_world->randomPartyCoords());
 }
 
 bool Entity::tryInfect() {
