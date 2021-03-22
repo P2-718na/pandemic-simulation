@@ -1,7 +1,8 @@
 #pragma once
 #include "pathfinder.hpp"
 
-enum EntityStatus { still, pathing }; //dead
+enum EntityStatus { still, pathing, quarantined }; //dead
+typedef EntityStatus ES;
 
 class Entity {
   int _uid;
@@ -21,10 +22,14 @@ class Entity {
   // Base chance to get infected by virus spread
   float _infectionChance{.8};
 
+  int _daysSinceLastInfection{0};
+  bool _quarantined{false};
+  bool _infective{false};
   Pathfinder _pathfinder{};
   EntityStatus _status{still};
-  int _daysSinceLastInfection{0};
-  bool _infective{false};
+
+  // Home coordinates
+  std::pair<int, int> _homeLocation{-10, -10};
 
  public:
   // Constructors //////////////////////////////////////////////////////////////
@@ -35,8 +40,9 @@ class Entity {
   int uid() const;
   int posX() const;
   int posY() const;
-  float baseSpreadChance() const;
+  float virusSpreadChance() const;
   bool infective() const;
+  bool quarantined() const;
 
   // Methods ///////////////////////////////////////////////////////////////////
   // Entity loop, must be run every game loop
@@ -46,6 +52,9 @@ class Entity {
 
   // Load path to destination
   void moveTo(int destX, int destY);
+
+  // Go home and stay quarantined
+  void goHome();
 
   // Try to infect this entity. Affected by _infectionBaseResistance
   // and _daysSinceLastInfection

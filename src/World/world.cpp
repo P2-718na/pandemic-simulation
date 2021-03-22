@@ -29,7 +29,7 @@ void World::_entityPostLoop(Entity &entity) {
     ++(currentTile->entityCount);
     if (
       currentTile->entityCount > 1 && entity.infective() &&
-      AI::chanceCheck(entity.baseSpreadChance())
+      AI::chanceCheck(entity.virusSpreadChance())
     ) {
       this->_activeTiles.push_back(&_map[entity.posX()][entity.posY()]);
     }

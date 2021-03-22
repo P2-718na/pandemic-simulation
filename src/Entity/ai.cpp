@@ -16,6 +16,10 @@ void AI::randomAi(Entity* _this) {
   x = randInt(100, 700);
   y = randInt(100, 700);
 
+  if (_this->quarantined()) {
+    return _this->goHome();
+  }
+
   _this->moveTo(x, y);
 }
 

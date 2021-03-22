@@ -28,7 +28,7 @@ int Entity::posY() const {
   return this->_posY;
 }
 
-float Entity::baseSpreadChance() const {
+float Entity::virusSpreadChance() const {
   return this->_virusSpreadChance;
 }
 
@@ -36,11 +36,15 @@ bool Entity::infective() const {
   return this->_infective;
 }
 
-// Methods /////////////////////////////////////////////////////////////////////
+bool Entity::quarantined() const {
+  return this->_quarantined;
+}
+
+// Loops ///////////////////////////////////////////////////////////////////////
 // NOTICE this can't be moved to AI since it calls private methods.
 void Entity::loop() {
   switch (this->_status) {
-    case pathing:
+    case ES::pathing:
       if (!this->_pathfinder.isArrived()) {
         std::pair<int, int> nextStep = this->_pathfinder.step();
         this->_posX = nextStep.first;
@@ -50,9 +54,13 @@ void Entity::loop() {
       }
       break;
 
-    case still:
+    case ES::still:
       this->_nextAI(this);
       break;
+
+    // Quarantine status gets applied only when person is already home
+    case ES::quarantined:
+      // Stay still
 
     default:
       break;
@@ -60,13 +68,30 @@ void Entity::loop() {
 }
 
 void Entity::dayLoop() {
+  // todo reword these if, they can be optimized
+  // Change quarantined status. This might need to be moved
+  if (
+    this->infective() &&
+    this->_daysSinceLastInfection > 2
+    ) {
+    this->_quarantined = true;
+  }
+
   // Todo add 10 days min infection time to config
   if (
-    this->_infective &&
+    this->infective() &&
     this->_daysSinceLastInfection > 10 &&
     AI::chanceCheck(this->_virusResistance)
   ) {
     this->_infective = false;
+  }
+
+  if (
+    this->_daysSinceLastInfection >= 14 &&
+    this->_daysSinceLastInfection % 7 == 0 &&
+    !this->infective()
+  ) {
+    this->_quarantined = false;
   }
 
   if (this->_daysSinceLastInfection != 0) {
@@ -74,12 +99,17 @@ void Entity::dayLoop() {
   }
 }
 
+// Methods /////////////////////////////////////////////////////////////////////
 // this might need to be a bool in the future, since some paths might be not
 // available
 void Entity::moveTo(int destX, int destY) {
   this->_pathfinder = Pathfinder{this->_posX, this->_posY, destX, destY};
 
   this->_status = pathing;
+}
+
+void Entity::goHome() {
+  this->moveTo(this->_homeLocation.first, this->_homeLocation.second);
 }
 
 bool Entity::tryInfect() {
