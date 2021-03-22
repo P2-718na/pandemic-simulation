@@ -1,5 +1,5 @@
 #pragma once
-#include <unordered_set>
+#include <vector>
 
 #include "entity.hpp"
 
@@ -8,7 +8,7 @@
 
 struct Tile {
   float entityCount{};
-  std::unordered_set<Entity*> entities;
+  std::vector<Entity*> entities;
 };
 
 class World {
@@ -18,7 +18,7 @@ class World {
   int _minutesPassed{0};
 
   std::vector<std::vector<Tile>> _map;
-  std::unordered_set<Tile*> _activeTiles;
+  std::vector<Tile*> _activeTiles;
 
   // Todo there should be some error management here
   // Loops /////////////////////////////////////////////////////////////////////

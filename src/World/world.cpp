@@ -8,11 +8,9 @@ void World::_entityPreLoop(Entity &entity) {
     // get tile the entity is in pre-loop
     Tile *currentTile = &this->_map[entity.posX()][entity.posY()];
 
-    // remove from map (do not clear same tile twice).
-    if (!currentTile->entities.empty()) {
-      currentTile->entities.clear();
-      currentTile->entityCount = 0;
-    }
+    // remove from map.
+    currentTile->entities.clear();
+    currentTile->entityCount = 0;
   }
 }
 
@@ -31,11 +29,11 @@ void World::_entityPostLoop(Entity &entity) {
       currentTile->entityCount > 1 && entity.infective() &&
       AI::chanceCheck(entity.baseSpreadChance())
     ) {
-      this->_activeTiles.insert(&_map[entity.posX()][entity.posY()]);
+      this->_activeTiles.push_back(&_map[entity.posX()][entity.posY()]);
     }
 
     // add in map
-    currentTile->entities.insert(&entity);
+    currentTile->entities.push_back(&entity);
   }
 }
 
