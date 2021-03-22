@@ -53,7 +53,7 @@ void World::_dayLoop() {
   }
 
   printf("New day! %d\n", this->_daysPassed);
-  printf("Sani: %d, Contagiati: %d\n", this->entities.size() - contagiati, contagiati);
+  printf("Sani: %ld, Contagiati: %d\n", this->entities.size() - contagiati, contagiati);
 }
 
 void World::loop() {
