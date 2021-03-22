@@ -3,20 +3,16 @@
 
 // Loops ///////////////////////////////////////////////////////////////////////
 void World::_entityPreLoop(Entity &entity) {
-  // If entity is in a valid position, update board
+  // If entity is in a valid position, clear it from the board
   if (isInside(entity)) {
     // get tile the entity is in pre-loop
     Tile *currentTile = &this->_map[entity.posX()][entity.posY()];
 
-    // decrease its value
-    // and remove from active tiles if empty.
-    // Count tile with only one entity as inactive, for now
-    if (--(currentTile->entityCount) <= 1) {
-      this->_activeTiles.erase({entity.posX(), entity.posY()});
+    // remove from map (do not clear same tile twice).
+    if (!currentTile->entities.empty()) {
+      currentTile->entities.clear();
+      currentTile->entityCount = 0;
     }
-
-    // remove from map
-    currentTile->entities.erase(&entity);
   }
 }
 
@@ -35,7 +31,7 @@ void World::_entityPostLoop(Entity &entity) {
       currentTile->entityCount > 1 && entity.infective() &&
       AI::chanceCheck(entity.baseSpreadChance())
     ) {
-      this->_activeTiles.insert({entity.posX(), entity.posY()});
+      this->_activeTiles.insert(&_map[entity.posX()][entity.posY()]);
     }
 
     // add in map
@@ -63,6 +59,9 @@ void World::_dayLoop() {
 void World::loop() {
   ++(this->_minutesPassed);
 
+  // Empty _activeTiles, since they will be regenerated.
+  this->_activeTiles.clear();
+
   // Loop every entity and update position on _map array
   for (auto &entity : this->entities) {
     this->_entityPreLoop(entity);
@@ -74,8 +73,8 @@ void World::loop() {
   // One where at least one infected person exists, for now.
   // Also note that an entity must succeed a spread check for a tile to
   // be considered active
-  for (auto &tile : this->_activeTiles) {
-    for (auto &entityPtr : this->_map[tile.x][tile.y].entities) {
+  for (auto &tilePtr : this->_activeTiles) {
+    for (auto &entityPtr : tilePtr->entities) {
       entityPtr->tryInfect();
     }
   }
