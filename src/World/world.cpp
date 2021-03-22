@@ -1,3 +1,5 @@
+#include <iostream>
+
 #include "world.hpp"
 #include "ai.hpp"
 
