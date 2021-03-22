@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 
+#include "iworld.hpp"
 #include "entity.hpp"
 
 // todo config file
@@ -11,7 +12,7 @@ struct Tile {
   std::vector<Entity*> entities;
 };
 
-class World {
+class World : IWorld{
   int _width;
   int _height;
   int _daysPassed{0};
@@ -35,6 +36,9 @@ class World {
   World(int width, int height);
   World(int width, int height, std::vector<Entity> &entities);
   World(int width, int height, int entityCount); //this is gonna be removed most likely
+
+  // Accessors /////////////////////////////////////////////////////////////////
+  int time() const final;
 
   // Methods ///////////////////////////////////////////////////////////////////
   bool isInside(const Entity &entity) const;

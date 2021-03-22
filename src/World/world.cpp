@@ -65,7 +65,7 @@ void World::loop() {
   // Loop every entity and update position on _map array
   for (auto &entity : this->entities) {
     this->_entityPreLoop(entity);
-    entity.loop(this->_minutesPassed);
+    entity.loop();
     this->_entityPostLoop(entity);
   }
 
@@ -107,6 +107,7 @@ World::World(int width, int height, std::vector<Entity> &entities)
   // this must use this->.
   // Initialize map with entities
   for (auto &entity : this->entities) {
+    entity.setParent(this);
     this->_entityPostLoop(entity);
   }
 }
@@ -118,6 +119,11 @@ World::World(int width, int height, int entityCount)
   for (int i = 0; i < entityCount; i++) {
     this->entities.emplace_back(i, 0, 0, AI::randomAi);
   }
+}
+
+// Accessors ///////////////////////////////////////////////////////////////////
+int World::time() const {
+  return this->_minutesPassed;
 }
 
 // Methods /////////////////////////////////////////////////////////////////////
