@@ -36,11 +36,11 @@ bool Pathfinder::_calcPath() {
       --currentY;
     }
 
-    this->_path.push_back(std::vector<int>{currentX, currentY});
+    this->_path.emplace_back(currentX, currentY);
   }
 
   // add last node
-  this->_path.push_back(std::vector<int>{this->_endX, this->_endY});
+  this->_path.emplace_back(this->_endX, this->_endY);
 
   return true;
 }
@@ -65,11 +65,11 @@ void Pathfinder::init(
   return this->_init(startX, startY, endX, endY);
 }
 
-std::vector<std::vector<int>> Pathfinder::getPath() const {
+std::vector<std::pair<int, int>> Pathfinder::getPath() const {
   return this->_path;
 }
 
-std::vector<int> Pathfinder::step() {
+std::pair<int, int> Pathfinder::step() {
   if (this->_step == -1) {
     throw std::runtime_error("Pathfinder not initialised.");
   }

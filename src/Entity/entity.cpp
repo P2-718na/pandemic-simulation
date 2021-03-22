@@ -42,9 +42,9 @@ void Entity::loop() {
   switch (this->_status) {
     case pathing:
       if (!this->_pathfinder.isArrived()) {
-        std::vector<int> nextStep = this->_pathfinder.step();
-        this->_posX = nextStep[0];
-        this->_posY = nextStep[1];
+        std::pair<int, int> nextStep = this->_pathfinder.step();
+        this->_posX = nextStep.first;
+        this->_posY = nextStep.second;
       } else {
         this->_status = still;
       }
