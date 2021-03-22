@@ -7,6 +7,14 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 FIND_PACKAGE(SFML 2.5 COMPONENTS graphics window audio REQUIRED)
 
+INCLUDE_DIRECTORIES(
+        lab PUBLIC
+        "${PROJECT_SOURCE_DIR}/src"
+        "${PROJECT_SOURCE_DIR}/src/Pathfinder"
+        "${PROJECT_SOURCE_DIR}/src/Entity"
+        "${PROJECT_SOURCE_DIR}/src/World"
+)
+
 ADD_SUBDIRECTORY(src)
 ADD_SUBDIRECTORY(tests)
 
