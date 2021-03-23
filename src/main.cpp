@@ -15,10 +15,6 @@ int main() {
   sf::Texture backgroundTexture;
   sf::Sprite background;
 
-  backgroundTexture.loadFromFile("./test.bmp");
-  background.setTexture(backgroundTexture);
-  background.setScale(2, 2);
-
   sf::VertexArray _entities(sf::Points, 5000);
 
   std::vector<Entity> _e;
@@ -30,7 +26,12 @@ int main() {
     _e[i].tryInfect();
   }
 
-  World world(800, 800, _e);
+  World world("background.sample.bmp", _e);
+
+  backgroundTexture.loadFromImage(world.background());
+  background.setTexture(backgroundTexture);
+  background.setScale(2, 2);
+
   bool draw = true;
   while (window.isOpen()) {
     sf::Event event{};

@@ -85,31 +85,55 @@ void World::loop() {
   }
 }
 
+// Private methods /////////////////////////////////////////////////////////////
+void World::_initMap() {
+  this->_map =
+    std::vector<std::vector<Tile>>(
+      this->_width,
+      std::vector<Tile>(this->_height, {0})
+    );
+}
+
+void World::_initEntities(std::vector<Entity> &entities) {
+  // Original entities vector will be cleared.
+  this->entities = std::move(entities);
+
+  // Initialize map with entities. Note that this-> is required here.
+  for (auto &entity : this->entities) {
+    entity.setParent(this);
+  }
+}
+
+void World::_parseImage() {
+  for (int y = 0; y < this->_height; ++y) {
+    for (int x = 0; x < this->_width; ++x ) {
+      sf::Color color = this->_background.getPixel(x, y);
+
+      // Todo actual parsing
+      // sample, for now
+      if (color.r == 0x0 && color.g == 0xff && color.b == 0x0) {
+        this->_walkCoords.emplace_back(x, y);
+      } else if (color.r == 0xff && color.g == 0xFF && color.b == 0x0) {
+        this->_shopCoords.emplace_back(x, y);
+      } else if (color.r == 0xff && color.g == 0x0 && color.b == 0xff) {
+        this->_partyCoords.emplace_back(x, y);
+      }
+    }
+  }
+}
 
 // Constructors ////////////////////////////////////////////////////////////////
 World::World(int width, int height)
   : _width{width}
   , _height(height)
-  , _map{
-    std::vector<std::vector<Tile>>(
-      width,
-      std::vector<Tile>(height, {0})
-    )
-  }
-{}
+{
+  this->_initMap();
+}
 
 World::World(int width, int height, std::vector<Entity> &entities)
   : World(width, height)
 {
-  this->entities = std::move(entities); //todo controlla sta roba
-
-  // move removes entities from original vector.
-  // this must use this->.
-  // Initialize map with entities
-  for (auto &entity : this->entities) {
-    entity.setParent(this);
-    this->_entityPostLoop(entity);
-  }
+  this->_initEntities(entities);
 }
 
 World::World(int width, int height, int entityCount)
@@ -121,9 +145,28 @@ World::World(int width, int height, int entityCount)
   }
 }
 
+World::World(
+  const std::string &backgroundImagePath,
+  std::vector<Entity> &entities
+) {
+  if (!this->_background.loadFromFile(backgroundImagePath)) {
+    throw std::runtime_error("Cannot load image");
+  };
+
+  this->_width = this->_background.getSize().x;
+  this->_height = this->_background.getSize().y;
+  this->_initMap();
+  this->_initEntities(entities);
+  this->_parseImage();
+}
+
 // Accessors ///////////////////////////////////////////////////////////////////
 int World::time() const {
   return this->_minutesPassed;
+}
+
+sf::Image World::background() {
+  return this->_background;
 }
 
 std::pair<int, int> World::randomWalkCoords() {

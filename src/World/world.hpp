@@ -1,5 +1,7 @@
 #pragma once
 #include <vector>
+#include <string>
+#include <SFML/Graphics/Image.hpp>
 
 #include "iworld.hpp"
 #include "entity.hpp"
@@ -18,14 +20,24 @@ class World : IWorld{
   int _daysPassed{0};
   int _minutesPassed{0};
 
+  sf::Image _background;
   std::vector<std::vector<Tile>> _map;
   std::vector<Tile*> _activeTiles;
+
+  std::vector<std::pair<int, int>> _walkCoords;
+  std::vector<std::pair<int, int>> _shopCoords;
+  std::vector<std::pair<int, int>> _partyCoords;
 
   // Todo there should be some error management here
   // Loops /////////////////////////////////////////////////////////////////////
   void _entityPreLoop(Entity &entity);
   void _entityPostLoop(Entity &entity);
   void _dayLoop();
+
+  // Private methods ///////////////////////////////////////////////////////////
+  void _initMap();
+  void _initEntities(std::vector<Entity> &entities);
+  void _parseImage();
 
  public:
   // todo decide if this should be public or private
@@ -37,8 +49,12 @@ class World : IWorld{
   World(int width, int height, std::vector<Entity> &entities);
   World(int width, int height, int entityCount); //this is gonna be removed most likely
 
+  World(const std::string &backgroundImagePath, std::vector<Entity> &entities);
+
+
   // Accessors /////////////////////////////////////////////////////////////////
   int time() const final;
+  sf::Image background();
 
   // todo implement variation for range (maybe just on random walk?)
   std::pair<int, int> randomWalkCoords() final;
