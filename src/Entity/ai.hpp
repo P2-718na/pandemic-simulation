@@ -8,5 +8,5 @@ struct AI {
   // Static AI /////////////////////////////////////////////////////////////////
   static void nullAi(Entity* _this, int time = 0);
   static void randomAi(Entity* _this, int time = 0);
-
+  static void testAI(Entity* _this, int time);
 };

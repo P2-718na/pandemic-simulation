@@ -7,7 +7,17 @@
 #include "entity.hpp"
 
 // todo config file
-#define MINUTES_IN_A_DAY 1440
+#define MINUTES_IN_A_DAY 9000
+
+enum day {
+  monday,
+  tuesday,
+  wednesday,
+  thursday,
+  friday,
+  saturday,
+  sunday
+};
 
 struct Tile {
   float entityCount{};
@@ -62,6 +72,7 @@ class World : IWorld{
   std::pair<int, int> randomPartyCoords() final;
 
   // Methods ///////////////////////////////////////////////////////////////////
-  bool isInside(const Entity &entity) const;
   void loop();
+  bool isInside(const Entity &entity) const;
+  day weekDay() const;
 };

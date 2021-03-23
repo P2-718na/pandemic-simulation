@@ -169,14 +169,15 @@ sf::Image World::background() {
   return this->_background;
 }
 
+// FIXME these three need to be optimized
 std::pair<int, int> World::randomWalkCoords() {
-  return {500, 500}; //todo
+  return this->_walkCoords[AI::randInt(0, this->_walkCoords.size())];
 }
 std::pair<int, int> World::randomShopCoords() {
-  return {500, 500}; //todo
+  return this->_shopCoords[AI::randInt(0, this->_shopCoords.size())];
 }
 std::pair<int, int> World::randomPartyCoords() {
-  return {500, 500}; //todo
+  return this->_partyCoords[AI::randInt(0, this->_partyCoords.size())];
 }
 
 // Methods /////////////////////////////////////////////////////////////////////
@@ -185,4 +186,8 @@ bool World::isInside(const Entity &entity) const {
   const int posY = entity.posY();
 
   return posX < this->_width && posX >= 0 && posY < this->_height && posY >= 0;
+}
+
+day World::weekDay() const {
+  return (day)(this->_daysPassed % 7);
 }
