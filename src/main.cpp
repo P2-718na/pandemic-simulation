@@ -30,7 +30,7 @@ int main() {
 
   backgroundTexture.loadFromImage(world.background());
   background.setTexture(backgroundTexture);
-  background.setScale(2, 2);
+  //background.setScale(2, 2);
 
   bool draw = true;
   while (window.isOpen()) {
