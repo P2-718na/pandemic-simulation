@@ -1,4 +1,5 @@
 #include <iostream>
+#include <fstream>
 
 #include "world.hpp"
 #include "ai.hpp"
@@ -86,6 +87,7 @@ void World::loop() {
 }
 
 // Private methods /////////////////////////////////////////////////////////////
+
 void World::_initMap() {
   this->_map =
     std::vector<std::vector<Tile>>(
@@ -160,6 +162,25 @@ World::World(
   this->_parseImage();
 }
 
+World::World(
+  const std::string &backgroundImagePath,
+  const std::string &entitiesFile
+) {
+  std::vector<Entity> entities;
+
+  // fixme cleanup these two constructors
+  if (!this->_background.loadFromFile(backgroundImagePath)) {
+    throw std::runtime_error("Cannot load image");
+  };
+
+  this->_width = this->_background.getSize().x;
+  this->_height = this->_background.getSize().y;
+  this->_initMap();
+  this->parseEntities(entitiesFile, entities);
+  this->_initEntities(entities);
+  this->_parseImage();
+}
+
 // Accessors ///////////////////////////////////////////////////////////////////
 int World::time() const {
   return this->_minutesPassed;
@@ -190,4 +211,51 @@ bool World::isInside(const Entity &entity) const {
 
 day World::weekDay() const {
   return (day)(this->_daysPassed % 7);
+}
+
+// Static //////////////////////////////////////////////////////////////////////
+bool World::parseEntities(
+  const std::string &entitiesFile,
+  std::vector<Entity> &entities
+) {
+  if (!entities.empty()) {
+    return false;
+  }
+
+  std::ifstream ifs(entitiesFile);
+  std::string line;
+
+  int count = 0;
+
+  while(std::getline(ifs, line)) {
+    if (line == "[count]") {
+      if (count != 0) {
+        return false;
+      }
+
+      ifs >> count;
+      entities.reserve(count);
+      continue;
+    }
+
+    if (line == "[entity]") {
+      entities.emplace_back();
+      continue;
+    }
+
+    auto delim = line.find('=');
+    if (delim == std::string::npos) {
+      continue;
+    }
+
+    std::string key = line.substr(0, delim);
+    std::string value = line.substr(delim + 1, std::string::npos);
+    Entity &currentEntity = entities[entities.size() - 1];
+
+    if (key == "uid") {
+      currentEntity.uid(atoi(value.c_str()));
+      continue;
+    }
+  }
+  return true;
 }

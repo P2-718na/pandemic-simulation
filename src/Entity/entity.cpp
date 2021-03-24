@@ -24,6 +24,10 @@ int Entity::uid() const {
   return this->_uid;
 }
 
+int Entity::uid(int uid_) {
+  return this->_uid = uid_;
+}
+
 int Entity::posX() const {
   return this->_posX;
 }

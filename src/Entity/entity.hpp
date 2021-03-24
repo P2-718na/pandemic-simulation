@@ -1,22 +1,27 @@
 #pragma once
-#include "pathfinder.hpp"
+#include "ai.hpp"
 #include "iworld.hpp"
+#include "pathfinder.hpp"
 
 class IWorld;
 
-enum EntityStatus { still, pathing, quarantined }; //dead
+enum EntityStatus {
+  still,
+  pathing,
+  quarantined
+}; //dead
 typedef EntityStatus ES;
 
 class Entity {
   // Todo check this is set before doing anything
   IWorld* _world{};
-  int _uid;
-  int _posX;
-  int _posY;
+  int _uid{};
+  int _posX{};
+  int _posY{};
 
   // Ai for next() calls
   // todo maybe change in queue system?
-  void (*_nextAI)(Entity*, int);
+  void (*_nextAI)(Entity*, int){AI::nullAi};
 
   // Affects virus symptoms and recovery time
   float _virusResistance{.9};
@@ -43,6 +48,7 @@ class Entity {
   // Todo Pathfinder will be map-dependant. It will need to be passed by
   //  constructor. Also be sure to pass map by referende.
   //  and implement pathfinder reset method.
+  Entity() = default;
   Entity(int uid, int posX, int posY);
   Entity(
     int uid,
@@ -54,6 +60,7 @@ class Entity {
   // Accessors /////////////////////////////////////////////////////////////////
   void setParent(IWorld* parent);
   int uid() const;
+  int uid(int uid_);
   int posX() const;
   int posY() const;
   float virusSpreadChance() const;

@@ -59,7 +59,9 @@ class World : IWorld{
   World(int width, int height, std::vector<Entity> &entities);
   World(int width, int height, int entityCount); //this is gonna be removed most likely
 
+  // These two will be used. Maybe some init function would be great.
   World(const std::string &backgroundImagePath, std::vector<Entity> &entities);
+  World(const std::string &backgroundImagePath, const std::string &entitiesFile);
 
 
   // Accessors /////////////////////////////////////////////////////////////////
@@ -75,4 +77,10 @@ class World : IWorld{
   void loop();
   bool isInside(const Entity &entity) const;
   day weekDay() const;
+
+  // Static ////////////////////////////////////////////////////////////////////
+  static bool parseEntities(
+    const std::string &entitiesFile,
+    std::vector<Entity> &entities
+  );
 };

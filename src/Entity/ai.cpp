@@ -1,4 +1,5 @@
 #include "ai.hpp"
+#include "entity.hpp"
 #include <cstdlib>
 
 //todo check this
