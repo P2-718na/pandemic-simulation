@@ -26,7 +26,7 @@ int main() {
     _e[i].tryInfect();
   }
 
-  World world("background.sample.bmp", _e);
+  World world("background.sample.bmp", "entities");
 
   backgroundTexture.loadFromImage(world.background());
   background.setTexture(backgroundTexture);
