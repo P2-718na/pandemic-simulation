@@ -96,8 +96,6 @@ int main(int argc, char* argv[]) {
     ofs <<
       "[entity]\n"
       "uid=" << genTarget << "\n"
-      "posx=0\n"
-      "posy=0\n"
       "homex=0\n"
       "homey=0\n"
       "workx=0\n"

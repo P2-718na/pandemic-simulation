@@ -3,9 +3,6 @@
 
 [entity]
 uid=0
-#optional, will be initialised to home
-posx=0
-posy=0
 homex=0
 homey=0
 workx=0
@@ -17,8 +14,6 @@ ai=randomAi
 
 [entity]
 uid=1
-posx=1
-posy=1
 homex=1
 homey=1
 workx=1
