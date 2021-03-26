@@ -1,14 +1,33 @@
 #include <fstream>
 #include <iostream>
 #include <string>
+#include <vector>
+#include <SFML/Graphics/Image.hpp>
 
 #include "seeder.config.h"
 
 using namespace std;
 
-int parsed = 1;
+enum Sex {
+  male,
+  female
+};
+
+// Entity
+struct Entity {
+  int age;
+  Sex sex;
+
+};
+
+// Globals
+sf::Image background;
+vector<pair<int, int>> homeLocations;
+vector<pair<int, int>> workLocations;
+vector<pair<int, int>> schoolLocations;
 
 // Arguments
+int parsed = 1;
 int genTarget = 0;
 string mapFile = "";
 string outFile = "entities";
@@ -68,6 +87,21 @@ void parseArg(int argc, char* argv[]) {
   }
 }
 
+void parseImage() {
+  for (int y = 0; y < background.getSize().y; ++y) {
+    for (int x = 0; x < background.getSize().x; ++x ) {
+      sf::Color color = background.getPixel(x, y);
+      if (color.r == 0xff && color.g == 0xaa && color.b == 0x0) {
+        schoolLocations.emplace_back(x, y);
+      } else if (color.r == 0xff && color.g == 0xff && color.b == 0xff) {
+        homeLocations.emplace_back(x, y);
+      } else if (color.r == 0x0 && color.g == 0x0 && color.b == 0xcc) {
+        workLocations.emplace_back(x, y);
+      }
+    }
+  }
+}
+
 // 1st argument is the number of people to generate
 int main(int argc, char* argv[]) {
   ofstream ofs;
@@ -92,6 +126,12 @@ int main(int argc, char* argv[]) {
   }
 
   ofs << "[count]" << endl << genTarget << endl << endl;
+
+  background.loadFromFile(mapFile);
+  parseImage();
+
+
+
   while (genTarget --> 0) {
     ofs <<
       "[entity]\n"

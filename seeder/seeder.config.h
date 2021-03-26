@@ -1,1 +1,1 @@
-#include "entity.cpp"
+#pragma once
