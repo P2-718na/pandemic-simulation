@@ -28,7 +28,7 @@ void AI::randomAi(Entity* _this, int time) {
   _this->moveTo(x, y);
 }
 
-void AI::testAI(Entity* _this, int time) {
+void AI::testAi(Entity* _this, int time) {
   if (_this->quarantined()) {
     return _this->goHome();
   } else if (time > 7000) {

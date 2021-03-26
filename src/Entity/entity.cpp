@@ -1,3 +1,5 @@
+#include <string>
+
 #include "entity.hpp"
 #include "ai.hpp"
 
@@ -6,46 +8,43 @@ Entity::Entity(int uid, int posX, int posY)
   : _uid{uid}
   , _posX{posX}
   , _posY{posY}
-  , _nextAI{AI::nullAi}
+  , nextAi{AI::nullAi}
 {}
 
 Entity::Entity(int uid, int posX, int posY, void (*nextAI)(Entity*, int))
   : Entity(uid, posX, posY)
 {
-  this->_nextAI = nextAI;
+  this->nextAi = nextAI;
 }
 
 // Accessors ///////////////////////////////////////////////////////////////////
-void Entity::setParent(IWorld *parent) {
-  this->_world = parent;
-}
-
 int Entity::uid() const {
   return this->_uid;
 }
-
-int Entity::uid(int uid_) {
-  return this->_uid = uid_;
-}
-
 int Entity::posX() const {
   return this->_posX;
 }
-
 int Entity::posY() const {
   return this->_posY;
 }
-
-float Entity::virusSpreadChance() const {
-  return this->_virusSpreadChance;
-}
-
 bool Entity::infective() const {
   return this->_infective;
 }
-
 bool Entity::quarantined() const {
   return this->_quarantined;
+}
+
+void Entity::world(IWorld *parent) {
+  this->_world = parent;
+}
+void Entity::uid(int uid_) {
+  this->_uid = uid_;
+}
+void Entity::pos(int x, int y) {
+  // This should reset pathfinder, prolly
+
+  this->_posX = x;
+  this->_posY = y;
 }
 
 // Loops ///////////////////////////////////////////////////////////////////////
@@ -63,7 +62,7 @@ void Entity::loop() {
       break;
 
     case ES::still:
-      this->_nextAI(this, _world->time());
+      this->nextAi(this, _world->time());
       break;
 
     // Quarantine status gets applied only when person is already home
@@ -89,7 +88,7 @@ void Entity::dayLoop() {
   if (
     this->infective() &&
     this->_daysSinceLastInfection > 10 &&
-    AI::chanceCheck(this->_virusResistance)
+    AI::chanceCheck(this->virusResistance)
   ) {
     this->_infective = false;
   }
@@ -120,13 +119,13 @@ void Entity::moveTo(const std::pair<int, int> &destination) {
 }
 
 void Entity::goHome() {
-  return this->moveTo(this->_homeLocation);
+  return this->moveTo(this->homeLocation);
 }
 void Entity::goWork() {
-  return this->moveTo(this->_workLocation);
+  return this->moveTo(this->workLocation);
 }
 void Entity::goSchool() {
-  return this->moveTo(this->_schoolLocation);
+  return this->moveTo(this->workLocation);
 }
 void Entity::goWalk() {
   return this->moveTo(this->_world->randomWalkCoords());
@@ -151,10 +150,25 @@ bool Entity::tryInfect() {
 
   // Do infect if never infected before. Also do infect if more than 2 months
   // have passed since last infection. Infection is still affected by chance.
-  if (AI::chanceCheck(this->_infectionChance)) {
+  if (AI::chanceCheck(this->infectionChance)) {
     this->_daysSinceLastInfection = 1;
     return this->_infective = true;
   }
 
   return false;
+}
+
+// Static //////////////////////////////////////////////////////////////////////
+entityAi Entity::parseAi(const std::string &value) {
+  if (value == "nullAi") {
+    return AI::nullAi;
+  }
+  if (value == "randomAi") {
+    return AI::randomAi;
+  }
+  if (value == "testAi") {
+    return AI::testAi;
+  }
+
+  return AI::nullAi;
 }

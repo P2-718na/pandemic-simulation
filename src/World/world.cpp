@@ -3,6 +3,7 @@
 
 #include "world.hpp"
 #include "ai.hpp"
+#include "entity.hpp"
 
 // Loops ///////////////////////////////////////////////////////////////////////
 void World::_entityPreLoop(Entity &entity) {
@@ -30,7 +31,7 @@ void World::_entityPostLoop(Entity &entity) {
     ++(currentTile->entityCount);
     if (
       currentTile->entityCount > 1 && entity.infective() &&
-      AI::chanceCheck(entity.virusSpreadChance())
+      AI::chanceCheck(entity.virusSpreadChance)
     ) {
       this->_activeTiles.push_back(&_map[entity.posX()][entity.posY()]);
     }
@@ -101,8 +102,7 @@ void World::_initEntities(std::vector<Entity> &entities) {
   this->entities = std::move(entities);
 
   // Initialize map with entities. Note that this-> is required here.
-  for (auto &entity : this->entities) {
-    entity.setParent(this);
+  for (auto &entity : this->entities) { entity.world(this);
   }
 }
 
@@ -254,6 +254,38 @@ bool World::parseEntities(
 
     if (key == "uid") {
       currentEntity.uid(atoi(value.c_str()));
+      continue;
+    }
+    if (key == "homex") {
+      currentEntity.homeLocation.first = atoi(value.c_str());
+      continue;
+    }
+    if (key == "homey") {
+      currentEntity.homeLocation.second = atoi(value.c_str());
+      continue;
+    }
+    if (key == "workx") {
+      currentEntity.workLocation.second = atoi(value.c_str());
+      continue;
+    }
+    if (key == "worky") {
+      currentEntity.workLocation.second = atoi(value.c_str());
+      continue;
+    }
+    if (key == "virus_resistance") {
+      currentEntity.virusResistance = atof(value.c_str());
+      continue;
+    }
+    if (key == "virus_spread_chance") {
+      currentEntity.virusSpreadChance = atof(value.c_str());
+      continue;
+    }
+    if (key == "infection_chance") {
+      currentEntity.infectionChance = atof(value.c_str());
+      continue;
+    }
+    if (key == "ai") {
+      currentEntity.nextAi = Entity::parseAi(value);
       continue;
     }
   }

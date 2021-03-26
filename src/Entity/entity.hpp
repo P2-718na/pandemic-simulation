@@ -10,7 +10,9 @@ enum EntityStatus {
   pathing,
   quarantined
 }; //dead
+
 typedef EntityStatus ES;
+typedef void (*entityAi)(Entity*, int);
 
 class Entity {
   // Todo check this is set before doing anything
@@ -19,31 +21,31 @@ class Entity {
   int _posX{};
   int _posY{};
 
-  // Ai for next() calls
-  // todo maybe change in queue system?
-  void (*_nextAI)(Entity*, int){AI::nullAi};
-
-  // Affects virus symptoms and recovery time
-  float _virusResistance{.9};
-
-  // Base chance to spread virus to nearby entities
-  float _virusSpreadChance{.5};
-
-  // Base chance to get infected by virus spread
-  float _infectionChance{.8};
-
   int _daysSinceLastInfection{0};
   bool _quarantined{false};
   bool _infective{false};
   Pathfinder _pathfinder{};
   EntityStatus _status{still};
 
-  // Entity-based POI Coordinates
-  std::pair<int, int> _homeLocation{-10, -10};
-  std::pair<int, int> _workLocation{-10, -10};
-  std::pair<int, int> _schoolLocation{-10, -10};
-
  public:
+  // Ai for next() calls
+  // maybe change in queue system?
+  entityAi nextAi{AI::nullAi};
+
+  // Variables /////////////////////////////////////////////////////////////////
+  // Affects virus symptoms and recovery time
+  float virusResistance{.9};
+
+  // Base chance to spread virus to nearby entities
+  float virusSpreadChance{.5};
+
+  // Base chance to get infected by virus spread
+  float infectionChance{.8};
+
+  // Entity-based POI Coordinates
+  std::pair<int, int> homeLocation{-10, -10};
+  std::pair<int, int> workLocation{-10, -10};
+
   // Constructors //////////////////////////////////////////////////////////////
   // Todo Pathfinder will be map-dependant. It will need to be passed by
   //  constructor. Also be sure to pass map by referende.
@@ -58,14 +60,15 @@ class Entity {
   );
 
   // Accessors /////////////////////////////////////////////////////////////////
-  void setParent(IWorld* parent);
   int uid() const;
-  int uid(int uid_);
   int posX() const;
   int posY() const;
-  float virusSpreadChance() const;
   bool infective() const;
   bool quarantined() const;
+
+  void world(IWorld* parent);
+  void uid(int uid_);
+  void pos(int x, int y);
 
   // Loops /////////////////////////////////////////////////////////////////////
   // Entity loop, must be run every game loop
@@ -94,4 +97,7 @@ class Entity {
   // Try to infect this entity. Affected by _infectionBaseResistance
   // and _daysSinceLastInfection
   bool tryInfect();
+
+  // Static ////////////////////////////////////////////////////////////////////
+  static entityAi parseAi(const std::string &value);
 };

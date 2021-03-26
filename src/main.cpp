@@ -20,7 +20,8 @@ int main() {
   std::vector<Entity> _e;
   _e.reserve(5000);
   for (int i = 0; i < 5000; i++)   {
-    _e.emplace_back(i, AI::randInt(100, 700), AI::randInt(100, 700), AI::testAI);
+    _e.emplace_back(
+      i, AI::randInt(100, 700), AI::randInt(100, 700), AI::testAi);
   }
   for (int i = 0; i < 50; i++) {
     _e[i].tryInfect();
