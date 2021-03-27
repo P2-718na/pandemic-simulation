@@ -93,6 +93,7 @@ class Entity {
   void goHome(); //todo quarantine logic
   void goWork();
   void goSchool();
+  void goUni();
   void goWalk();
   void goShop();
   void goParty();

@@ -130,6 +130,9 @@ void Entity::goWork() {
 void Entity::goSchool() {
   return this->moveTo(this->workLocation);
 }
+void Entity::goUni() {
+  return this->moveTo(this->workLocation);
+}
 void Entity::goWalk() {
   return this->moveTo(this->_world->randomWalkCoords());
 }
