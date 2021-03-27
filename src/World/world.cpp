@@ -176,7 +176,7 @@ World::World(
   this->_width = this->_background.getSize().x;
   this->_height = this->_background.getSize().y;
   this->_initMap();
-  this->parseEntities(entitiesFile, entities);
+  World::parseEntities(entitiesFile, entities);
   this->_initEntities(entities);
   this->_parseImage();
 }
@@ -240,6 +240,11 @@ bool World::parseEntities(
 
     if (line == "[entity]") {
       entities.emplace_back();
+      continue;
+    }
+
+    if (line == "[infected]") {
+      entities.back().infective(true);
       continue;
     }
 

@@ -3,6 +3,8 @@
 #include "iworld.hpp"
 #include "pathfinder.hpp"
 
+#include <string>
+
 class IWorld;
 
 enum EntityStatus {
@@ -69,6 +71,7 @@ class Entity {
   void world(IWorld* parent);
   void uid(int uid_);
   void pos(int x, int y);
+  void infective(bool status);
 
   // Loops /////////////////////////////////////////////////////////////////////
   // Entity loop, must be run every game loop

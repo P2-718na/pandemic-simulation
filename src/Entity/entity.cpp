@@ -46,6 +46,9 @@ void Entity::pos(int x, int y) {
   this->_posX = x;
   this->_posY = y;
 }
+void Entity::infective(bool status) {
+  this->_infective = status;
+}
 
 // Loops ///////////////////////////////////////////////////////////////////////
 // NOTICE this can't be moved to AI since it calls private methods.
