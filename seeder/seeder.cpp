@@ -9,27 +9,18 @@
 
 using namespace std;
 
-enum Sex {
-  male,
-  female
-};
-
-// Entity
-struct Entity {
-  int age;
-  Sex sex;
-
-};
-
 // Globals
 sf::Image background;
 vector<pair<int, int>> homeLocations;
 vector<pair<int, int>> workLocations;
 vector<pair<int, int>> schoolLocations;
+vector<pair<int, int>> uniLocations;
+vector<Entity> entities;
+vector<vector<Entity>> houses;
 
 // Arguments
 int parsed = 1;
-int genTarget = 0;
+int target = 0;
 string mapFile = "";
 string outFile = "entities";
 
@@ -37,9 +28,13 @@ void help() {
   char help[] =
     "Seeder for entities.\n"
     "Commands:\n"
-    "--help         show this message\n"
+    "--help         show this message\nù"
+    "\n"
     "--target       target number of entities to generate (required)\n"
+    "               Use -1 for unlimited entities\n"
+    "\n"
     "--map          map file to read entities from (required)\n"
+    "\n"
     "--output       output file (default: ./entities)\n";
 
   cout << help;
@@ -56,8 +51,13 @@ void parseArg(int argc, char* argv[]) {
     if (parsed == argc) {
       throw runtime_error("Invalid parameter count");
     }
-    genTarget = atoi(argv[parsed]);
-    cout << "Target: " << genTarget << endl;
+    target = atoi(argv[parsed]);
+
+    if (target < -1) {
+      throw runtime_error("Invalid target");
+    }
+
+    cout << "Target: " << target << endl;
     ++parsed;
 
     return;
@@ -94,10 +94,19 @@ void parseImage() {
       sf::Color color = background.getPixel(x, y);
       if (color.r == 0xff && color.g == 0xaa && color.b == 0x0) {
         schoolLocations.emplace_back(x, y);
-      } else if (color.r == 0xff && color.g == 0xff && color.b == 0xff) {
+        continue;
+      }
+      if (color.r == 0xff && color.g == 0x55 && color.b == 0x0) {
+        uniLocations.emplace_back(x, y);
+        continue;
+      }
+      if (color.r == 0xff && color.g == 0xff && color.b == 0xff) {
         homeLocations.emplace_back(x, y);
-      } else if (color.r == 0x0 && color.g == 0x0 && color.b == 0xcc) {
+        continue;
+      }
+      if (color.r == 0x0 && color.g == 0x0 && color.b == 0xcc) {
         workLocations.emplace_back(x, y);
+        continue;
       }
     }
   }
@@ -126,17 +135,23 @@ int main(int argc, char* argv[]) {
     cerr << "Error initialising: " << err.what() << endl;
   }
 
-  ofs << "[count]" << endl << genTarget << endl << endl;
+  ofs << "[count]" << endl << target << endl << endl;
 
   background.loadFromFile(mapFile);
   parseImage();
 
+  if (target != -1) {
+    entities.reserve(target);
+  }
+  houses.reserve(homeLocations.size());
 
 
-  while (genTarget --> 0) {
+
+  while (target --> 0) {
     ofs <<
       "[entity]\n"
-      "uid=" << genTarget << "\n"
+      "uid=" << target
+        << "\n"
       "homex=0\n"
       "homey=0\n"
       "workx=0\n"
