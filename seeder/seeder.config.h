@@ -4,10 +4,16 @@
 
 using namespace std;
 
-float randFloat(float min, float max) {
-  return min + (float)rand() / (float)RAND_MAX/(max - min);
-}
+float randFloat(float a, float b) {
+  if (b > a) {
+    return randFloat(b, a);
+  }
 
+  float random = ((float) rand()) / (float) RAND_MAX;
+  float diff = b - a;
+  float r = random * diff;
+  return a + r;
+}
 enum Sex {
   male,
   female
@@ -15,7 +21,6 @@ enum Sex {
 
 struct Entity {
   int age;
-  Sex sex;
   float virusResistance;
   float virusSpreadChance;
   float infectionChance;
@@ -24,71 +29,166 @@ struct Entity {
   pair<int, int> workLocation{};
 };
 
-struct OLD_MAN : Entity {
-  int age{(int)randFloat(70, 95)};
-  Sex sex{male};
-  float virusResistance{randFloat(0, 100 - age) / 100.f};
-  float virusSpreadChance{randFloat(.4, .6)};
-  float infectionChance{randFloat(.5, .7)};
-  string ai{"oldAi"};
+Entity OLD_MAN() {
+  int age = (int)randFloat(70, 95);
+
+  return {
+    age,
+    randFloat(0, 100 - age) / 100.f,
+    randFloat(.4, .6),
+    randFloat(.5, .7),
+    "oldAi"
+  };
 };
 
-struct OLD_WOMAN : Entity {
-  int age{(int)randFloat(70, 100)};
-  Sex sex{female};
-  float virusResistance{randFloat(10, 110 - age) / 100.f};
-  float virusSpreadChance{randFloat(.4, .6)};
-  float infectionChance{randFloat(.4, .6)};
-  string ai{"oldAi"};
+Entity OLD_WOMAN() {
+  int age = (int)randFloat(70, 95);
+
+  return {
+    (int)randFloat(70, 100),
+    randFloat(10, 110 - age) / 100.f,
+    randFloat(.4, .6),
+    randFloat(.4, .6),
+    "oldAi"
+  };
 };
 
-struct MAN : Entity{
-  int age{(int)randFloat(35, 70)};
-  Sex sex{male};
-  float virusResistance{randFloat(.4, .7)};
-  float virusSpreadChance{randFloat(.4, .6)};
-  float infectionChance{randFloat(.3, .5)};
-  string ai{"manAi"};
+Entity MAN() {
+  return {
+    (int)randFloat(35, 70),
+    randFloat(.4, .7),
+    randFloat(.4, .6),
+    randFloat(.3, .5),
+    "manAi"
+  };
 };
 
-struct WOMAN : Entity{
-  int age{(int)randFloat(35, 70)};
-  Sex sex{female};
-  float virusResistance{randFloat(.45, .75)};
-  float virusSpreadChance{randFloat(.4, .6)};
-  float infectionChance{randFloat(.1, .2)};
-  // We did it boys, we stopped gender inequality
-  string ai{"manAi"};
+Entity WOMAN() {
+  return {
+    (int)randFloat(35, 70),
+    randFloat(.45, .75),
+    randFloat(.4, .6),
+    randFloat(.1, .2),
+    // We did it boys, we stopped gender inequality
+    "manAi"
+  };
 };
 
-struct GRADUATE : Entity{
-  int age{(int)randFloat(25, 35)};
-  float virusResistance{randFloat(.70, .80)};
-  float virusSpreadChance{randFloat(.5, .6)};
-  float infectionChance{randFloat(.4, .5)};
-  string ai{"gradAi"};
+Entity GRADUATE() {
+  return {
+    (int)randFloat(25, 35),
+    randFloat(.70, .80),
+    randFloat(.5, .6),
+    randFloat(.4, .5),
+    "gradAi"
+  };
 };
 
-struct UNI_STUDENT : Entity{
-  int age{(int)randFloat(18, 25)};
-  float virusResistance{randFloat(.80, .90)};
-  float virusSpreadChance{randFloat(.55, .65)};
-  float infectionChance{randFloat(.5, .6)};
-  string ai{"uniAi"};
+Entity UNI_STUDENT() {
+  return {
+    (int)randFloat(18, 25),
+    randFloat(.80, .90),
+    randFloat(.55, .65),
+    randFloat(.5, .6),
+    "uniAi"
+  };
 };
 
-struct TEEN : Entity{
-  int age{(int)randFloat(12, 18)};
-  float virusResistance{randFloat(.8, .95)};
-  float virusSpreadChance{randFloat(.6, .7)};
-  float infectionChance{randFloat(.5, .6)};
-  string ai{"teenAi"};
+Entity TEEN() {
+  return {
+    (int)randFloat(12, 18),
+    randFloat(.8, .95),
+    randFloat(.6, .7),
+    randFloat(.5, .6),
+    "teenAi"
+  };
 };
 
-struct NOMASK : Entity{
-  int age{(int)randFloat(35, 45)};
-  float virusResistance{randFloat(.40, .70)};
-  float virusSpreadChance{randFloat(.9, 1)};
-  float infectionChance{randFloat(.7, .9)};
-  string ai{"manAi"};
+Entity NOMASK() {
+  return {
+    (int)randFloat(35, 45),
+    randFloat(.40, .70),
+    randFloat(.9, 1),
+    randFloat(.7, .9),
+    "manAi"
+  };
+};
+
+// Houses //////////////////////////////////////////////////////////////////////
+struct House {
+  vector<Entity> inhabs{};
+  int posx{};
+  int posy{};
+};
+
+House FAMILY1() {
+  return House{{
+    MAN(),
+    WOMAN(),
+    TEEN(),
+    TEEN()
+  }};
+};
+
+House FAMILY2() {
+  return House{{
+    MAN(),
+    WOMAN(),
+    TEEN(),
+    TEEN(),
+    TEEN()
+  }};
+};
+
+House FAMILY3() {
+  return House{{
+    MAN(),
+    WOMAN(),
+    TEEN()
+  }};
+};
+
+House COUPLE() {
+  return House{{
+    MAN(),
+    WOMAN()
+  }};
+};
+
+House OLDIES() {
+  return House{{
+    OLD_MAN(),
+    OLD_MAN()
+  }};
+};
+
+House SINGLE() {
+  return House{{
+    GRADUATE()
+  }};
+};
+
+House CON() {
+  return House{{
+    NOMASK(),
+    OLD_WOMAN()
+  }};
+};
+
+House UNI1() {
+  return House{{
+    UNI_STUDENT(),
+    UNI_STUDENT(),
+    UNI_STUDENT(),
+    UNI_STUDENT(),
+    UNI_STUDENT()
+  }};
+};
+
+House UNI2() {
+  return House{{
+    UNI_STUDENT(),
+    UNI_STUDENT(),
+    UNI_STUDENT()
+  }};
 };
