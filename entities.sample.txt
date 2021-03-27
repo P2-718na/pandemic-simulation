@@ -13,6 +13,7 @@ infection_chance=.8
 ai=randomAi
 
 [entity]
+[infected]
 uid=1
 homex=1
 homey=1
