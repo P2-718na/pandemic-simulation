@@ -54,7 +54,7 @@ int main() {
       auto e = &world.entities[i];
       //printf("entity %d is at pos x:%d, y:%d", i, e->posX(), e->posY());
       _entities[i].position = sf::Vector2f(e->posX(), e->posY());
-      _entities[i].color = e->infective() ? sf::Color::Red : sf::Color::White;
+      _entities[i].color = e->infective() ? sf::Color::Red : sf::Color::Black;
     }
 
     if (draw) {
