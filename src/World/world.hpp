@@ -68,7 +68,6 @@ class World : IWorld{
   int time() const final;
   sf::Image background();
 
-  // todo implement variation for range (maybe just on random walk?)
   std::pair<int, int> randomWalkCoords() final;
   std::pair<int, int> randomShopCoords() final;
   std::pair<int, int> randomPartyCoords() final;

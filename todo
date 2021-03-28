@@ -31,3 +31,5 @@ first things to do:
 
 General todos:
     - change cast to c++ style cast (maybe, maybe not)
+    - visualizzazione contagi con root
+    - Cambia seeder, usa lyra per parsare argomenti

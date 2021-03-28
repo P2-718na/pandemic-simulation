@@ -111,13 +111,13 @@ void World::_parseImage() {
     for (int x = 0; x < this->_width; ++x ) {
       sf::Color color = this->_background.getPixel(x, y);
 
-      // Todo actual parsing
-      // sample, for now
-      if (color.r == 0x0 && color.g == 0xff && color.b == 0x0) {
+      // Todo write these values to config
+      // Parse image to find walk, shop and party POIs
+      if (color.r == 0x00 && color.g == 0xff && color.b == 0x00) {
         this->_walkCoords.emplace_back(x, y);
-      } else if (color.r == 0xff && color.g == 0xFF && color.b == 0x0) {
+      } else if (color.r == 0xff && color.g == 0xFF && color.b == 0x00) {
         this->_shopCoords.emplace_back(x, y);
-      } else if (color.r == 0xff && color.g == 0x0 && color.b == 0xff) {
+      } else if (color.r == 0xff && color.g == 0x00 && color.b == 0xff) {
         this->_partyCoords.emplace_back(x, y);
       }
     }
