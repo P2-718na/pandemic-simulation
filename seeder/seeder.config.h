@@ -42,7 +42,7 @@ Entity OLD_MAN() {
 };
 
 Entity OLD_WOMAN() {
-  int age = (int)randFloat(70, 95);
+  int age = (int)randFloat(70, 100);
 
   return {
     (int)randFloat(70, 100),

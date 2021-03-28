@@ -91,6 +91,10 @@ void parseArg(int argc, char* argv[]) {
   }
 }
 
+pair<int, int> randomLocation(const vector<pair<int, int>> &list) {
+  return list[(int)randFloat(0, list.size())];
+}
+
 void parseImage() {
   // Loop through every pixel in image
   for (int y = 0; y < background.getSize().y; ++y) {
@@ -118,7 +122,7 @@ void parseImage() {
 }
 
 void populateHouses() {
-  for (auto &house : houseLocations) {
+  for (auto &houseCoords : houseLocations) {
     switch ((int)randFloat(0,  9)) {
       case 0:
         houses.push_back(FAMILY1());
@@ -151,10 +155,26 @@ void populateHouses() {
         houses.push_back(SINGLE());
     }
 
-    // todo write work locations;
+    House &house = houses.back();
 
-    houses.back().posx = house.first;
-    houses.back().posy = house.second;
+    house.posx = houseCoords.first;
+    house.posy = houseCoords.second;
+
+    // Set POI coords for house inhabitants
+    for (auto &inhab : house.inhabs) {
+      inhab.homeLocation = houseCoords;
+
+      // No work location needed for elder people
+      // and younger than 12 years
+      if (inhab.age >= 12) {
+        // Todo this should be set to nearest school to homeLocation
+        inhab.workLocation = randomLocation(schoolLocations);
+      } else if (inhab.age >= 18) {
+        inhab.workLocation = randomLocation(uniLocations);
+      } else if (inhab.age >= 30) {
+        inhab.workLocation = randomLocation(workLocations);
+      }
+    }
   }
 }
 
@@ -194,11 +214,6 @@ void writeEntitiesUntilTarget() {
       if (target_ == 0) {
         return;
       }
-
-      // Set home location based on current house.
-      // This could be moved elsewhere
-      inhab.homeLocation.first = house.posx;
-      inhab.homeLocation.second = house.posy;
 
       // Write entity to file
       writeEntity(inhab, target_);
