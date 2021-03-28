@@ -263,10 +263,12 @@ bool World::parseEntities(
     }
     if (key == "homex") {
       currentEntity.homeLocation.first = atoi(value.c_str());
+      currentEntity.posX(atoi(value.c_str()));
       continue;
     }
     if (key == "homey") {
       currentEntity.homeLocation.second = atoi(value.c_str());
+      currentEntity.posY(atoi(value.c_str()));
       continue;
     }
     if (key == "workx") {

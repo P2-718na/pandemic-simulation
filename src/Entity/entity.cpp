@@ -40,10 +40,12 @@ void Entity::world(IWorld *parent) {
 void Entity::uid(int uid_) {
   this->_uid = uid_;
 }
-void Entity::pos(int x, int y) {
+void Entity::posX(int x) {
   // This should reset pathfinder, prolly
-
   this->_posX = x;
+}
+void Entity::posY(int y) {
+  // This should reset pathfinder, prolly
   this->_posY = y;
 }
 void Entity::infective(bool status) {
@@ -176,5 +178,5 @@ entityAi Entity::parseAi(const std::string &value) {
     return AI::testAi;
   }
 
-  return AI::nullAi;
+  return AI::testAi;
 }

@@ -45,8 +45,8 @@ class Entity {
   float infectionChance{.8};
 
   // Entity-based POI Coordinates
-  std::pair<int, int> homeLocation{-10, -10};
-  std::pair<int, int> workLocation{-10, -10};
+  std::pair<int, int> homeLocation{0, 0};
+  std::pair<int, int> workLocation{0, 0};
 
   // Constructors //////////////////////////////////////////////////////////////
   // Todo Pathfinder will be map-dependant. It will need to be passed by
@@ -70,7 +70,8 @@ class Entity {
 
   void world(IWorld* parent);
   void uid(int uid_);
-  void pos(int x, int y);
+  void posX(int x);
+  void posY(int Y);
   void infective(bool status);
 
   // Loops /////////////////////////////////////////////////////////////////////
