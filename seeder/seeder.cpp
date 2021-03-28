@@ -13,15 +13,13 @@ using namespace std;
 sf::Image background;
 ofstream ofs;
 
-vector<pair<int, int>> homeLocations;
+vector<pair<int, int>> houseLocations;
 vector<pair<int, int>> workLocations;
 vector<pair<int, int>> schoolLocations;
 vector<pair<int, int>> uniLocations;
 
 // This is used for internal generation
 vector<House> houses;
-
-vector<Entity> entities;
 
 // Arguments
 int parsed = 1;
@@ -94,22 +92,24 @@ void parseArg(int argc, char* argv[]) {
 }
 
 void parseImage() {
+  // Loop through every pixel in image
   for (int y = 0; y < background.getSize().y; ++y) {
     for (int x = 0; x < background.getSize().x; ++x ) {
       sf::Color color = background.getPixel(x, y);
-      if (color.r == 0xff && color.g == 0xaa && color.b == 0x0) {
+
+      if (color.r == 0xff && color.g == 0xaa && color.b == 0x00) {
         schoolLocations.emplace_back(x, y);
         continue;
       }
-      if (color.r == 0xff && color.g == 0x55 && color.b == 0x0) {
+      if (color.r == 0xff && color.g == 0x55 && color.b == 0x00) {
         uniLocations.emplace_back(x, y);
         continue;
       }
       if (color.r == 0xff && color.g == 0xff && color.b == 0xff) {
-        homeLocations.emplace_back(x, y);
+        houseLocations.emplace_back(x, y);
         continue;
       }
-      if (color.r == 0x0 && color.g == 0x0 && color.b == 0xcc) {
+      if (color.r == 0x00 && color.g == 0x00 && color.b == 0xcc) {
         workLocations.emplace_back(x, y);
         continue;
       }
@@ -117,67 +117,8 @@ void parseImage() {
   }
 }
 
-void printEntity(const Entity &entity, int uid) {
-  ofs << "[entity]\n";
-  ofs << "uid=" << uid << "\n";
-  ofs << "homex=" << entity.homeLocation.first << "\n";
-  ofs << "homey=" << entity.homeLocation.second << "\n";
-  ofs << "workx=" << entity.workLocation.first << "\n";
-  ofs << "worky=" << entity.workLocation.second << "\n";
-  ofs << "virus_resistance=" << entity.virusResistance << "\n";
-  ofs << "virus_spread_chance=" << entity.virusSpreadChance << "\n";
-  ofs << "infection_chance=" << entity.infectionChance << "\n";
-  ofs << "ai=" << entity.ai << "\n";
-  ofs << "\n";
-}
-
-void writeEntitiesUntilTarget() {
-  for (auto &house : houses) {
-    for (auto &inhab : house.inhabs) {
-      if (target == 0) {
-        return;
-      }
-
-      inhab.homeLocation.first = house.posx;
-      inhab.homeLocation.second = house.posy;
-
-      printEntity(inhab, target);
-      --target;
-    }
-  }
-}
-
-int main(int argc, char* argv[]) {
-  // Parse arguments
-  try {
-    if (argc < 2) {
-      help();
-      return 0;
-    }
-
-    while (parsed < argc) {
-      parseArg(argc, argv);
-    }
-
-    if (mapFile.empty()) {
-      throw runtime_error("Must specify input map file");
-    }
-
-    ofs.open(outFile);
-  } catch (runtime_error &err) {
-    cerr << "Error initialising: " << err.what() << endl;
-    exit(1);
-  }
-
-  // Todo check for -1
-  ofs << "[count]" << endl << target << endl << endl;
-
-  background.loadFromFile(mapFile);
-  parseImage();
-
-  houses.reserve(homeLocations.size());
-
-  for (auto &home : homeLocations) {
+void populateHouses() {
+  for (auto &house : houseLocations) {
     switch ((int)randFloat(0,  9)) {
       case 0:
         houses.push_back(FAMILY1());
@@ -210,19 +151,114 @@ int main(int argc, char* argv[]) {
         houses.push_back(SINGLE());
     }
 
-    // todo write work and home locations;
+    // todo write work locations;
 
-    houses.back().posx = home.first;
-    houses.back().posy = home.second;
+    houses.back().posx = house.first;
+    houses.back().posy = house.second;
+  }
+}
+
+int countEntities() {
+  int count = 0;
+  for (auto &house : houses) {
+    for (auto &inhab : house.inhabs) {
+      ++count;
+    }
   }
 
-  cout <<
-       "Finish. Wrote " <<
-       (target > 0 ? target : - target - 1)  <<
-       " entities";
+  return count;
+}
 
+void writeEntity(const Entity &entity, int uid) {
+  // (See entity format in entities.sample.txt)
+  ofs << "[entity]\n";
+  ofs << "uid=" << uid << "\n";
+  ofs << "homex=" << entity.homeLocation.first << "\n";
+  ofs << "homey=" << entity.homeLocation.second << "\n";
+  ofs << "workx=" << entity.workLocation.first << "\n";
+  ofs << "worky=" << entity.workLocation.second << "\n";
+  ofs << "virus_resistance=" << entity.virusResistance << "\n";
+  ofs << "virus_spread_chance=" << entity.virusSpreadChance << "\n";
+  ofs << "infection_chance=" << entity.infectionChance << "\n";
+  ofs << "ai=" << entity.ai << "\n";
+  ofs << "\n";
+}
+
+void writeEntitiesUntilTarget() {
+  // Do not modify original target since we want to print it later
+  int target_ = target;
+
+  for (auto &house : houses) {
+    for (auto &inhab : house.inhabs) {
+      // Stop once target is reached
+      if (target_ == 0) {
+        return;
+      }
+
+      // Set home location based on current house.
+      // This could be moved elsewhere
+      inhab.homeLocation.first = house.posx;
+      inhab.homeLocation.second = house.posy;
+
+      // Write entity to file
+      writeEntity(inhab, target_);
+      --target_;
+    }
+  }
+}
+
+int main(int argc, char* argv[]) {
+  // Parse arguments
+  try {
+    // If no arguments provided, print help
+    if (argc < 2) {
+      help();
+      return 0;
+    }
+
+    // Parse each argument
+    while (parsed < argc) {
+      parseArg(argc, argv);
+    }
+
+    // MapFile is required. Check and open it
+    if (mapFile.empty()) {
+      throw runtime_error("Must specify input map file");
+    }
+    if (!background.loadFromFile(mapFile)) {
+      throw runtime_error("Invalid map file");
+    };
+
+    // Open output file. Throws on fail.
+    ofs.open(outFile);
+  } catch (runtime_error &err) {
+    cerr << "Error initialising: " << err.what() << endl;
+
+    exit(1);
+  }
+
+  // Load POI locations from image into memory
+  parseImage();
+
+  // Reserve space for houses (Not needed, increases performance a bit)
+  houses.reserve(houseLocations.size());
+
+  // Insert random families into available houses
+  populateHouses();
+
+  // Print info
+  ofs << "[count]" << endl;
+  ofs << (target > 0 ? target : countEntities()) << endl;
+  ofs << endl;
+
+  // Write entities to file until target is reached
   writeEntitiesUntilTarget();
 
+  // Save data to file
   ofs.close();
-  cout << endl;
+
+  // Print result
+  cout << "Finish. Wrote ";
+  cout << (target > 0 ? target : countEntities());
+  cout << " entities" << endl;
 }
