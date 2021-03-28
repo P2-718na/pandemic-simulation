@@ -121,7 +121,7 @@ void printEntity(const Entity &entity, int uid) {
   ofs << "[entity]\n";
   ofs << "uid=" << uid << "\n";
   ofs << "homex=" << entity.homeLocation.first << "\n";
-  ofs << "homex=" << entity.homeLocation.second << "\n";
+  ofs << "homey=" << entity.homeLocation.second << "\n";
   ofs << "workx=" << entity.workLocation.first << "\n";
   ofs << "worky=" << entity.workLocation.second << "\n";
   ofs << "virus_resistance=" << entity.virusResistance << "\n";
