@@ -1,5 +1,6 @@
 #include <fstream>
 #include <iostream>
+#include <random>
 #include <string>
 #include <cstring>
 #include <vector>
@@ -265,6 +266,10 @@ int main(int argc, char* argv[]) {
   ofs << "[count]" << endl;
   ofs << (target > 0 ? target : countEntities()) << endl;
   ofs << endl;
+
+  // Randomly shuffle houses, since we will be only
+  // picking the first [target]
+  shuffle(houses.begin(), houses.end(), std::mt19937(std::random_device()()));
 
   // Write entities to file until target is reached
   writeEntitiesUntilTarget();
