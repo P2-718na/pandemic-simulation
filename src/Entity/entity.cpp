@@ -5,9 +5,9 @@
 
 // Constructors ////////////////////////////////////////////////////////////////
 Entity::Entity(int uid, int posX, int posY)
-  : _uid{uid}
-  , _posX{posX}
-  , _posY{posY}
+  : uid_{uid}
+  , posX_{posX}
+  , posY_{posY}
   , nextAi{AI::nullAi}
 {}
 
@@ -19,55 +19,57 @@ Entity::Entity(int uid, int posX, int posY, void (*nextAI)(Entity*, int))
 
 // Accessors ///////////////////////////////////////////////////////////////////
 int Entity::uid() const {
-  return this->_uid;
+  return this->uid_;
 }
 int Entity::posX() const {
-  return this->_posX;
+  return this->posX_;
 }
 int Entity::posY() const {
-  return this->_posY;
+  return this->posY_;
 }
 bool Entity::infective() const {
-  return this->_infective;
+  // todo add this value to config
+  return this->daysSinceLastInfection_ >= 3;
 }
 bool Entity::quarantined() const {
-  return this->_quarantined;
+  return this->quarantined_;
 }
 
 void Entity::world(IWorld *parent) {
-  this->_world = parent;
+  this->world_ = parent;
 }
 void Entity::uid(int uid_) {
-  this->_uid = uid_;
+  this->uid_ = uid_;
 }
 void Entity::posX(int x) {
   // This should reset pathfinder, prolly
-  this->_posX = x;
+  this->posX_ = x;
 }
 void Entity::posY(int y) {
   // This should reset pathfinder, prolly
-  this->_posY = y;
+  this->posY_ = y;
 }
 void Entity::infective(bool status) {
-  this->_infective = status;
+  // todo this will need to be moved in config
+
 }
 
 // Loops ///////////////////////////////////////////////////////////////////////
 // NOTICE this can't be moved to AI since it calls private methods.
 void Entity::loop() {
-  switch (this->_status) {
+  switch (this->status_) {
     case ES::pathing:
-      if (!this->_pathfinder.isArrived()) {
-        std::pair<int, int> nextStep = this->_pathfinder.step();
-        this->_posX = nextStep.first;
-        this->_posY = nextStep.second;
+      if (!this->pathfinder_.isArrived()) {
+        std::pair<int, int> nextStep = this->pathfinder_.step();
+        this->posX_ = nextStep.first;
+        this->posY_ = nextStep.second;
       } else {
-        this->_status = still;
+        this->status_ = still;
       }
       break;
 
     case ES::still:
-      this->nextAi(this, _world->time());
+      this->nextAi(this, world_->time());
       break;
 
     // Quarantine status gets applied only when person is already home
@@ -84,30 +86,30 @@ void Entity::dayLoop() {
   // Change quarantined status. This might need to be moved
   if (
     this->infective() &&
-    this->_daysSinceLastInfection > 2
+    this->daysSinceLastInfection_ > 2
     ) {
-    this->_quarantined = true;
+    this->quarantined_ = true;
   }
 
   // Todo add 10 days min infection time to config
   if (
     this->infective() &&
-    this->_daysSinceLastInfection > 10 &&
+    this->daysSinceLastInfection_ > 10 &&
     AI::chanceCheck(this->virusResistance)
   ) {
-    this->_infective = false;
+    this->infective(false);
   }
 
   if (
-    this->_daysSinceLastInfection >= 14 &&
-    this->_daysSinceLastInfection % 7 == 0 &&
+    this->daysSinceLastInfection_ >= 14 &&
+    this->daysSinceLastInfection_ % 7 == 0 &&
     !this->infective()
   ) {
-    this->_quarantined = false;
+    this->quarantined_ = false;
   }
 
-  if (this->_daysSinceLastInfection != 0) {
-    ++(this->_daysSinceLastInfection);
+  if (this->daysSinceLastInfection_ != 0) {
+    ++(this->daysSinceLastInfection_);
   }
 }
 
@@ -115,9 +117,9 @@ void Entity::dayLoop() {
 // this might need to be a bool in the future, since some paths might be not
 // available
 void Entity::moveTo(int destX, int destY) {
-  this->_pathfinder = Pathfinder{this->_posX, this->_posY, destX, destY};
+  this->pathfinder_ = Pathfinder{this->posX_, this->posY_, destX, destY};
 
-  this->_status = pathing;
+  this->status_ = pathing;
 }
 void Entity::moveTo(const std::pair<int, int> &destination) {
   return this->moveTo(destination.first, destination.second);
@@ -136,13 +138,13 @@ void Entity::goUni() {
   return this->moveTo(this->workLocation);
 }
 void Entity::goWalk() {
-  return this->moveTo(this->_world->randomWalkCoords());
+  return this->moveTo(this->world_->randomWalkCoords());
 }
 void Entity::goShop() {
-  return this->moveTo(this->_world->randomShopCoords());
+  return this->moveTo(this->world_->randomShopCoords());
 }
 void Entity::goParty() {
-  return this->moveTo(this->_world->randomPartyCoords());
+  return this->moveTo(this->world_->randomPartyCoords());
 }
 
 bool Entity::tryInfect() {
@@ -151,7 +153,7 @@ bool Entity::tryInfect() {
   // Todo move 30 days to config.
   if (
     this->_infective ||
-    (this->_daysSinceLastInfection < 30 && this->_daysSinceLastInfection != 0)
+    (this->daysSinceLastInfection_ < 30 && this->daysSinceLastInfection_ != 0)
   ) {
     return false;
   }
@@ -159,7 +161,7 @@ bool Entity::tryInfect() {
   // Do infect if never infected before. Also do infect if more than 2 months
   // have passed since last infection. Infection is still affected by chance.
   if (AI::chanceCheck(this->infectionChance)) {
-    this->_daysSinceLastInfection = 1;
+    this->daysSinceLastInfection_ = 1;
     return this->_infective = true;
   }
 

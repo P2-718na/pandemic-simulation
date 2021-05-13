@@ -14,20 +14,24 @@ enum EntityStatus {
 }; //dead
 
 typedef EntityStatus ES;
+// Entity*, points to current entity, int is the current time of day.
 typedef void (*entityAi)(Entity*, int);
 
 class Entity {
   // Todo check this is set before doing anything
-  IWorld* _world{};
-  int _uid{};
-  int _posX{};
-  int _posY{};
+  IWorld* world_{};
+  int uid_{};
+  int posX_{};
+  int posY_{};
 
-  int _daysSinceLastInfection{0};
-  bool _quarantined{false};
-  bool _infective{false};
-  Pathfinder _pathfinder{};
-  EntityStatus _status{still};
+  int daysSinceLastInfection_{0};
+  bool quarantined_{false};
+  bool infected_{false};
+  bool infective_{false};
+
+  // Todo this will become a shared pointer
+  Pathfinder pathfinder_{};
+  EntityStatus status_{still};
 
  public:
   // Ai for next() calls
@@ -68,10 +72,13 @@ class Entity {
   bool infective() const;
   bool quarantined() const;
 
+  // todo use shared pointer
   void world(IWorld* parent);
   void uid(int uid_);
   void posX(int x);
   void posY(int Y);
+
+  // This should be used only in initialization
   void infective(bool status);
 
   // Loops /////////////////////////////////////////////////////////////////////
