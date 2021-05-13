@@ -1,8 +1,9 @@
-#include <iostream>
-#include <fstream>
-
 #include "world.hpp"
-#include "ai.hpp"
+
+#include <fstream>
+#include <iostream>
+
+#include "Entity/AI/ai.hpp"
 #include "entity.hpp"
 
 // Loops ///////////////////////////////////////////////////////////////////////
@@ -49,7 +50,7 @@ void World::_dayLoop() {
   for (auto &entity : this->entities) {
     entity.dayLoop();
 
-    if (entity.infective()) {
+    if (entity.infected()) {
       contagiati++;
     }
   }
@@ -89,7 +90,7 @@ void World::loop() {
 
 // Private methods /////////////////////////////////////////////////////////////
 
-void World::_initMap() {
+void World::initMap_() {
   this->_map =
     std::vector<std::vector<Tile>>(
       this->_width,
@@ -97,16 +98,7 @@ void World::_initMap() {
     );
 }
 
-void World::_initEntities(std::vector<Entity> &entities) {
-  // Original entities vector will be cleared.
-  this->entities = std::move(entities);
-
-  // Initialize map with entities. Note that this-> is required here.
-  for (auto &entity : this->entities) { entity.world(this);
-  }
-}
-
-void World::_parseImage() {
+void World::parseBackground_() {
   for (int y = 0; y < this->_height; ++y) {
     for (int x = 0; x < this->_width; ++x ) {
       sf::Color color = this->_background.getPixel(x, y);
@@ -129,45 +121,13 @@ World::World(int width, int height)
   : _width{width}
   , _height(height)
 {
-  this->_initMap();
-}
-
-World::World(int width, int height, std::vector<Entity> &entities)
-  : World(width, height)
-{
-  this->_initEntities(entities);
-}
-
-World::World(int width, int height, int entityCount)
-  : World(width, height)
-{
-  this->entities.reserve(entityCount);
-  for (int i = 0; i < entityCount; i++) {
-    this->entities.emplace_back(i, 0, 0, AI::randomAi);
-  }
-}
-
-World::World(
-  const std::string &backgroundImagePath,
-  std::vector<Entity> &entities
-) {
-  if (!this->_background.loadFromFile(backgroundImagePath)) {
-    throw std::runtime_error("Cannot load image");
-  };
-
-  this->_width = this->_background.getSize().x;
-  this->_height = this->_background.getSize().y;
-  this->_initMap();
-  this->_initEntities(entities);
-  this->_parseImage();
+  this->initMap_();
 }
 
 World::World(
   const std::string &backgroundImagePath,
   const std::string &entitiesFile
 ) {
-  std::vector<Entity> entities;
-
   // fixme cleanup these two constructors
   if (!this->_background.loadFromFile(backgroundImagePath)) {
     throw std::runtime_error("Cannot load image");
@@ -175,10 +135,9 @@ World::World(
 
   this->_width = this->_background.getSize().x;
   this->_height = this->_background.getSize().y;
-  this->_initMap();
-  World::parseEntities(entitiesFile, entities);
-  this->_initEntities(entities);
-  this->_parseImage();
+  this->initMap_();
+  World::parseEntitiesFromFile_(entitiesFile, this->entities);
+  this->parseBackground_();
 }
 
 // Accessors ///////////////////////////////////////////////////////////////////
@@ -213,14 +172,15 @@ day World::weekDay() const {
   return (day)(this->_daysPassed % 7);
 }
 
-// Static //////////////////////////////////////////////////////////////////////
-bool World::parseEntities(
-  const std::string &entitiesFile,
-  std::vector<Entity> &entities
-) {
+bool World::parseEntitiesFromFile_(
+  const std::string &entitiesFile, std::vector<Entity> &entities) {
   if (!entities.empty()) {
     return false;
   }
+
+  int uid, homex, homey, workx, worky;
+  float virus_resistance, virus_spread_chance, infection_chance;
+  std::string ai;
 
   std::ifstream ifs(entitiesFile);
   std::string line;
@@ -239,12 +199,14 @@ bool World::parseEntities(
     }
 
     if (line == "[entity]") {
-      entities.emplace_back();
+      entities.emplace_back((IWorld*)this, uid, homex, homey, parseEntityAi(ai));
+      entities.back().homeLocation = {homex, homey};
+      entities.back().workLocation = {workx, worky};
       continue;
     }
 
     if (line == "[infected]") {
-      entities.back().infective(true);
+      entities.back().infected(true);
       continue;
     }
 
@@ -258,43 +220,55 @@ bool World::parseEntities(
     Entity &currentEntity = entities[entities.size() - 1];
 
     if (key == "uid") {
-      currentEntity.uid(atoi(value.c_str()));
+      uid = atoi(value.c_str());
       continue;
     }
     if (key == "homex") {
-      currentEntity.homeLocation.first = atoi(value.c_str());
-      currentEntity.posX(atoi(value.c_str()));
+      homex = atoi(value.c_str());
       continue;
     }
     if (key == "homey") {
-      currentEntity.homeLocation.second = atoi(value.c_str());
-      currentEntity.posY(atoi(value.c_str()));
+      homey = atoi(value.c_str());
       continue;
     }
     if (key == "workx") {
-      currentEntity.workLocation.second = atoi(value.c_str());
+      workx = atoi(value.c_str());
       continue;
     }
     if (key == "worky") {
-      currentEntity.workLocation.second = atoi(value.c_str());
+      worky = atoi(value.c_str());
       continue;
     }
     if (key == "virus_resistance") {
-      currentEntity.virusResistance = atof(value.c_str());
+      virus_resistance = atof(value.c_str());
       continue;
     }
     if (key == "virus_spread_chance") {
-      currentEntity.virusSpreadChance = atof(value.c_str());
+      virus_spread_chance = atof(value.c_str());
       continue;
     }
     if (key == "infection_chance") {
-      currentEntity.infectionChance = atof(value.c_str());
+      infection_chance = atof(value.c_str());
       continue;
     }
     if (key == "ai") {
-      currentEntity.nextAi = Entity::parseAi(value);
+      ai = value;
       continue;
     }
   }
   return true;
+}
+
+entityAi World::parseEntityAi(const std::string &value) {
+  if (value == "nullAi") {
+    return AI::nullAi;
+  }
+  if (value == "randomAi") {
+    return AI::randomAi;
+  }
+  if (value == "testAi") {
+    return AI::testAi;
+  }
+
+  return AI::testAi;
 }

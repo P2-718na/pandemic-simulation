@@ -1,0 +1,1 @@
+ADD_LIBRARY(AI STATIC ai.cpp)

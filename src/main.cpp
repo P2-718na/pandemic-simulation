@@ -1,11 +1,11 @@
-#include <iostream>
 #include <SFML/Graphics.hpp>
+#include <iostream>
 #include <vector>
 
+#include "Entity/AI/ai.hpp"
 #include "entity.hpp"
 #include "pathfinder.hpp"
 #include "world.hpp"
-#include "ai.hpp"
 
 // values near the mean are the most likely
 // standard deviation affects the dispersion of generated values from the mean
@@ -16,16 +16,6 @@ int main() {
   sf::Sprite background;
 
   sf::VertexArray _entities(sf::Points, 5000);
-
-  std::vector<Entity> _e;
-  _e.reserve(5000);
-  for (int i = 0; i < 5000; i++)   {
-    _e.emplace_back(
-      i, AI::randInt(100, 700), AI::randInt(100, 700), AI::testAi);
-  }
-  for (int i = 0; i < 50; i++) {
-    _e[i].tryInfect();
-  }
 
   World world("background.sample.bmp", "entities");
 
@@ -54,7 +44,7 @@ int main() {
       auto e = &world.entities[i];
       //printf("entity %d is at pos x:%d, y:%d", i, e->posX(), e->posY());
       _entities[i].position = sf::Vector2f(e->posX(), e->posY());
-      _entities[i].color = e->infective() ? sf::Color::Red : sf::Color::Black;
+      _entities[i].color = e->infected() ? sf::Color::Red : sf::Color::Black;
     }
 
     if (draw) {

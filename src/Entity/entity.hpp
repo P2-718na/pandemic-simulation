@@ -1,24 +1,29 @@
 #pragma once
-#include "ai.hpp"
+#include <string>
+
+#include "Entity/AI/ai.hpp"
 #include "iworld.hpp"
 #include "pathfinder.hpp"
 
-#include <string>
-
 class IWorld;
 
-enum EntityStatus {
+enum EntityStatus
+{
   still,
   pathing,
-  quarantined
-}; //dead
+  quarantined,
+  dead
+};
 
 typedef EntityStatus ES;
+// Coordinates
+typedef std::pair<int, int> Coords;
 // Entity*, points to current entity, int is the current time of day.
 typedef void (*entityAi)(Entity*, int);
 
 class Entity {
   // Todo check this is set before doing anything
+  //  move to constructor
   IWorld* world_{};
   int uid_{};
   int posX_{};
@@ -27,81 +32,59 @@ class Entity {
   int daysSinceLastInfection_{0};
   bool quarantined_{false};
   bool infected_{false};
-  bool infective_{false};
 
   // Todo this will become a shared pointer
   Pathfinder pathfinder_{};
   EntityStatus status_{still};
-
- public:
   // Ai for next() calls
   // maybe change in queue system?
-  entityAi nextAi{AI::nullAi};
+  entityAi nextAi_{AI::nullAi};
 
+ public:
   // Variables /////////////////////////////////////////////////////////////////
   // Affects virus symptoms and recovery time
-  float virusResistance{.9};
-
+  float symptomsResistance{.9};
   // Base chance to spread virus to nearby entities
   float virusSpreadChance{.5};
-
   // Base chance to get infected by virus spread
-  float infectionChance{.8};
+  float infectionResistance{.8};
 
   // Entity-based POI Coordinates
-  std::pair<int, int> homeLocation{0, 0};
-  std::pair<int, int> workLocation{0, 0};
+  // workLocation can be work, school or uni location.
+  Coords homeLocation{0, 0};
+  Coords workLocation{0, 0};
 
   // Constructors //////////////////////////////////////////////////////////////
-  // Todo Pathfinder will be map-dependant. It will need to be passed by
-  //  constructor. Also be sure to pass map by referende.
-  //  and implement pathfinder reset method.
-  Entity() = default;
-  Entity(int uid, int posX, int posY);
-  Entity(
-    int uid,
-    int posX,
-    int posY,
-    void (*nextAI)(Entity*, int)
-  );
+  // Todo Pathfinder will be map-dependant.
+  //  implement pathfinder reset method and add pathfinder in constructor.
+  Entity(IWorld* world, int uid, int posX, int posY);
+  Entity(IWorld* world, int uid, int posX, int posY, entityAi AI);
 
-  // Accessors /////////////////////////////////////////////////////////////////
+  // Getters ///////////////////////////////////////////////////////////////////
   int uid() const;
   int posX() const;
   int posY() const;
-  bool infective() const;
+  int daysSinceLastInfection() const;
   bool quarantined() const;
+  bool infected() const;
+  bool infective() const;
 
-  // todo use shared pointer
-  void world(IWorld* parent);
-  void uid(int uid_);
-  void posX(int x);
-  void posY(int Y);
-
-  // This should be used only in initialization
-  void infective(bool status);
-
-  // Loops /////////////////////////////////////////////////////////////////////
-  // Entity loop, must be run every game loop
-  void loop();
-  // Entity day loop, must be run every day
-  void dayLoop();
+  // Setters ///////////////////////////////////////////////////////////////////
+  // This should be used in initialization and by private members.
+  // Sets daysSinceLastInfection and infective.
+  // If a person is not infected anymore, adds some infectionResistance.
+  void infected(bool status);
 
   // Methods ///////////////////////////////////////////////////////////////////
-  // Load path to destination
-  void moveTo(int destX, int destY);
-  void moveTo(const std::pair<int, int> &destination);
+  // Load path to destination.
+  void setDestination(int destX, int destY);
+  void setDestination(const Coords& destination);
 
-  // Todo implement methods like goHome(), goWork(), goParty() for AI to call.
-  //  The only class to have access to map should be Pathfinder, Entity will
-  //  only have access to the coords of these places (or to a set of coords)
-  //  and AI will only have access to methods to go to these places.
+  // Todo
   //  AI will also have access to time and will be able to specify additional
   //  path metadata, like "fastPath, publicTransport..."
-  void goHome(); //todo quarantine logic
+  void goHome();  // todo quarantine logic
   void goWork();
-  void goSchool();
-  void goUni();
   void goWalk();
   void goShop();
   void goParty();
@@ -110,6 +93,9 @@ class Entity {
   // and _daysSinceLastInfection
   bool tryInfect();
 
-  // Static ////////////////////////////////////////////////////////////////////
-  static entityAi parseAi(const std::string &value);
+  // Loops /////////////////////////////////////////////////////////////////////
+  // Entity loop, must be run every game loop
+  void loop();
+  // Entity day loop, must be run every day
+  void dayLoop();
 };

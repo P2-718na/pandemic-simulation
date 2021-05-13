@@ -21,9 +21,9 @@ enum Sex {
 
 struct Entity {
   int age;
-  float virusResistance;
+  float symptomsResistance;
   float virusSpreadChance;
-  float infectionChance;
+  float infectionResistance;
   string ai;
   pair<int, int> homeLocation{};
   pair<int, int> workLocation{};

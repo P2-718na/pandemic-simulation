@@ -34,9 +34,9 @@ class World : IWorld{
   std::vector<std::vector<Tile>> _map;
   std::vector<Tile*> _activeTiles;
 
-  std::vector<std::pair<int, int>> _walkCoords;
-  std::vector<std::pair<int, int>> _shopCoords;
-  std::vector<std::pair<int, int>> _partyCoords;
+  std::vector<Coords> _walkCoords;
+  std::vector<Coords> _shopCoords;
+  std::vector<Coords> _partyCoords;
 
   // Todo there should be some error management here
   // Loops /////////////////////////////////////////////////////////////////////
@@ -45,9 +45,13 @@ class World : IWorld{
   void _dayLoop();
 
   // Private methods ///////////////////////////////////////////////////////////
-  void _initMap();
-  void _initEntities(std::vector<Entity> &entities);
-  void _parseImage();
+  void initMap_();
+  void parseBackground_();
+
+  bool parseEntitiesFromFile_(
+    const std::string &entitiesFile,
+    std::vector<Entity> &entities
+  );
 
  public:
   // todo decide if this should be public or private
@@ -56,11 +60,8 @@ class World : IWorld{
   // Constructors //////////////////////////////////////////////////////////////
   //World();
   World(int width, int height);
-  World(int width, int height, std::vector<Entity> &entities);
-  World(int width, int height, int entityCount); //this is gonna be removed most likely
 
   // These two will be used. Maybe some init function would be great.
-  World(const std::string &backgroundImagePath, std::vector<Entity> &entities);
   World(const std::string &backgroundImagePath, const std::string &entitiesFile);
 
 
@@ -68,9 +69,9 @@ class World : IWorld{
   int time() const final;
   sf::Image background();
 
-  std::pair<int, int> randomWalkCoords() final;
-  std::pair<int, int> randomShopCoords() final;
-  std::pair<int, int> randomPartyCoords() final;
+  Coords randomWalkCoords() final;
+  Coords randomShopCoords() final;
+  Coords randomPartyCoords() final;
 
   // Methods ///////////////////////////////////////////////////////////////////
   void loop();
@@ -78,8 +79,5 @@ class World : IWorld{
   day weekDay() const;
 
   // Static ////////////////////////////////////////////////////////////////////
-  static bool parseEntities(
-    const std::string &entitiesFile,
-    std::vector<Entity> &entities
-  );
+  static entityAi parseEntityAi(const std::string& value);
 };
