@@ -15,7 +15,7 @@ int main() {
   sf::Texture backgroundTexture;
   sf::Sprite background;
 
-  sf::VertexArray _entities(sf::Points, 5000);
+  sf::VertexArray _entities(sf::Points, 1000);
 
   World world("background.sample.bmp", "entities");
 
@@ -40,7 +40,7 @@ int main() {
     window.draw(background);
     world.loop();
 
-    for (int i = 0; i < 5000; i++) {
+    for (int i = 0; i < 1000; i++) {
       auto e = &world.entities[i];
       //printf("entity %d is at pos x:%d, y:%d", i, e->posX(), e->posY());
       _entities[i].position = sf::Vector2f(e->posX(), e->posY());

@@ -16,8 +16,6 @@ enum EntityStatus
 };
 
 typedef EntityStatus ES;
-// Coordinates
-typedef std::pair<int, int> Coords;
 // Entity*, points to current entity, int is the current time of day.
 typedef void (*entityAi)(Entity*, int);
 
@@ -64,6 +62,7 @@ class Entity {
   int uid() const;
   int posX() const;
   int posY() const;
+  Coords pos() const;
   int daysSinceLastInfection() const;
   bool quarantined() const;
   bool infected() const;

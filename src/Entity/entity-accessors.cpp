@@ -13,6 +13,10 @@ int Entity::posY() const {
   return posY_;
 }
 
+Coords Entity::pos() const {
+  return {posX_, posY_};
+}
+
 int Entity::daysSinceLastInfection() const {
   return daysSinceLastInfection_;
 }

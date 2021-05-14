@@ -15,7 +15,7 @@ void Entity::loop() {
       break;
 
     case ES::still:
-      nextAi_(this, world_->time());
+      nextAi_(this, world_->currentMinute());
       break;
 
       // Quarantine status gets applied only when person is already home
