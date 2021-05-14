@@ -43,3 +43,12 @@ void Entity::infected(bool status) {
   // todo config
   this->infectionResistance += (1.f - this->infectionResistance) / 1.5f ;
 }
+
+void Entity::infective(bool status) {
+  infected(status);
+
+  if (status) {
+    // todo config
+    daysSinceLastInfection_ = 99;
+  }
+}

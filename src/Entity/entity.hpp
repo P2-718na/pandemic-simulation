@@ -75,6 +75,9 @@ class Entity {
   // If a person is not infected anymore, adds some infectionResistance.
   void infected(bool status);
 
+  // calls infected(true) and sets daysSinceLastInfection.
+  void infective(bool status);
+
   // Methods ///////////////////////////////////////////////////////////////////
   // Load path to destination.
   void setDestination(int destX, int destY);

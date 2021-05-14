@@ -200,13 +200,19 @@ bool World::parseEntitiesFromFile_(
 
     if (line == "[entity]") {
       entities.emplace_back((IWorld*)this, uid, homex, homey, parseEntityAi(ai));
-      entities.back().homeLocation = {homex, homey};
-      entities.back().workLocation = {workx, worky};
+
+      Entity& entity = entities.back();
+      entity.homeLocation = {homex, homey};
+      entity.workLocation = {workx, worky};
+      entity.symptomsResistance = virus_resistance;
+      entity.virusSpreadChance = virus_spread_chance;
+      entity.infectionResistance = infection_chance;
+
       continue;
     }
 
     if (line == "[infected]") {
-      entities.back().infected(true);
+      entities.back().infective(true);
       continue;
     }
 
