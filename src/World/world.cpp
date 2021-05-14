@@ -6,135 +6,45 @@
 #include "Entity/AI/ai.hpp"
 #include "entity.hpp"
 
-// Loops ///////////////////////////////////////////////////////////////////////
-void World::_entityPreLoop(Entity &entity) {
-  // If entity is in a valid position, clear it from the board
-  if (isInside(entity)) {
-    // get tile the entity is in pre-loop
-    Tile *currentTile = &this->_map[entity.posX()][entity.posY()];
-
-    // remove from map.
-    currentTile->entities.clear();
-    currentTile->entityCount = 0;
-  }
-}
-
-void World::_entityPostLoop(Entity &entity) {
-  // If entity is in a valid position, update board
-  if (isInside(entity)) {
-    // get tile the entity should be in post-loop
-    Tile *currentTile = &this->_map[entity.posX()][entity.posY()];
-
-    // increase its entity count  and add to active tiles
-    // Count tile with only one entity as inactive, for now.
-    // Also note that a tile must succeed a spread check in order to make a tile
-    // active.
-    ++(currentTile->entityCount);
-    if (
-      currentTile->entityCount > 1 && entity.infective() &&
-      AI::chanceCheck(entity.virusSpreadChance)
-    ) {
-      this->_activeTiles.push_back(&_map[entity.posX()][entity.posY()]);
-    }
-
-    // add in map
-    currentTile->entities.push_back(&entity);
-  }
-}
-
-void World::_dayLoop() {
-  ++(this->_daysPassed);
-  this->_minutesPassed = 0;
-
-  int contagiati = 0;
-  for (auto &entity : this->entities) {
-    entity.dayLoop();
-
-    if (entity.infected()) {
-      contagiati++;
-    }
-  }
-
-  printf("New day! %d\n", this->_daysPassed);
-  printf("Sani: %ld, Contagiati: %d\n", this->entities.size() - contagiati, contagiati);
-}
-
-void World::loop() {
-  ++(this->_minutesPassed);
-
-  // Empty _activeTiles, since they will be regenerated.
-  this->_activeTiles.clear();
-
-  // Loop every entity and update position on _map array
-  for (auto &entity : this->entities) {
-    this->_entityPreLoop(entity);
-    entity.loop();
-    this->_entityPostLoop(entity);
-  }
-
-  // For each entity in tile, spread infection. Note that active tiles are the
-  // One where at least one infected person exists, for now.
-  // Also note that an entity must succeed a spread check for a tile to
-  // be considered active
-  for (auto &tilePtr : this->_activeTiles) {
-    for (auto &entityPtr : tilePtr->entities) {
-      entityPtr->tryInfect();
-    }
-  }
-
-  // Execute next day logic (Must be called last)
-  if (this->_minutesPassed >= MINUTES_IN_A_DAY) {
-    return this->_dayLoop();
-  }
-}
-
 // Private methods /////////////////////////////////////////////////////////////
-
 void World::initMap_() {
-  this->_map =
-    std::vector<std::vector<Tile>>(
-      this->_width,
-      std::vector<Tile>(this->_height, {0})
+  this->map_ =
+    Map(
+      this->width_,
+      Column(this->height_, {0})
     );
 }
 
 void World::parseBackground_() {
-  for (int y = 0; y < this->_height; ++y) {
-    for (int x = 0; x < this->_width; ++x ) {
-      sf::Color color = this->_background.getPixel(x, y);
+  for (int y = 0; y < this->height_; ++y) {
+    for (int x = 0; x < this->width_; ++x ) {
+      sf::Color color = this->backgroundImage_.getPixel(x, y);
 
       // Todo write these values to config
       // Parse image to find walk, shop and party POIs
       if (color.r == 0x00 && color.g == 0xff && color.b == 0x00) {
-        this->_walkCoords.emplace_back(x, y);
+        this->parkCoords_.emplace_back(x, y);
       } else if (color.r == 0xff && color.g == 0xFF && color.b == 0x00) {
-        this->_shopCoords.emplace_back(x, y);
+        this->shopCoords_.emplace_back(x, y);
       } else if (color.r == 0xff && color.g == 0x00 && color.b == 0xff) {
-        this->_partyCoords.emplace_back(x, y);
+        this->partyCoords_.emplace_back(x, y);
       }
     }
   }
 }
 
 // Constructors ////////////////////////////////////////////////////////////////
-World::World(int width, int height)
-  : _width{width}
-  , _height(height)
-{
-  this->initMap_();
-}
-
 World::World(
   const std::string &backgroundImagePath,
   const std::string &entitiesFile
 ) {
   // fixme cleanup these two constructors
-  if (!this->_background.loadFromFile(backgroundImagePath)) {
+  if (!this->backgroundImage_.loadFromFile(backgroundImagePath)) {
     throw std::runtime_error("Cannot load image");
   };
 
-  this->_width = this->_background.getSize().x;
-  this->_height = this->_background.getSize().y;
+  this->width_ = this->backgroundImage_.getSize().x;
+  this->height_ = this->backgroundImage_.getSize().y;
   this->initMap_();
   World::parseEntitiesFromFile_(entitiesFile, this->entities);
   this->parseBackground_();
@@ -142,22 +52,22 @@ World::World(
 
 // Accessors ///////////////////////////////////////////////////////////////////
 int World::time() const {
-  return this->_minutesPassed;
+  return this->currentMinute_;
 }
 
 sf::Image World::background() {
-  return this->_background;
+  return this->backgroundImage_;
 }
 
 // FIXME these three need to be optimized
-std::pair<int, int> World::randomWalkCoords() {
-  return this->_walkCoords[AI::randInt(0, this->_walkCoords.size())];
+std::pair<int, int> World::randomParkCoords() {
+  return this->parkCoords_[AI::randInt(0, this->parkCoords_.size())];
 }
 std::pair<int, int> World::randomShopCoords() {
-  return this->_shopCoords[AI::randInt(0, this->_shopCoords.size())];
+  return this->shopCoords_[AI::randInt(0, this->shopCoords_.size())];
 }
 std::pair<int, int> World::randomPartyCoords() {
-  return this->_partyCoords[AI::randInt(0, this->_partyCoords.size())];
+  return this->partyCoords_[AI::randInt(0, this->partyCoords_.size())];
 }
 
 // Methods /////////////////////////////////////////////////////////////////////
@@ -165,11 +75,11 @@ bool World::isInside(const Entity &entity) const {
   const int posX = entity.posX();
   const int posY = entity.posY();
 
-  return posX < this->_width && posX >= 0 && posY < this->_height && posY >= 0;
+  return posX < this->width_ && posX >= 0 && posY < this->height_ && posY >= 0;
 }
 
 day World::weekDay() const {
-  return (day)(this->_daysPassed % 7);
+  return (day)(this->currentDay_ % 7);
 }
 
 bool World::parseEntitiesFromFile_(

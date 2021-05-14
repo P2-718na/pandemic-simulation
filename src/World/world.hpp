@@ -24,19 +24,22 @@ struct Tile {
   std::vector<Entity*> entities;
 };
 
+typedef std::vector<Tile> Column;
+typedef std::vector<Column> Map;
+
 class World : IWorld{
-  int _width;
-  int _height;
-  int _daysPassed{0};
-  int _minutesPassed{0};
+  int width_;
+  int height_;
+  int currentDay_{0};
+  int currentMinute_{0};
 
-  sf::Image _background;
-  std::vector<std::vector<Tile>> _map;
-  std::vector<Tile*> _activeTiles;
+  sf::Image backgroundImage_;
+  Map map_;
+  std::vector<Tile*> activeTiles_;
 
-  std::vector<Coords> _walkCoords;
-  std::vector<Coords> _shopCoords;
-  std::vector<Coords> _partyCoords;
+  std::vector<Coords> parkCoords_;
+  std::vector<Coords> shopCoords_;
+  std::vector<Coords> partyCoords_;
 
   // Todo there should be some error management here
   // Loops /////////////////////////////////////////////////////////////////////
@@ -58,10 +61,6 @@ class World : IWorld{
   std::vector<Entity> entities;
 
   // Constructors //////////////////////////////////////////////////////////////
-  //World();
-  World(int width, int height);
-
-  // These two will be used. Maybe some init function would be great.
   World(const std::string &backgroundImagePath, const std::string &entitiesFile);
 
 
@@ -69,7 +68,7 @@ class World : IWorld{
   int time() const final;
   sf::Image background();
 
-  Coords randomWalkCoords() final;
+  Coords randomParkCoords() final;
   Coords randomShopCoords() final;
   Coords randomPartyCoords() final;
 

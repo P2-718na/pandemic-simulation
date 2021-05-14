@@ -38,7 +38,7 @@ void Entity::goWork() {
 }
 
 void Entity::goWalk() {
-  this->setDestination(world_->randomWalkCoords());
+  this->setDestination(world_->randomParkCoords());
 }
 
 void Entity::goShop() {
