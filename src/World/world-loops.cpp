@@ -44,15 +44,12 @@ void World::spreadVirus_() {
 
   // And spread virus
   for (auto &entity : this->entities) {
-    if (entity.infected()) {
-      continue;
-    }
-
+    // Map is not very efficient compared to this
     const auto &first = infectiveTiles.begin();
     const auto &last = infectiveTiles.end();
-    const bool canBeInfected = std::find(first, last, entity.pos()) != last;
-    if (canBeInfected) {
-      if (entity.tryInfect()) printf(".");
+    const bool contactWithInfected = std::find(first, last, entity.pos()) != last;
+    if (contactWithInfected) {
+      entity.tryInfect();
     }
   }
 }

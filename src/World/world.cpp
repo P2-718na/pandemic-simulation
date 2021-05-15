@@ -54,7 +54,6 @@ const sf::Image& World::background() {
   return backgroundImage_;
 }
 
-// FIXME these three need to be optimized
 const Coords& World::randomParkCoords() {
   return parkCoords_[AI::randInt(0, parkCoords_.size())];
 }
