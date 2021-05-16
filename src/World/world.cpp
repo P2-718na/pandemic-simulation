@@ -57,9 +57,11 @@ const sf::Image& World::background() {
 const Coords& World::randomParkCoords() {
   return parkCoords_[AI::randInt(0, parkCoords_.size())];
 }
+
 const Coords& World::randomShopCoords() {
   return shopCoords_[AI::randInt(0, shopCoords_.size())];
 }
+
 const Coords& World::randomPartyCoords() {
   return partyCoords_[AI::randInt(0, partyCoords_.size())];
 }
@@ -74,4 +76,16 @@ int World::infectedCount() const {
   }
 
   return infected;
+}
+
+int World::deadCount() const {
+  int dead = 0;
+
+  for (auto & entity : this->entities) {
+    if (entity.dead()) {
+      ++dead;
+    }
+  }
+
+  return dead;
 }

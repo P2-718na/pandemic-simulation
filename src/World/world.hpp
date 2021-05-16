@@ -58,6 +58,8 @@ class World : IWorld{
 
   int infectedCount() const;
 
+  int deadCount() const;
+
   // Methods ///////////////////////////////////////////////////////////////////
   void loop();
 

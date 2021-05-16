@@ -21,8 +21,8 @@ int Entity::daysSinceLastInfection() const {
   return daysSinceLastInfection_;
 }
 
-bool Entity::quarantined() const {
-  return quarantined_;
+bool Entity::dead() const {
+  return dead_;
 }
 
 bool Entity::infected() const {

@@ -8,7 +8,7 @@ struct AI {
   static bool chanceCheck(float chance);
 
   // Static AI /////////////////////////////////////////////////////////////////
-  static void nullAi(Entity* _this, int time = 0);
-  static void randomAi(Entity* _this, int time = 0);
-  static void testAi(Entity* _this, int time);
+  static void nullAI(Entity* _this, int time = 0);
+  static void randomAI(Entity* _this, int time = 0);
+  static void testAI(Entity* _this, int time);
 };

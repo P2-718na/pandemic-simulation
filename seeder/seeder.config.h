@@ -37,7 +37,7 @@ Entity OLD_MAN() {
     randFloat(0, 100 - age) / 100.f,
     randFloat(.04, .06),
     randFloat(.5, .7),
-    "oldAi"
+    "oldAI"
   };
 };
 
@@ -49,7 +49,7 @@ Entity OLD_WOMAN() {
     randFloat(10, 110 - age) / 100.f,
     randFloat(.04, .06),
     randFloat(.4, .6),
-    "oldAi"
+    "oldAI"
   };
 };
 
@@ -59,7 +59,7 @@ Entity MAN() {
     randFloat(.4, .7),
     randFloat(.04, .06),
     randFloat(.3, .5),
-    "manAi"
+    "manAI"
   };
 };
 
@@ -70,7 +70,7 @@ Entity WOMAN() {
     randFloat(.04, .06),
     randFloat(.1, .2),
     // We did it boys, we stopped gender inequality
-    "manAi"
+    "manAI"
   };
 };
 
@@ -90,7 +90,7 @@ Entity UNI_STUDENT() {
     randFloat(.80, .90),
     randFloat(.055, .065),
     randFloat(.5, .6),
-    "uniAi"
+    "uniAI"
   };
 };
 
@@ -100,7 +100,7 @@ Entity TEEN() {
     randFloat(.8, .95),
     randFloat(.06, .07),
     randFloat(.5, .6),
-    "teenAi"
+    "teenAI"
   };
 };
 
@@ -110,7 +110,7 @@ Entity NOMASK() {
     randFloat(.40, .70),
     randFloat(.1, .2),
     randFloat(.7, .9),
-    "manAi"
+    "manAI"
   };
 };
 

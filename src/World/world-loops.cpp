@@ -8,7 +8,7 @@ void World::dayLoop_() {
 
   for (auto &entity : this->entities) { entity.dayLoop(); }
 
-  printf("New day! %d\nInfected: %d\n", currentDay_, infectedCount());
+  printf("New day! %d\nInfected: %d, Dead: %d\n", currentDay_, infectedCount(), deadCount());
 }
 
 void World::loop() {

@@ -14,16 +14,9 @@ Entity::Entity(IWorld* world, int uid, int posX, int posY, entityAi AI)
 }
 
 // Methods /////////////////////////////////////////////////////////////////////
-// this might need to be a bool in the future, since some paths might be not
-// available
 void Entity::setDestination(int destX, int destY) {
-  // Todo this will need to change. maybe .loadDestination method
-  //  for pathfinder?
-
-  // Todo pathfinder will need to tell whether or not positiomn is inside grid.
+  // Todo pathfinder will need to tell whether or not position is inside grid.
   this->pathfinder_ = Pathfinder{this->posX_, this->posY_, destX, destY};
-
-  this->status_ = pathing;
 }
 void Entity::setDestination(const Coords& destination) {
   this->setDestination(destination.first, destination.second);

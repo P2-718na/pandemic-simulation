@@ -96,15 +96,15 @@ bool World::parseEntitiesFromFile_(
 }
 
 entityAi World::parseEntityAi(const std::string &value) {
-  if (value == "nullAi") {
-    return AI::nullAi;
+  if (value == "nullAI") {
+    return AI::nullAI;
   }
-  if (value == "randomAi") {
-    return AI::randomAi;
+  if (value == "randomAI") {
+    return AI::randomAI;
   }
-  if (value == "testAi") {
-    return AI::testAi;
+  if (value == "testAI") {
+    return AI::testAI;
   }
 
-  return AI::testAi;
+  return AI::testAI;
 }

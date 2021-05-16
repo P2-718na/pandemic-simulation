@@ -22,4 +22,4 @@ worky=1
 virus_resistance=.8
 virus_spread_chance=.9
 infection_chance=.9
-ai=randomAi
+ai=randomAI
