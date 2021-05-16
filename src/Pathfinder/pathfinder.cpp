@@ -1,87 +1,117 @@
 #include "pathfinder.hpp"
-#include <stdexcept>
-#include <vector>
 
-void Pathfinder::_init(const int &startX, const int &startY, const int &endX, const int &endY) {
-  if (this->_step != -1) {
-   throw std::runtime_error("Already initialised.");
-  }
+#include <SFML/Graphics/Image.hpp>
+#include <algorithm>
+#include <cmath>
+// A* algorithm from https://www.geeksforgeeks.org/a-search-algorithm/
 
-  this->_startX = startX;
-  this->_startY = startY;
-  this->_endX = endX;
-  this->_endY = endY;
-  this->_step = 0;
+void Pathfinder::loadMap(std::string mapImagePath) {
+  sf::Image map;
 
-  _calcPath();
-}
+  if (!map.loadFromFile(mapImagePath)) {
+    throw std::runtime_error("Cannot load image");
+  };
 
-bool Pathfinder::_calcPath() {
-  // don't add first node
-  // this->_path.push_back(new int[2] {this->_startX, this->_startY});
+  const int width = map.getSize().x;
+  const int height = map.getSize().y;
 
-  int currentX = this->_startX;
-  int currentY = this->_startY;
+  for (int column = 0; column != width; ++column) {
+    for (int row = 0; row != height; ++row) {
 
-  while (currentX != this->_endX || currentY != this->_endY) {
-    if (currentX < this->_endX) {
-      ++currentX;
-    } else if (currentX > this->_endX) {
-      --currentX;
     }
+  }
+}
 
-    if (currentY < this->_endY) {
-      ++currentY;
-    } else if (currentY > this->_endY) {
-      --currentY;
+auto Pathfinder::aStarFindLowestF_(const aStarList& list) {
+  auto compareNodeF = [](const aStarNode& a, const aStarNode& b) {
+    return a.f() < b.f();
+  };
+
+  return std::min_element(list.begin(), list.end(), compareNodeF);
+}
+
+auto Pathfinder::nodeWithLowerFInList_(const aStarNode& node, const aStarList& list) {
+  auto compareNodes = [node](const aStarNode& listNode) {
+    return listNode.coords == node.coords && listNode.f() < node.f();
+  };
+
+  return std::find_if(list.begin(), list.end(), compareNodes);
+}
+
+int Pathfinder::aStarComputeHeuristics_(const Coords& nodeCoords) const {
+  // Diagonal distance heuristics
+  return std::max(std::abs(nodeCoords.first - endCoords_.first),
+    abs(nodeCoords.second - endCoords_.second));
+}
+
+void Pathfinder::reset() {
+  // 1. Initialize open list
+  aStarOpenList_.clear();
+
+  // 2. Initialize closed list
+  aStarClosedList_ = aStarFullList_;
+}
+
+void Pathfinder::init(const Coords& startCoords, const Coords& endCoords) {
+  startCoords_ = startCoords;
+  endCoords_ = endCoords;
+
+  reset();
+}
+
+aStarNode* Pathfinder::generateTree() {
+  // 2.a Put starting node on the open list
+  auto startingNode = find(aStarClosedList_.begin(), aStarClosedList_.end(),
+    startCoords_);  // todo error handling
+  aStarOpenList_.splice(aStarOpenList_.begin(), aStarClosedList_, startingNode);
+
+  // 3. While the open list is not empty...
+  while (!aStarOpenList_.empty()) {
+    // 3.a find node with least f on open list and call it q.
+    // q is an iterator to node with lowest F on Open List.
+    auto q = aStarFindLowestF_(aStarOpenList_);
+
+    // 3.b && 3.e pop q out off the open list and push it to the closed list.
+    aStarClosedList_.splice(aStarClosedList_.end(), aStarOpenList_, q);
+
+    // 3.d For each neighbor...
+    for (int i = 0; i != 8; ++i) {
+      auto neigborPtr = q->neigbors[i];
+
+      // 3.c set its parent to q (last element of aStarClosedList)
+      neigborPtr->parent = &aStarClosedList_.back();
+
+      // 3.d.I If neigbor is goal, end search
+      if (neigborPtr->coords == endCoords_) {
+        return neigborPtr;
+      }
+
+      // Compute g and h values for neigbor
+      neigborPtr->g = q->g + q->weight;
+      neigborPtr->h = aStarComputeHeuristics_(neigborPtr->coords);
+
+      // 3.d.II If a node with same position as neighbor but with lower f is
+      // in open list, skip this neigbor
+      if (nodeWithLowerFInList_(*neigborPtr, aStarOpenList_) != aStarOpenList_.end()) {
+        continue;
+      }
+
+      // 3.d.III If a node with same position as neighbor but with lower f is
+      // in closed list, add node to open list
+      if (nodeWithLowerFInList_(*neigborPtr, aStarClosedList_) != aStarClosedList_.end()) {
+        continue;
+      }
+
+      // Otherwise, add node to open list
+      aStarOpenList_.push_back(*neigborPtr);
     }
-
-    this->_path.emplace_back(currentX, currentY);
   }
-
-  // add last node
-  this->_path.emplace_back(this->_endX, this->_endY);
-
-  return true;
 }
 
-Pathfinder::Pathfinder() = default;
-
-Pathfinder::Pathfinder(
-  const int &startX,
-  const int &startY,
-  const int &endX,
-  const int &endY
-) {
-  this->_init(startX, startY, endX, endY);
-}
-
-void Pathfinder::init(
-  const int &startX,
-  const int &startY,
-  const int &endX,
-  const int &endY
-) {
-  return this->_init(startX, startY, endX, endY);
-}
-
-std::vector<std::pair<int, int>> Pathfinder::getPath() const {
-  return this->_path;
-}
-
-std::pair<int, int> Pathfinder::step() {
-  if (this->_step == -1) {
-    throw std::runtime_error("Pathfinder not initialised.");
-  }
-
-  const int totalStepCount = (int)this->_path.size();
-  if (this->_step >= totalStepCount) {
-    return this->_path[totalStepCount];
-  }
-
-  return this->_path[this->_step++];
-}
-
-bool Pathfinder::isArrived() {
-  return this->_step >= this->_path.size() - 1;
+void Pathfinder::computeAStar() {
+  aStarNode* currentNode = generateTree();
+  do {
+    _path.push_back(currentNode->coords);
+    currentNode = currentNode->parent;
+  } while (currentNode->parent != nullptr);
 }
