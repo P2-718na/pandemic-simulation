@@ -192,17 +192,17 @@ int countEntities() {
 
 void writeEntity(const Entity &entity, int uid) {
   // (See entity format in entities.sample.txt)
-  ofs << "[entity]\n";
+  ofs << "\n";
   ofs << "uid=" << uid << "\n";
   ofs << "homex=" << entity.homeLocation.first << "\n";
   ofs << "homey=" << entity.homeLocation.second << "\n";
   ofs << "workx=" << entity.workLocation.first << "\n";
   ofs << "worky=" << entity.workLocation.second << "\n";
-  ofs << "virus_resistance=" << entity.virusResistance << "\n";
+  ofs << "virus_resistance=" << entity.symptomsResistance << "\n";
   ofs << "virus_spread_chance=" << entity.virusSpreadChance << "\n";
-  ofs << "infection_chance=" << entity.infectionChance << "\n";
+  ofs << "infection_chance=" << entity.infectionResistance << "\n";
   ofs << "ai=" << entity.ai << "\n";
-  ofs << "\n";
+  ofs << "[entity]\n";
 }
 
 void writeEntitiesUntilTarget() {

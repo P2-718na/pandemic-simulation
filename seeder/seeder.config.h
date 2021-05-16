@@ -21,9 +21,9 @@ enum Sex {
 
 struct Entity {
   int age;
-  float virusResistance;
+  float symptomsResistance;
   float virusSpreadChance;
-  float infectionChance;
+  float infectionResistance;
   string ai;
   pair<int, int> homeLocation{};
   pair<int, int> workLocation{};
@@ -35,9 +35,9 @@ Entity OLD_MAN() {
   return {
     age,
     randFloat(0, 100 - age) / 100.f,
-    randFloat(.4, .6),
+    randFloat(.04, .06),
     randFloat(.5, .7),
-    "oldAi"
+    "oldAI"
   };
 };
 
@@ -47,9 +47,9 @@ Entity OLD_WOMAN() {
   return {
     (int)randFloat(70, 100),
     randFloat(10, 110 - age) / 100.f,
+    randFloat(.04, .06),
     randFloat(.4, .6),
-    randFloat(.4, .6),
-    "oldAi"
+    "oldAI"
   };
 };
 
@@ -57,9 +57,9 @@ Entity MAN() {
   return {
     (int)randFloat(35, 70),
     randFloat(.4, .7),
-    randFloat(.4, .6),
+    randFloat(.04, .06),
     randFloat(.3, .5),
-    "manAi"
+    "manAI"
   };
 };
 
@@ -67,10 +67,10 @@ Entity WOMAN() {
   return {
     (int)randFloat(35, 70),
     randFloat(.45, .75),
-    randFloat(.4, .6),
+    randFloat(.04, .06),
     randFloat(.1, .2),
     // We did it boys, we stopped gender inequality
-    "manAi"
+    "manAI"
   };
 };
 
@@ -78,7 +78,7 @@ Entity GRADUATE() {
   return {
     (int)randFloat(25, 35),
     randFloat(.70, .80),
-    randFloat(.5, .6),
+    randFloat(.05, .06),
     randFloat(.4, .5),
     "gradAi"
   };
@@ -88,9 +88,9 @@ Entity UNI_STUDENT() {
   return {
     (int)randFloat(18, 25),
     randFloat(.80, .90),
-    randFloat(.55, .65),
+    randFloat(.055, .065),
     randFloat(.5, .6),
-    "uniAi"
+    "uniAI"
   };
 };
 
@@ -98,9 +98,9 @@ Entity TEEN() {
   return {
     (int)randFloat(12, 18),
     randFloat(.8, .95),
-    randFloat(.6, .7),
+    randFloat(.06, .07),
     randFloat(.5, .6),
-    "teenAi"
+    "teenAI"
   };
 };
 
@@ -108,9 +108,9 @@ Entity NOMASK() {
   return {
     (int)randFloat(35, 45),
     randFloat(.40, .70),
-    randFloat(.9, 1),
+    randFloat(.1, .2),
     randFloat(.7, .9),
-    "manAi"
+    "manAI"
   };
 };
 

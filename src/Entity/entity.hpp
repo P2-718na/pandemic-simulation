@@ -1,108 +1,123 @@
-#pragma once
-#include "ai.hpp"
-#include "iworld.hpp"
-#include "pathfinder.hpp"
-
+#ifndef ENTITY_HPP
+#define ENTITY_HPP
 #include <string>
+
+#include "Entity/AI/ai.hpp"
+#include "pathfinder.hpp"
+#include "iworld.hpp"
 
 class IWorld;
 
-enum EntityStatus {
-  still,
-  pathing,
-  quarantined
-}; //dead
-
-typedef EntityStatus ES;
+// Entity*, points to current entity, int is the current time of day.
 typedef void (*entityAi)(Entity*, int);
 
 class Entity {
-  // Todo check this is set before doing anything
-  IWorld* _world{};
-  int _uid{};
-  int _posX{};
-  int _posY{};
+  // World this entity belongs to.
+  IWorld* world_;
 
-  int _daysSinceLastInfection{0};
-  bool _quarantined{false};
-  bool _infective{false};
-  Pathfinder _pathfinder{};
-  EntityStatus _status{still};
+  // uid of entity. It is not checked whether or not this is actually
+  // unique. Currently unused, kept mainly for debugging purposes.
+  int uid_;
+
+  // Current X and Y position of entity.
+  int posX_;
+  int posY_;
+
+  // Days since infection. Updated at the end of each dayLoop.
+  // The value is rounded up (e.g., if an entity is infected in the last
+  // minute of day 1, as soon as day 2 begins, this value will be 1).
+  int daysSinceLastInfection_{0};
+
+  // Dead status.
+  // todo add death logic.
+  bool dead_{false};
+
+  // Infected status. If this is true, every day loop we check if entity can
+  // defeat the virus.
+  // Note that infected and infective are two separate conditions.
+  bool infected_{false};
+
+  // Pathfinder. Will be changed in the future.
+  // TODO shared pointer to global pathfinder instance
+  Pathfinder pathfinder_{};
+
+  // AI of the entity, called every time it reaches the end of its path.
+  // This will set the new path.
+  entityAi nextAi_{AI::nullAI};
 
  public:
-  // Ai for next() calls
-  // maybe change in queue system?
-  entityAi nextAi{AI::nullAi};
+  // Quarantined status. Public, since this is regulated by outside
+  // factors.
+  // Todo move quarantine logic to WORLD
+  bool quarantined{false};
 
-  // Variables /////////////////////////////////////////////////////////////////
+  // Infection-related stats of any entity.
   // Affects virus symptoms and recovery time
-  float virusResistance{.9};
-
+  float symptomsResistance{.9};
   // Base chance to spread virus to nearby entities
-  float virusSpreadChance{.5};
-
+  float virusSpreadChance{.05};
   // Base chance to get infected by virus spread
-  float infectionChance{.8};
+  float infectionResistance{.8};
 
-  // Entity-based POI Coordinates
-  std::pair<int, int> homeLocation{0, 0};
-  std::pair<int, int> workLocation{0, 0};
+  // Entity-based Point of Interest Coordinates
+  // workLocation can be work, school or uni location.
+  Coords homeLocation{0, 0};
+  Coords workLocation{0, 0};
 
   // Constructors //////////////////////////////////////////////////////////////
-  // Todo Pathfinder will be map-dependant. It will need to be passed by
-  //  constructor. Also be sure to pass map by referende.
-  //  and implement pathfinder reset method.
-  Entity() = default;
-  Entity(int uid, int posX, int posY);
-  Entity(
-    int uid,
-    int posX,
-    int posY,
-    void (*nextAI)(Entity*, int)
-  );
+  // Todo Pathfinder will be map-dependant.
+  //  implement pathfinder reset method and add pathfinder in constructor.
+  // Default entityAi is nullAi.
+  Entity(IWorld* world, int uid, int posX, int posY);
+  Entity(IWorld* world, int uid, int posX, int posY, entityAi AI);
 
-  // Accessors /////////////////////////////////////////////////////////////////
+  // Getters ///////////////////////////////////////////////////////////////////
+  // fixme should I add noexcept?
   int uid() const;
   int posX() const;
   int posY() const;
+  Coords pos() const;
+  int daysSinceLastInfection() const;
+  bool dead() const;
+  bool infected() const;
   bool infective() const;
-  bool quarantined() const;
 
-  void world(IWorld* parent);
-  void uid(int uid_);
-  void posX(int x);
-  void posY(int Y);
+  // Setters ///////////////////////////////////////////////////////////////////
+  // This should be used in initialization and by private members.
+  // Sets daysSinceLastInfection and infective.
+  // If a person is not infected anymore, adds some infectionResistance.
+  void infected(bool status);
+
+  // calls infected(true) and sets daysSinceLastInfection.
+  // This should be used only in constructor.
   void infective(bool status);
 
-  // Loops /////////////////////////////////////////////////////////////////////
-  // Entity loop, must be run every game loop
-  void loop();
-  // Entity day loop, must be run every day
-  void dayLoop();
-
   // Methods ///////////////////////////////////////////////////////////////////
-  // Load path to destination
-  void moveTo(int destX, int destY);
-  void moveTo(const std::pair<int, int> &destination);
+  // Load path to destination.
+  void setDestination(int destX, int destY);
+  void setDestination(const Coords& destination);
 
-  // Todo implement methods like goHome(), goWork(), goParty() for AI to call.
-  //  The only class to have access to map should be Pathfinder, Entity will
-  //  only have access to the coords of these places (or to a set of coords)
-  //  and AI will only have access to methods to go to these places.
-  //  AI will also have access to time and will be able to specify additional
-  //  path metadata, like "fastPath, publicTransport..."
-  void goHome(); //todo quarantine logic
+  // Todo add access to current day for ai.
+  void goHome();  // todo quarantine logic
   void goWork();
-  void goSchool();
-  void goUni();
   void goWalk();
   void goShop();
   void goParty();
 
-  // Try to infect this entity. Affected by _infectionBaseResistance
-  // and _daysSinceLastInfection
+  // Try to infect this entity. Affected by infectionResistance.
   bool tryInfect();
 
-  // Static ////////////////////////////////////////////////////////////////////
-  static entityAi parseAi(const std::string &value);
+  // Loops /////////////////////////////////////////////////////////////////////
+  // Entity loop, must be run every game loop.
+  // Checks whether or not an entity is arrived to its set destination by
+  // calling Pathfinder::isArrived().
+  // If it is, it will call its ai to decide what to do next.
+  // If it isn't, it will move forward one tile.
+  // If an entity is dead, it will do nothing.
+  void loop();
+
+  // Entity day loop, must be run every day.
+  void dayLoop();
 };
+
+#endif // define ENTITY_HPP

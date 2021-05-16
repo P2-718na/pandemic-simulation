@@ -7,17 +7,7 @@
 #include "entity.hpp"
 
 // todo config file
-#define MINUTES_IN_A_DAY 9000
-
-enum day {
-  monday,
-  tuesday,
-  wednesday,
-  thursday,
-  friday,
-  saturday,
-  sunday
-};
+constexpr int MINUTES_IN_A_DAY = 9000;
 
 struct Tile {
   float entityCount{};
@@ -25,61 +15,54 @@ struct Tile {
 };
 
 class World : IWorld{
-  int _width;
-  int _height;
-  int _daysPassed{0};
-  int _minutesPassed{0};
+  int width_;
+  int height_;
+  int currentDay_{0};
+  int currentMinute_{0};
 
-  sf::Image _background;
-  std::vector<std::vector<Tile>> _map;
-  std::vector<Tile*> _activeTiles;
+  sf::Image backgroundImage_;
 
-  std::vector<std::pair<int, int>> _walkCoords;
-  std::vector<std::pair<int, int>> _shopCoords;
-  std::vector<std::pair<int, int>> _partyCoords;
+  std::vector<Coords> parkCoords_;
+  std::vector<Coords> shopCoords_;
+  std::vector<Coords> partyCoords_;
 
-  // Todo there should be some error management here
   // Loops /////////////////////////////////////////////////////////////////////
-  void _entityPreLoop(Entity &entity);
-  void _entityPostLoop(Entity &entity);
-  void _dayLoop();
+  void dayLoop_();
+  void spreadVirus_();
 
   // Private methods ///////////////////////////////////////////////////////////
-  void _initMap();
-  void _initEntities(std::vector<Entity> &entities);
-  void _parseImage();
+  void parseBackground_();
+
+  bool parseEntitiesFromFile_(
+    const std::string &entitiesFile,
+    std::vector<Entity> &entities
+  );
 
  public:
   // todo decide if this should be public or private
   std::vector<Entity> entities;
 
   // Constructors //////////////////////////////////////////////////////////////
-  //World();
-  World(int width, int height);
-  World(int width, int height, std::vector<Entity> &entities);
-  World(int width, int height, int entityCount); //this is gonna be removed most likely
-
-  // These two will be used. Maybe some init function would be great.
-  World(const std::string &backgroundImagePath, std::vector<Entity> &entities);
   World(const std::string &backgroundImagePath, const std::string &entitiesFile);
 
 
   // Accessors /////////////////////////////////////////////////////////////////
-  int time() const final;
-  sf::Image background();
+  Day currentDay() const final;
+  int currentMinute() const final;
 
-  std::pair<int, int> randomWalkCoords() final;
-  std::pair<int, int> randomShopCoords() final;
-  std::pair<int, int> randomPartyCoords() final;
+  const sf::Image& background();
+
+  const Coords& randomParkCoords() final;
+  const Coords& randomShopCoords() final;
+  const Coords& randomPartyCoords() final;
+
+  int infectedCount() const;
+
+  int deadCount() const;
 
   // Methods ///////////////////////////////////////////////////////////////////
   void loop();
-  bool isInside(const Entity &entity) const;
-  day weekDay() const;
 
   // Static ////////////////////////////////////////////////////////////////////
-  static bool parseEntities(
-    const std::string &entitiesFile,
-    std::vector<Entity> &entities
-  );
+  static entityAi parseEntityAi(const std::string& value);
 };

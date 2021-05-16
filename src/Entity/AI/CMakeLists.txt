@@ -1,0 +1,3 @@
+ADD_LIBRARY(AI STATIC ai.cpp)
+
+TARGET_LINK_LIBRARIES(AI Pathfinder Entity)
