@@ -1,3 +1,5 @@
+// todo refactor this
+
 #include <fstream>
 #include <iostream>
 #include <random>
