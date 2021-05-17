@@ -2,3 +2,6 @@ ADD_EXECUTABLE(seeder seeder.cpp)
 
 TARGET_LINK_LIBRARIES(seeder Entity Pathfinder)
 TARGET_LINK_LIBRARIES(seeder sfml-graphics)
+
+SET_TARGET_PROPERTIES(seeder PROPERTIES
+        RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/seeder")
