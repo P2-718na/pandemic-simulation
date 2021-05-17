@@ -16,8 +16,12 @@ class Config {
   // using ">", which means the actual number of days is this value + 1.
   int DAYS_AFTER_INFECTIVE{2};
 
-  // Days after which an infected person goes into quarantine
+  // Days after which an infected person goes into quarantine.
   int DAYS_AFTER_QUARANTINE{3};
+
+  // Interval to check if virus is defeated and entity can leave
+  // quarantine.
+  int QUARANTINE_CHECK_INTERVAL{7};
 
   // Infection resistance increment after defeating the virus.
   // Calculated with (1.f - infResistance) / INFECTION_RESISTANCE_INCREMENT;

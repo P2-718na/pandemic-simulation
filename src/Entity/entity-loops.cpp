@@ -26,7 +26,7 @@ void Entity::dayLoop() {
 
   // Todo move quarantine logic to WORLD
   // if quarantined, check every week if it can leave quarantine.
-  if (quarantined && !infected_ && daysSinceLastInfection_ % 7 == 0) {
+  if (quarantined && !infected_ && daysSinceLastInfection_ % world_->config.QUARANTINE_CHECK_INTERVAL == 0) {
     quarantined = false;
   }
 
