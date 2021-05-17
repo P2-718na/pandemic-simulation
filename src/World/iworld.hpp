@@ -1,4 +1,6 @@
 #pragma once
+#include "config.hpp"
+
 #include <utility>
 
 typedef std::pair<int, int> Coords;
@@ -15,6 +17,10 @@ enum Day {
 
 class IWorld {
  public:
+  IWorld(Config& config) : config{config} {};
+
+  Config& config;
+
   // Accessors /////////////////////////////////////////////////////////////////
   virtual Day currentDay() const = 0;
   virtual int currentMinute() const = 0;

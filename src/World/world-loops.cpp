@@ -21,7 +21,7 @@ void World::loop() {
   spreadVirus_();
 
   // Execute next day logic (Must be called last)
-  if (this->currentMinute_ >= MINUTES_IN_A_DAY) {
+  if (this->currentMinute_ >= this->config.MINUTES_IN_A_DAY) {
     dayLoop_();
   }
 }

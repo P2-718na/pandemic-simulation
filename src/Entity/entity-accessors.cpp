@@ -30,8 +30,7 @@ bool Entity::infected() const {
 }
 
 bool Entity::infective() const {
-  // todo config
-  return daysSinceLastInfection_ > 2;
+  return daysSinceLastInfection_ > world_->config.DAYS_AFTER_INFECTIVE;
 }
 
 // Setters /////////////////////////////////////////////////////////////////////
@@ -44,15 +43,13 @@ void Entity::infected(bool status) {
     return;
   }
 
-  // todo config
-  this->infectionResistance += (1.f - this->infectionResistance) / 1.5f ;
+  this->infectionResistance += (1.f - this->infectionResistance) / world_->config.INFECTION_RESISTANCE_INCREMENT ;
 }
 
 void Entity::infective(bool status) {
   infected(status);
 
   if (status) {
-    // todo config
-    daysSinceLastInfection_ = 99;
+    daysSinceLastInfection_ = world_->config.DAYS_AFTER_INFECTIVE + 1;
   }
 }

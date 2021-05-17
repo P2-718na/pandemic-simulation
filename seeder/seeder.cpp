@@ -7,6 +7,7 @@
 #include <SFML/Graphics/Image.hpp>
 
 #include "seeder.config.h"
+// todo include config here
 
 using namespace std;
 

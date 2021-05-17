@@ -2,9 +2,7 @@
 #include <iostream>
 #include <vector>
 
-#include "Entity/AI/ai.hpp"
-#include "entity.hpp"
-#include "pathfinder.hpp"
+#include "config.hpp"
 #include "world.hpp"
 
 // values near the mean are the most likely
@@ -17,7 +15,9 @@ int main() {
 
   sf::VertexArray _entities(sf::Points, 1000);
 
-  World world("background.sample.bmp", "entities");
+  Config config{};
+
+  World world("background.sample.bmp", "entities", config);
 
   backgroundTexture.loadFromImage(world.background());
   background.setTexture(backgroundTexture);

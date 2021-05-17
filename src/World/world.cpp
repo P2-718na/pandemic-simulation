@@ -12,13 +12,12 @@ void World::parseBackground_() {
     for (int x = 0; x < this->width_; ++x ) {
       sf::Color color = this->backgroundImage_.getPixel(x, y);
 
-      // Todo write these values to config
       // Parse image to find walk, shop and party POIs
-      if (color.r == 0x00 && color.g == 0xff && color.b == 0x00) {
+      if (color == this->config.PARK_COLOR) {
         this->parkCoords_.emplace_back(x, y);
-      } else if (color.r == 0xff && color.g == 0xFF && color.b == 0x00) {
+      } else if (color == this->config.SHOP_COLOR) {
         this->shopCoords_.emplace_back(x, y);
-      } else if (color.r == 0xff && color.g == 0x00 && color.b == 0xff) {
+      } else if (color == this->config.PARTY_COLOR) {
         this->partyCoords_.emplace_back(x, y);
       }
     }
@@ -28,8 +27,10 @@ void World::parseBackground_() {
 // Constructors ////////////////////////////////////////////////////////////////
 World::World(
   const std::string &backgroundImagePath,
-  const std::string &entitiesFile
-) {
+  const std::string &entitiesFile,
+  Config& config
+) : IWorld(config) {
+
   // fixme cleanup these two constructors
   if (!this->backgroundImage_.loadFromFile(backgroundImagePath)) {
     throw std::runtime_error("Cannot load image");

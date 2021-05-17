@@ -5,9 +5,7 @@
 
 #include "iworld.hpp"
 #include "entity.hpp"
-
-// todo config file
-constexpr int MINUTES_IN_A_DAY = 9000;
+#include "config.hpp"
 
 struct Tile {
   float entityCount{};
@@ -43,8 +41,10 @@ class World : IWorld{
   std::vector<Entity> entities;
 
   // Constructors //////////////////////////////////////////////////////////////
-  World(const std::string &backgroundImagePath, const std::string &entitiesFile);
-
+  World(
+    const std::string &backgroundImagePath,
+    const std::string &entitiesFile,
+    Config& config);
 
   // Accessors /////////////////////////////////////////////////////////////////
   Day currentDay() const final;
