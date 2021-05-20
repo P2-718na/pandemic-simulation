@@ -9,7 +9,7 @@
 Entity::Entity(World* world, int uid, int posX, int posY)
   : world_{world}, uid_{uid}, posX_{posX}, posY_{posY} {}
 
-Entity::Entity(World* world, int uid, int posX, int posY, entityAi AI)
+Entity::Entity(World* world, int uid, int posX, int posY, entityAI AI)
   : Entity(world, uid, posX, posY) {
   nextAi_ = AI;
 }

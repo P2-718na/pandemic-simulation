@@ -9,9 +9,6 @@ typedef std::pair<int, int> Coords;
 
 class World;
 
-// Entity*, points to current entity, int is the current time of day.
-typedef void (*entityAi)(Entity*, int);
-
 class Entity {
   // World this entity belongs to.
   World* world_;
@@ -44,7 +41,7 @@ class Entity {
 
   // AI of the entity, called every time it reaches the end of its path.
   // This will set the new path.
-  entityAi nextAi_{AI::nullAI};
+  entityAI nextAi_{AI::nullAI};
 
  public:
   // Quarantined status. Public, since this is regulated by outside
@@ -70,7 +67,7 @@ class Entity {
   //  implement pathfinder reset method and add pathfinder in constructor.
   // Default entityAi is nullAi.
   Entity(World* world, int uid, int posX, int posY);
-  Entity(World* world, int uid, int posX, int posY, entityAi AI);
+  Entity(World* world, int uid, int posX, int posY, entityAI AI);
 
   // Getters ///////////////////////////////////////////////////////////////////
   // fixme should I add noexcept?

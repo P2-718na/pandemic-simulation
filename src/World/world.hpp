@@ -43,17 +43,6 @@ class World {
   std::vector<Coords> partyCoords_;
 
   // Private methods ///////////////////////////////////////////////////////////
-  // todo i want this in another file.
-  //  or maybe just refactor this
-  bool loadEntitiesFromFile_(
-    const std::string &entitiesFile,
-    std::vector<Entity> &entities
-  );
-
-  // Parse background image to load park, shop and party coordinates.
-  // Called once in constructor.
-  void parseBackground_();
-
   // Day loop, called at the end of loop() once every x minutes have passed.
   // Calls dayLoop method for each entity.
   void dayLoop_();
@@ -68,6 +57,7 @@ class World {
  public:
   // Constructors //////////////////////////////////////////////////////////////
   // todo error handle this
+  // todo add description to this
   World(
     const std::string &backgroundImagePath,
     const std::string &entitiesFile,
@@ -106,10 +96,6 @@ class World {
   // Loop //////////////////////////////////////////////////////////////////////
   // World main loop. Must be called repeatedly to advance the simulation.
   void loop();
-
-  // Static ////////////////////////////////////////////////////////////////////
-  // todo move this
-  static entityAi parseEntityAi(const std::string& value);
 };
 
 #endif // define WORLD_HPP

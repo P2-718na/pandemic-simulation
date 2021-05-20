@@ -1,10 +1,7 @@
-#include "world.hpp"
-
-#include <fstream>
-#include <iostream>
-
 #include "Entity/AI/ai.hpp"
+#include "world.hpp"
 #include "entity.hpp"
+#include "parser.hpp"
 
 // Private methods /////////////////////////////////////////////////////////////
 void World::spreadVirus_() {
@@ -66,8 +63,10 @@ World::World(const std::string &backgroundImagePath,
 
   this->width_ = this->backgroundImage_.getSize().x;
   this->height_ = this->backgroundImage_.getSize().y;
-  World::loadEntitiesFromFile_(entitiesFile, this->entities_);
-  this->parseBackground_();
+
+  // todo check if there are correct
+  Parser::parseEntitiesFile(this, entitiesFile, entities_);
+  Parser::parsePointsOfInterests(config, backgroundImage_, parkCoords_, shopCoords_, partyCoords_);
 }
 
 // Accessors ///////////////////////////////////////////////////////////////////
