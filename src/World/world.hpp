@@ -1,4 +1,6 @@
-#pragma once
+#ifndef WORLD_HPP
+#define WORLD_HPP
+
 #include <vector>
 #include <string>
 #include <SFML/Graphics/Image.hpp>
@@ -109,3 +111,5 @@ class World {
   // todo move this
   static entityAi parseEntityAi(const std::string& value);
 };
+
+#endif // define WORLD_HPP
