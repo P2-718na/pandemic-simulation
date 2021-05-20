@@ -1,3 +1,4 @@
+#include "world.hpp"
 #include "entity.hpp"
 
 // Loops ///////////////////////////////////////////////////////////////////////
@@ -19,40 +20,34 @@ void Entity::loop() {
 }
 
 void Entity::dayLoop() {
-  // Do nothing if dead.
+    // Do nothing if dead.
   if (dead_) {
     return;
   }
 
-  // Todo move quarantine logic to WORLD
-  // if quarantined, check every week if it can leave quarantine.
-  if (quarantined && !infected_ && daysSinceLastInfection_ % world_->config.QUARANTINE_CHECK_INTERVAL == 0) {
-    quarantined = false;
-  }
-
   // if infected, handle virus...
   if (infected_) {
-    // Put person in quarantine after virus gets diagnosed.
-    if (daysSinceLastInfection_ > world_->config.DAYS_AFTER_QUARANTINE) {
-
-      // Todo move quarantine logic to WORLD
-      quarantined = true;
-    }
-
     bool resistSymptoms = AI::chanceCheck(this->symptomsResistance);
 
+    // An entity can only die if it starts to show symptoms.
+    // aka if it's infective.
     if (this->infective() && !resistSymptoms) {
-      if (AI::chanceCheck(world_->config.VIRUS_DEATH_RATE)) {
+      if (AI::chanceCheck(world_->config().VIRUS_DEATH_RATE)) {
         dead_ = true;
         return;
       }
     }
 
     // chance to lose virus.
-    if (daysSinceLastInfection_ > world_->config.VIRUS_DURATION && resistSymptoms) {
+    if (daysSinceLastInfection_ > world_->config().VIRUS_DURATION && resistSymptoms) {
       this->infected(false);
+      return;
     }
+  }
 
+  // Increment daysSinceLastInfection only if quarantined or infected
+  // since this is used to check for quarantine healing.
+  if (quarantined || infected()) {
     ++daysSinceLastInfection_;
   }
 }

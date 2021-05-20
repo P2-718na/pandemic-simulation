@@ -1,14 +1,15 @@
 #include "entity.hpp"
+#include "world.hpp"
 
 #include <string>
 
 #include "AI/ai.hpp"
 
 // Constructors ////////////////////////////////////////////////////////////////
-Entity::Entity(IWorld* world, int uid, int posX, int posY)
+Entity::Entity(World* world, int uid, int posX, int posY)
   : world_{world}, uid_{uid}, posX_{posX}, posY_{posY} {}
 
-Entity::Entity(IWorld* world, int uid, int posX, int posY, entityAi AI)
+Entity::Entity(World* world, int uid, int posX, int posY, entityAi AI)
   : Entity(world, uid, posX, posY) {
   nextAi_ = AI;
 }
@@ -43,7 +44,8 @@ void Entity::goParty() {
 }
 
 bool Entity::tryInfect() {
-  // Do not infect an already infected person.
+  // Do not infect an already infected person. (It is required to check this,
+  // since infected() will reset daysSinceLastInfection).
   // "Removed" people will have their infectionChance go up.
   if (!infected_ && AI::chanceCheck(this->infectionResistance)) {
     this->infected(true);

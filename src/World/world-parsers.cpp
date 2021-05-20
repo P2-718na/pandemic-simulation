@@ -2,7 +2,24 @@
 
 #include "world.hpp"
 
-bool World::parseEntitiesFromFile_(
+void World::parseBackground_() {
+  for (int y = 0; y < this->height_; ++y) {
+    for (int x = 0; x < this->width_; ++x ) {
+      sf::Color color = this->backgroundImage_.getPixel(x, y);
+
+      // Parse image to find walk, shop and party POIs
+      if (color == this->config_.PARK_COLOR) {
+        this->parkCoords_.emplace_back(x, y);
+      } else if (color == this->config_.SHOP_COLOR) {
+        this->shopCoords_.emplace_back(x, y);
+      } else if (color == this->config_.PARTY_COLOR) {
+        this->partyCoords_.emplace_back(x, y);
+      }
+    }
+  }
+}
+
+bool World::loadEntitiesFromFile_(
   const std::string &entitiesFile, std::vector<Entity> &entities) {
   if (!entities.empty()) {
     return false;
@@ -29,7 +46,7 @@ bool World::parseEntitiesFromFile_(
     }
 
     if (line == "[entity]") {
-      entities.emplace_back((IWorld*)this, uid, homex, homey, parseEntityAi(ai));
+      entities.emplace_back(this, uid, homex, homey, parseEntityAi(ai));
 
       Entity& entity = entities.back();
       entity.homeLocation = {homex, homey};

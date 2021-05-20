@@ -1,4 +1,5 @@
 #include "entity.hpp"
+#include "world.hpp"
 
 // Getters /////////////////////////////////////////////////////////////////////
 int Entity::uid() const {
@@ -30,26 +31,30 @@ bool Entity::infected() const {
 }
 
 bool Entity::infective() const {
-  return daysSinceLastInfection_ > world_->config.DAYS_AFTER_INFECTIVE;
+  return infected_ && daysSinceLastInfection_ > world_->config().DAYS_AFTER_INFECTIVE;
 }
 
 // Setters /////////////////////////////////////////////////////////////////////
 void Entity::infected(bool status) {
+  // Set new status.
   infected_ = status;
 
+  // If this is a new infection, reset daysSinceLastInfection
   if (status) {
     daysSinceLastInfection_ = 0;
-
     return;
   }
 
-  this->infectionResistance += (1.f - this->infectionResistance) / world_->config.INFECTION_RESISTANCE_INCREMENT ;
+  // If !status, increase infectionResistance.
+  this->infectionResistance += (1.f - this->infectionResistance) / world_->config().INFECTION_RESISTANCE_INCREMENT ;
 }
 
 void Entity::infective(bool status) {
+  // We must call infected first, since infected sets daysSinceLastInfection to 0.
   infected(status);
 
   if (status) {
-    daysSinceLastInfection_ = world_->config.DAYS_AFTER_INFECTIVE + 1;
+    daysSinceLastInfection_ = world_->config().DAYS_AFTER_INFECTIVE + 1;
+    return;
   }
 }
