@@ -5,8 +5,10 @@
 #include <string>
 #include <SFML/Graphics/Image.hpp>
 
-#include "entity.hpp"
-#include "config.hpp"
+typedef std::pair<int, int> Coords;
+
+class Config;
+class Entity;
 
 class World {
   // Current day counter. This will always increment.
@@ -50,8 +52,9 @@ class World {
 
  public:
   // Constructors //////////////////////////////////////////////////////////////
-  // todo error handle this
-  // todo add description to this
+  // Initialize world. Loads background image from file and calls
+  // parseEntitiesFile() and parsePoiintsOfInteres().
+  // Throws a runtime_error if any of these functions fails.
   World(
     const std::string &backgroundImagePath,
     const std::string &entitiesFile,

@@ -4,6 +4,7 @@
 
 #include "config.hpp"
 #include "world.hpp"
+#include "entity.hpp"
 
 // values near the mean are the most likely
 // standard deviation affects the dispersion of generated values from the mean

@@ -28,6 +28,13 @@ bool Parser::parsePointsOfInterests(const Config &config,
       }
     }
   }
+
+  // We want at least one POI in every list.
+  if (parkCoords.empty() || shopCoords.empty() || partyCoords.empty()) {
+    return false;
+  }
+
+  return true;
 }
 
 bool Parser::parseEntitiesFile(

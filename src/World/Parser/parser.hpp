@@ -12,6 +12,7 @@ class World;
 typedef std::pair<int, int> Coords;
 
 struct Parser {
+  // returns false if one of the three lists is empty.
   static bool parsePointsOfInterests(const Config& config,
     const sf::Image& backgroundImage, std::vector<Coords>& parkCoords,
     std::vector<Coords>& shopCoords, std::vector<Coords>& partyCoords) noexcept;

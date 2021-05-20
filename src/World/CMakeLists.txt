@@ -1,4 +1,4 @@
-ADD_LIBRARY(World STATIC world.cpp world-loops.cpp)
+ADD_LIBRARY(World STATIC world.cpp)
 
 ADD_SUBDIRECTORY(Parser)
 

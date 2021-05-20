@@ -1,5 +1,6 @@
 #include "entity.hpp"
 #include "world.hpp"
+#include "config.hpp"
 
 // Getters /////////////////////////////////////////////////////////////////////
 int Entity::uid() const {

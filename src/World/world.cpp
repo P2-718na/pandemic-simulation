@@ -3,6 +3,7 @@
 #include "world.hpp"
 #include "entity.hpp"
 #include "parser.hpp"
+#include "config.hpp"
 
 // Loops ///////////////////////////////////////////////////////////////////////
 void World::dayLoop_() {
@@ -61,7 +62,7 @@ void World::spreadVirus_() {
   // tile. (Note the order of the loops: entities->infectiveTiles. It would
   // be less efficient to do the opposite).
   for (auto &entity : entities_) {
-    // Todo this could probably be optimized using a set.
+    // todo this could probably be optimized using a set.
     const auto &first = infectiveTiles.begin();
     const auto &last = infectiveTiles.end();
 
@@ -107,13 +108,20 @@ void World::handleQuarantine_(Entity &entity) {
 World::World(const std::string &backgroundImagePath,
   const std::string &entitiesFile, Config &config)
   : config_{config} {
-  // fixme cleanup this constructor
-  if (!this->backgroundImage_.loadFromFile(backgroundImagePath)) {
-    throw std::runtime_error("Cannot load image");
-  };
+  // Load background image
+  if (!backgroundImage_.loadFromFile(backgroundImagePath)) {
+    throw std::runtime_error("Cannot load image from file.");
+  }
 
-  Parser::parseEntitiesFile(this, entitiesFile, entities_);
-  Parser::parsePointsOfInterests(config, backgroundImage_, parkCoords_, shopCoords_, partyCoords_);
+  // Load entities
+  if (!Parser::parseEntitiesFile(this, entitiesFile, entities_)) {
+    throw std::runtime_error("Error parsing entities file.");
+  }
+
+  // Load points of interest.
+  if (!Parser::parsePointsOfInterests(config, backgroundImage_, parkCoords_, shopCoords_, partyCoords_)) {
+    throw std::runtime_error("Error parsing points of interest for entities.");
+  }
 }
 
 // Accessors ///////////////////////////////////////////////////////////////////

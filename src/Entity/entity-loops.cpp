@@ -1,5 +1,6 @@
 #include "world.hpp"
 #include "entity.hpp"
+#include "config.hpp"
 
 // Loops ///////////////////////////////////////////////////////////////////////
 void Entity::loop() {
