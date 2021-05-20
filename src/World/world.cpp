@@ -1,50 +1,101 @@
-#include "Entity/AI/ai.hpp"
+#include <algorithm>
+
 #include "world.hpp"
 #include "entity.hpp"
 #include "parser.hpp"
 
-// Private methods /////////////////////////////////////////////////////////////
+// Loops ///////////////////////////////////////////////////////////////////////
+void World::dayLoop_() {
+  // Increment day counter
+  ++currentDay_;
+  // and reset minute counter.
+  currentMinute_ = 0;
+
+  // For every entity, run its dayLoop and handle quarantine logic.
+  for (auto &entity : entities_) {
+    entity.dayLoop();
+    handleQuarantine_(entity);
+  }
+
+  // Todo move this elsewhere
+  printf("New day! %d\nInfected: %d, Dead: %d\n", currentDay_, infectedCount(), deadCount());
+}
+
+void World::loop() {
+  // Increment minute counter
+  ++currentMinute_;
+
+  // Loop every entity
+  for (auto &entity : entities_) {
+    entity.loop();
+  }
+
+  // Spread virus
+  spreadVirus_();
+
+  // Execute next day logic (Must be called last)
+  if (currentMinute_ >= config_.MINUTES_IN_A_DAY) {
+    dayLoop_();
+  }
+}
+
+// Other methods ///////////////////////////////////////////////////////////////
 void World::spreadVirus_() {
+  // We want to write all tiles with infective entities in here...
   std::vector<Coords> infectiveTiles;
 
-  // Save coordinates for each infective entity...
-  for (auto &infectiveEntity : this->entities_) {
+  // Loop through every infective entity...
+  for (auto &infectiveEntity : entities_) {
     if (!infectiveEntity.infective()) {
       continue;
     }
 
-    // An infective entity has to succeed a virus spread test
+    // If entity succeeds a virusSpreadChance test, add tile to infective
+    // tiles.
     if (AI::chanceCheck(infectiveEntity.virusSpreadChance)) {
-      infectiveTiles.emplace_back(
-        infectiveEntity.posX(), infectiveEntity.posY());
+      infectiveTiles.push_back(infectiveEntity.pos());
     }
   }
 
-  // And spread virus
-  for (auto &entity : this->entities_) {
-    // Map is not very efficient compared to this
+  // Then, loop through every entity and check if they are in an infective
+  // tile. (Note the order of the loops: entities->infectiveTiles. It would
+  // be less efficient to do the opposite).
+  for (auto &entity : entities_) {
+    // Todo this could probably be optimized using a set.
     const auto &first = infectiveTiles.begin();
     const auto &last = infectiveTiles.end();
-    const bool contactWithInfected =
+
+    // Check if current entity is in an infected tile.
+    const bool isInInfectedTile =
       std::find(first, last, entity.pos()) != last;
-    if (contactWithInfected) {
+
+    // If it is, try to infect it.
+    if (isInInfectedTile) {
       entity.tryInfect();
     }
   }
 }
 
 void World::handleQuarantine_(Entity &entity) {
-  // Put person in quarantine after virus gets diagnosed.
+  // Note: this checks are performed on dead entities as well.
+  // We could add additional checks to skip dead entities, but it wouldn't
+  // benefit us that much, since the performance gains would be
+  // insignificant.
+
+  // If entity is infected and not quarantined, put it in quarantine.
+  // All this checks are needed to avoid unwanted behaviour (e.g. an entity
+  // staying in quarantine forever).
   if (entity.infected() &&
       !entity.quarantined &&
-      entity.daysSinceLastInfection() > this->config_.DAYS_AFTER_QUARANTINE) {
+      entity.daysSinceLastInfection() > config_.DAYS_AFTER_QUARANTINE) {
     entity.quarantined = true;
     return;
   }
 
-  // if quarantined, check every x days if it can leave quarantine.
+  // If an entity is  quarantined, check every x days if it can leave
+  // quarantine.
   const bool quarantineCheckDay =
-    entity.daysSinceLastInfection() % this->config_.QUARANTINE_CHECK_INTERVAL ==
+    entity.daysSinceLastInfection() % config_.QUARANTINE_CHECK_INTERVAL ==
     0;
   if (entity.quarantined && !entity.infected() && quarantineCheckDay) {
     entity.quarantined = false;
@@ -56,15 +107,11 @@ void World::handleQuarantine_(Entity &entity) {
 World::World(const std::string &backgroundImagePath,
   const std::string &entitiesFile, Config &config)
   : config_{config} {
-  // fixme cleanup these two constructors
+  // fixme cleanup this constructor
   if (!this->backgroundImage_.loadFromFile(backgroundImagePath)) {
     throw std::runtime_error("Cannot load image");
   };
 
-  this->width_ = this->backgroundImage_.getSize().x;
-  this->height_ = this->backgroundImage_.getSize().y;
-
-  // todo check if there are correct
   Parser::parseEntitiesFile(this, entitiesFile, entities_);
   Parser::parsePointsOfInterests(config, backgroundImage_, parkCoords_, shopCoords_, partyCoords_);
 }

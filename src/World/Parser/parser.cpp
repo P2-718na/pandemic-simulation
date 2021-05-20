@@ -31,6 +31,7 @@ bool Parser::parsePointsOfInterests(const Config &config,
 }
 
 bool Parser::parseEntitiesFile(
+  //todo rewrite this
   World* parentPtr,
   const std::string &entitiesFile, std::vector<Entity> &entities) {
   if (!entities.empty()) {

@@ -9,12 +9,6 @@
 #include "config.hpp"
 
 class World {
-  // Width of the world. Obtained from background image.
-  int width_;
-
-  // Height of the world. Obtained from background image.
-  int height_;
-
   // Current day counter. This will always increment.
   int currentDay_{0};
 
