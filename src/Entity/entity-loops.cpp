@@ -26,15 +26,14 @@ void Entity::dayLoop() {
 
   // Todo move quarantine logic to WORLD
   // if quarantined, check every week if it can leave quarantine.
-  if (quarantined && !infected_ && daysSinceLastInfection_ % 7 == 0) {
+  if (quarantined && !infected_ && daysSinceLastInfection_ % world_->config.QUARANTINE_CHECK_INTERVAL == 0) {
     quarantined = false;
   }
 
   // if infected, handle virus...
   if (infected_) {
     // Put person in quarantine after virus gets diagnosed.
-    //todo config
-    if (daysSinceLastInfection_ > 3) {
+    if (daysSinceLastInfection_ > world_->config.DAYS_AFTER_QUARANTINE) {
 
       // Todo move quarantine logic to WORLD
       quarantined = true;
@@ -42,17 +41,15 @@ void Entity::dayLoop() {
 
     bool resistSymptoms = AI::chanceCheck(this->symptomsResistance);
 
-    if (!resistSymptoms) {
-      // todo config. This is virus death rate
-      if (AI::chanceCheck(0.1)) {
+    if (this->infective() && !resistSymptoms) {
+      if (AI::chanceCheck(world_->config.VIRUS_DEATH_RATE)) {
         dead_ = true;
         return;
       }
     }
 
-    // todo config
     // chance to lose virus.
-    if (daysSinceLastInfection_ > 7 && resistSymptoms) {
+    if (daysSinceLastInfection_ > world_->config.VIRUS_DURATION && resistSymptoms) {
       this->infected(false);
     }
 

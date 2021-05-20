@@ -13,14 +13,14 @@ INCLUDE_DIRECTORIES(
         "${PROJECT_SOURCE_DIR}/src/Pathfinder"
         "${PROJECT_SOURCE_DIR}/src/Entity"
         "${PROJECT_SOURCE_DIR}/src/World"
-        "${PROJECT_SOURCE_DIR}/dist"
+        "${PROJECT_SOURCE_DIR}/src/Config"
 )
 
 ADD_SUBDIRECTORY(src)
 ADD_SUBDIRECTORY(tests)
 ADD_SUBDIRECTORY(seeder)
 
-CONFIGURE_FILE(background.sample.bmp  "${CMAKE_CURRENT_BINARY_DIR}/src" COPYONLY)
+CONFIGURE_FILE(assets/background.sample.bmp "${PROJECT_BINARY_DIR}" COPYONLY)
 
 SET(GCC_COVERAGE_COMPILE_FLAGS "-Wall -Wextra -g")
 SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${GCC_COVERAGE_COMPILE_FLAGS} ")

@@ -1,3 +1,5 @@
+// todo refactor this
+
 #include <fstream>
 #include <iostream>
 #include <random>
@@ -7,6 +9,7 @@
 #include <SFML/Graphics/Image.hpp>
 
 #include "seeder.config.h"
+// todo include config here
 
 using namespace std;
 
