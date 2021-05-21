@@ -7,13 +7,21 @@
 typedef std::pair<int, int> Coords;
 
 class Config {
-  // todo these probably need to be changed. We want some error handling on
-  // these values.
+  // Weights for pathfinding
+  int PARK_COLOR_WEIGHT{2};
+  int SHOP_COLOR_WEIGHT{10};
+  int PARTY_COLOR_WEIGHT{5};
+  int ROAD_COLOR_WEIGHT{1};
+
  public:
+  // todo all of these probably need to be changed. We want some error handling on
+  //  these values.
+
   // POI Colors
   sf::Color PARK_COLOR{0x00, 0xff, 0x00};
   sf::Color SHOP_COLOR{0xff, 0xff, 0x00};
   sf::Color PARTY_COLOR{0xff, 0x00, 0xff};
+  sf::Color ROAD_COLOR{0xee, 0xee, 0xee};
 
   // Number of minutes after every day loop.
   int MINUTES_IN_A_DAY{9000};
@@ -42,6 +50,8 @@ class Config {
 
   // Number of days after which an entity can recover from the virus.
   int VIRUS_DURATION{7};
+
+  int A_STAR_WEIGHT_BY_COLOR(const sf::Color& color) const noexcept;
 
   // todo loadFromFile
   // bool loadFromFile(string filename);

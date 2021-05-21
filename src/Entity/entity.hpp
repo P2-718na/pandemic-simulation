@@ -36,7 +36,6 @@ class Entity {
   bool infected_{false};
 
   // Pathfinder. Will be changed in the future.
-  // TODO shared pointer to global pathfinder instance
   Pathfinder pathfinder_{};
 
   // AI of the entity, called every time it reaches the end of its path.

@@ -7,6 +7,8 @@
 bool Parser::parsePointsOfInterests(const Config &config,
   const sf::Image &backgroundImage, std::vector<Coords> &parkCoords,
   std::vector<Coords> &shopCoords, std::vector<Coords> &partyCoords) noexcept {
+
+  //fixme this makes no sense. X is width, y is height.
   const int height = backgroundImage.getSize().x;
   const int width = backgroundImage.getSize().y;
 

@@ -2,9 +2,10 @@
 #define  PATHFINDER_HPP
 #include <vector>
 #include <list>
-#include <string>
+#include <SFML/Graphics/Image.hpp>
 
 typedef std::pair<int, int> Coords;
+class Config;
 
 struct aStarNode {
   Coords coords;
@@ -26,7 +27,7 @@ struct aStarNode {
   aStarNode* parent{};
 
   // todo make vector
-  aStarNode* neigbors[8];
+  std::vector<aStarNode*> neigbors;
 
   aStarNode(const Coords& coords, int weight) : coords{coords}, weight{weight} {};
 };
@@ -38,22 +39,22 @@ class Pathfinder {
   // of the simulation.
   static aStarList aStarFullList_;
 
-  aStarList aStarOpenList_{aStarFullList_.size()};
-  aStarList aStarClosedList_{aStarFullList_.size()};
+  aStarList aStarOpenList_;
+  aStarList aStarClosedList_;
 
   Coords startCoords_;
   Coords endCoords_;
-  int _step{-1};
-  std::vector<Coords> _path{};
+  int step_{-1};
 
   auto aStarFindLowestF_(const aStarList& list);
   auto nodeWithLowerFInList_(const aStarNode& node, const aStarList& list) ;
   int aStarComputeHeuristics_(const Coords& nodeCoords) const;
 
  public:
-  //todo Pathfinder();
+  //todo move back
+  std::vector<Coords> path_{};
 
-  static void loadMap(std::string mapImagePath);
+  static void loadMap(const Config& config, sf::Image map);
 
   // Reset open and closed list. (clear open list, copy full list to closed list).
   void reset();
@@ -66,9 +67,9 @@ class Pathfinder {
 
   void computeAStar();
 
-  // todo Coords step();
+  const Coords& step() noexcept;
 
-  // todo bool isArrived();
+  bool arrived() const noexcept;
 };
 
 #endif // define PATHFINDER_HPP

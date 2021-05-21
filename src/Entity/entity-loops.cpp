@@ -10,7 +10,7 @@ void Entity::loop() {
   }
 
   // IF arrived to destination, call AI
-  if (pathfinder_.isArrived()) {
+  if (pathfinder_.arrived()) {
     return nextAi_(this, world_->currentMinute());
   }
 

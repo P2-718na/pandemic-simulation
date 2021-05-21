@@ -122,6 +122,9 @@ World::World(const std::string &backgroundImagePath,
         config, backgroundImage_, parkCoords_, shopCoords_, partyCoords_)) {
     throw std::runtime_error("Error parsing points of interest for entities.");
   }
+
+  // Initialize Pathfinder
+  Pathfinder::loadMap(config_, backgroundImage_);
 }
 
 // Accessors ///////////////////////////////////////////////////////////////////

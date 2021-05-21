@@ -1,19 +1,59 @@
 #include "pathfinder.hpp"
+#include "config.hpp"
 
 #include <algorithm>
 #include <cmath>
 // A* algorithm from https://www.geeksforgeeks.org/a-search-algorithm/
 
-void Pathfinder::loadMap(sf::Image map) {
+aStarList Pathfinder::aStarFullList_;
 
+void Pathfinder::loadMap(const Config& config, sf::Image map) {
   const int width = map.getSize().x;
   const int height = map.getSize().y;
 
-  for (int row = 0; row < height; ++row) {
-    for (int column = 0; column < width; ++column) {
+  for (int column = 0; column != width; ++column) {
+    for (int row = 0; row != height; ++row) {
+      const sf::Color& pixelColor = map.getPixel(column, row);
 
+      const int weight = config.A_STAR_WEIGHT_BY_COLOR(pixelColor);
+
+      if (weight > 0) {
+        aStarFullList_.emplace_back(Coords{column, row}, weight);
+      }
     }
   }
+
+  // fixme this can probably be optimized
+  //  also this needs comments badly
+  for (auto &node : aStarFullList_) {
+    std::list<Coords> possibleNeighborCoords;
+    for (int i = -1; i != 2; ++i) {
+      for (int j = -1; j != 2; ++j) {
+        // We don't want a node to be neighbor of itself.
+        if (i == 0 && j == 0) {
+          continue;
+        }
+
+        const int neighborX = node.coords.first + i;
+        const int neighborY = node.coords.second + j;
+
+        possibleNeighborCoords.emplace_back(neighborX, neighborY);
+      }
+    }
+
+    for (auto& possibleCoords : possibleNeighborCoords) {
+      auto compareNodeCoords = [possibleCoords](aStarNode& node) {
+        return node.coords == possibleCoords;
+      };
+
+      auto neighborIt = std::find_if(aStarFullList_.begin(), aStarFullList_.end(), compareNodeCoords);
+
+      if (neighborIt != aStarFullList_.end()) {
+        node.neigbors.push_back(&(*neighborIt));
+      }
+    }
+  }
+  printf("Loading comoplete");
 }
 
 auto Pathfinder::aStarFindLowestF_(const aStarList& list) {
@@ -54,9 +94,13 @@ void Pathfinder::init(const Coords& startCoords, const Coords& endCoords) {
 }
 
 aStarNode* Pathfinder::generateTree() {
+  auto compareNodeCoords = [this](aStarNode& node) {
+    return node.coords == startCoords_;
+  };
+
   // 2.a Put starting node on the open list
-  auto startingNode = find(aStarClosedList_.begin(), aStarClosedList_.end(),
-    startCoords_);  // todo error handling
+  auto startingNode = find_if(aStarClosedList_.begin(), aStarClosedList_.end(),
+    compareNodeCoords);  // todo error handling
   aStarOpenList_.splice(aStarOpenList_.begin(), aStarClosedList_, startingNode);
 
   // 3. While the open list is not empty...
@@ -69,6 +113,7 @@ aStarNode* Pathfinder::generateTree() {
     aStarClosedList_.splice(aStarClosedList_.end(), aStarOpenList_, q);
 
     // 3.d For each neighbor...
+    //todo rewrite to use vector....
     for (int i = 0; i != 8; ++i) {
       auto neigborPtr = q->neigbors[i];
 
@@ -100,12 +145,32 @@ aStarNode* Pathfinder::generateTree() {
       aStarOpenList_.push_back(*neigborPtr);
     }
   }
+
+  return &(*startingNode);
 }
 
 void Pathfinder::computeAStar() {
   aStarNode* currentNode = generateTree();
   do {
-    _path.push_back(currentNode->coords);
+    path_.push_back(currentNode->coords);
     currentNode = currentNode->parent;
   } while (currentNode->parent != nullptr);
+}
+
+const Coords& Pathfinder::step() noexcept {
+  if (step_ == -1) {
+    // todo handle this
+  }
+
+  const int totalStepCount = path_.size();
+
+  if (step_ >= totalStepCount) {
+    return path_[totalStepCount];
+  }
+
+  return path_[step_++];
+}
+
+bool Pathfinder::arrived() const noexcept {
+  return step_ >= path_.size() - 1;
 }
