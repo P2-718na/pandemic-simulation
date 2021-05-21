@@ -1,9 +1,10 @@
+#include "world.hpp"
+
 #include <algorithm>
 
-#include "world.hpp"
+#include "config.hpp"
 #include "entity.hpp"
 #include "parser.hpp"
-#include "config.hpp"
 
 // Loops ///////////////////////////////////////////////////////////////////////
 void World::dayLoop_() {
@@ -19,7 +20,8 @@ void World::dayLoop_() {
   }
 
   // Todo move this elsewhere
-  printf("New day! %d\nInfected: %d, Dead: %d\n", currentDay_, infectedCount(), deadCount());
+  printf("New day! %d\nInfected: %d, Dead: %d\n", currentDay_, infectedCount(),
+    deadCount());
 }
 
 void World::loop() {
@@ -67,8 +69,7 @@ void World::spreadVirus_() {
     const auto &last = infectiveTiles.end();
 
     // Check if current entity is in an infected tile.
-    const bool isInInfectedTile =
-      std::find(first, last, entity.pos()) != last;
+    const bool isInInfectedTile = std::find(first, last, entity.pos()) != last;
 
     // If it is, try to infect it.
     if (isInInfectedTile) {
@@ -86,8 +87,7 @@ void World::handleQuarantine_(Entity &entity) {
   // If entity is infected and not quarantined, put it in quarantine.
   // All this checks are needed to avoid unwanted behaviour (e.g. an entity
   // staying in quarantine forever).
-  if (entity.infected() &&
-      !entity.quarantined &&
+  if (entity.infected() && !entity.quarantined &&
       entity.daysSinceLastInfection() > config_.DAYS_AFTER_QUARANTINE) {
     entity.quarantined = true;
     return;
@@ -96,8 +96,7 @@ void World::handleQuarantine_(Entity &entity) {
   // If an entity is  quarantined, check every x days if it can leave
   // quarantine.
   const bool quarantineCheckDay =
-    entity.daysSinceLastInfection() % config_.QUARANTINE_CHECK_INTERVAL ==
-    0;
+    entity.daysSinceLastInfection() % config_.QUARANTINE_CHECK_INTERVAL == 0;
   if (entity.quarantined && !entity.infected() && quarantineCheckDay) {
     entity.quarantined = false;
     return;
@@ -119,7 +118,8 @@ World::World(const std::string &backgroundImagePath,
   }
 
   // Load points of interest.
-  if (!Parser::parsePointsOfInterests(config, backgroundImage_, parkCoords_, shopCoords_, partyCoords_)) {
+  if (!Parser::parsePointsOfInterests(
+        config, backgroundImage_, parkCoords_, shopCoords_, partyCoords_)) {
     throw std::runtime_error("Error parsing points of interest for entities.");
   }
 }
@@ -137,11 +137,11 @@ const sf::Image &World::background() {
   return backgroundImage_;
 }
 
-const Config& World::config() const noexcept {
+const Config &World::config() const noexcept {
   return config_;
 }
 
-const std::vector<Entity>& World::entities() const noexcept {
+const std::vector<Entity> &World::entities() const noexcept {
   return entities_;
 }
 
