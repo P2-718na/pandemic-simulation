@@ -1,22 +1,16 @@
 #include "pathfinder.hpp"
 
-#include <SFML/Graphics/Image.hpp>
 #include <algorithm>
 #include <cmath>
 // A* algorithm from https://www.geeksforgeeks.org/a-search-algorithm/
 
-void Pathfinder::loadMap(std::string mapImagePath) {
-  sf::Image map;
-
-  if (!map.loadFromFile(mapImagePath)) {
-    throw std::runtime_error("Cannot load image");
-  };
+void Pathfinder::loadMap(sf::Image map) {
 
   const int width = map.getSize().x;
   const int height = map.getSize().y;
 
-  for (int column = 0; column != width; ++column) {
-    for (int row = 0; row != height; ++row) {
+  for (int row = 0; row < height; ++row) {
+    for (int column = 0; column < width; ++column) {
 
     }
   }
