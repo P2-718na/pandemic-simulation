@@ -11,6 +11,10 @@ void Pathfinder::loadMap(const Config& config, sf::Image map) {
   const int width = map.getSize().x;
   const int height = map.getSize().y;
 
+  std::vector<std::vector<aStarNode*>> tempNodeMap(width, std::vector<aStarNode*>(height, nullptr));
+
+  // Phase 1:
+  // load node weights...
   for (int column = 0; column != width; ++column) {
     for (int row = 0; row != height; ++row) {
       const sf::Color& pixelColor = map.getPixel(column, row);
@@ -19,41 +23,42 @@ void Pathfinder::loadMap(const Config& config, sf::Image map) {
 
       if (weight > 0) {
         aStarFullList_.emplace_back(Coords{column, row}, weight);
+        tempNodeMap[column][row] = &aStarFullList_.back();
       }
     }
   }
 
-  // fixme this can probably be optimized
-  //  also this needs comments badly
-  for (auto &node : aStarFullList_) {
-    std::list<Coords> possibleNeighborCoords;
+  // Phase 2:
+  // assign node neigbors...
+  for (auto& node : aStarFullList_) {
+    // Loop through every possible neighbor...
     for (int i = -1; i != 2; ++i) {
       for (int j = -1; j != 2; ++j) {
-        // We don't want a node to be neighbor of itself.
+        // We don't want a node to be a neighbor of itself.
         if (i == 0 && j == 0) {
           continue;
         }
 
+        // Possible neighbor coordinates
         const int neighborX = node.coords.first + i;
         const int neighborY = node.coords.second + j;
 
-        possibleNeighborCoords.emplace_back(neighborX, neighborY);
-      }
-    }
+        // Coords must be positive and have to be inside tempNodeMap...
+        if (neighborY < 0 || neighborY >= height || neighborX < 0 || neighborX >= width) {
+          continue;
+        }
 
-    for (auto& possibleCoords : possibleNeighborCoords) {
-      auto compareNodeCoords = [possibleCoords](aStarNode& node) {
-        return node.coords == possibleCoords;
-      };
+        // And we need to check that the pointer at that coordinates is not nullptr
+        aStarNode* neighborPtr = tempNodeMap[neighborX][neighborY];
+        if (neighborPtr == nullptr) {
+          continue;
+        }
 
-      auto neighborIt = std::find_if(aStarFullList_.begin(), aStarFullList_.end(), compareNodeCoords);
-
-      if (neighborIt != aStarFullList_.end()) {
-        node.neigbors.push_back(&(*neighborIt));
+        // Finally, we can add this neigbor to node
+        node.neigbors.push_back(neighborPtr);
       }
     }
   }
-  printf("Loading comoplete");
 }
 
 auto Pathfinder::aStarFindLowestF_(const aStarList& list) {
