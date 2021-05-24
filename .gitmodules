@@ -1,0 +1,3 @@
+[submodule "dist/MicroPather"]
+	path = dist/MicroPather
+	url = git@github.com:leethomason/MicroPather.git

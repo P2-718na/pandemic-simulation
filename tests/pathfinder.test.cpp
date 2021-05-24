@@ -20,7 +20,7 @@ TEST_CASE("Pathfinder") {
 
   pathfinder.loadMap(config, img);
 
-  pathfinder.init({0, 0}, {4, 5});
+  pathfinder.computePath({0, 0}, {4, 5});
   pathfinder.computeAStar();
 
   do {

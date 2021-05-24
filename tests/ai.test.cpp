@@ -1,6 +1,6 @@
 #include "Entity/AI/ai.hpp"
 
-#include "../doctest.h"
+#include "../dist/doctest.h"
 
 TEST_CASE("Check AI::randInt function") {
   const int iterations = 100000;
