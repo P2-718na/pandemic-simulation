@@ -11,7 +11,7 @@ void Pathfinder::loadMap(const Config& config, sf::Image map) {
   const int width = map.getSize().x;
   const int height = map.getSize().y;
 
-  std::vector<std::vector<aStarNode*>> tempNodeMap(width, std::vector<aStarNode*>(height, nullptr));
+  std::vector<std::vector<int>> tempNodeMap(width, std::vector<int>(height, -1));
 
   // Phase 1:
   // load node weights...
@@ -23,13 +23,15 @@ void Pathfinder::loadMap(const Config& config, sf::Image map) {
 
       if (weight > 0) {
         aStarFullList_.emplace_back(Coords{column, row}, weight);
-        tempNodeMap[column][row] = &aStarFullList_.back();
+        tempNodeMap[column][row] = row * width + column;
       }
     }
   }
 
   // Phase 2:
   // assign node neigbors...
+  // fixme this sets neighbor pointer to aStarFullList, but the algorithm copies them.
+  //  to fix this, add neighbor offset and recalculate it.
   for (auto& node : aStarFullList_) {
     // Loop through every possible neighbor...
     for (int i = -1; i != 2; ++i) {
@@ -49,13 +51,13 @@ void Pathfinder::loadMap(const Config& config, sf::Image map) {
         }
 
         // And we need to check that the pointer at that coordinates is not nullptr
-        aStarNode* neighborPtr = tempNodeMap[neighborX][neighborY];
-        if (neighborPtr == nullptr) {
+        const int neighborOffset = tempNodeMap[neighborX][neighborY];
+        if (neighborOffset == -1) {
           continue;
         }
 
         // Finally, we can add this neigbor to node
-        node.neigbors.push_back(neighborPtr);
+        node.neighborOffset.push_back(neighborOffset);
       }
     }
   }
@@ -83,12 +85,28 @@ int Pathfinder::aStarComputeHeuristics_(const Coords& nodeCoords) const {
     abs(nodeCoords.second - endCoords_.second));
 }
 
+void Pathfinder::aStarAssignNodeNeigbors_() noexcept {
+  for (auto & node : aStarClosedList_) {
+    for (auto offset : node.neighborOffset) {
+      auto it = aStarClosedList_.begin();
+      for (int i = 0; i != offset; ++i) {
+        ++it;
+      }
+
+      node.neigbors.push_back(&(*it));
+    }
+  }
+}
+
 void Pathfinder::reset() {
   // 1. Initialize open list
   aStarOpenList_.clear();
 
   // 2. Initialize closed list
   aStarClosedList_ = aStarFullList_;
+
+  // (implementation) assign neigbor pointers:
+  aStarAssignNodeNeigbors_();
 }
 
 void Pathfinder::init(const Coords& startCoords, const Coords& endCoords) {
@@ -98,15 +116,15 @@ void Pathfinder::init(const Coords& startCoords, const Coords& endCoords) {
   reset();
 }
 
-aStarNode* Pathfinder::generateTree() {
+aStarNode* Pathfinder::generateTree_() {
   auto compareNodeCoords = [this](aStarNode& node) {
     return node.coords == startCoords_;
   };
 
   // 2.a Put starting node on the open list
-  auto startingNode = find_if(aStarClosedList_.begin(), aStarClosedList_.end(),
+  auto startingNodeIt = find_if(aStarClosedList_.begin(), aStarClosedList_.end(),
     compareNodeCoords);  // todo error handling
-  aStarOpenList_.splice(aStarOpenList_.begin(), aStarClosedList_, startingNode);
+  aStarOpenList_.splice(aStarOpenList_.begin(), aStarClosedList_, startingNodeIt);
 
   // 3. While the open list is not empty...
   while (!aStarOpenList_.empty()) {
@@ -118,44 +136,41 @@ aStarNode* Pathfinder::generateTree() {
     aStarClosedList_.splice(aStarClosedList_.end(), aStarOpenList_, q);
 
     // 3.d For each neighbor...
-    //todo rewrite to use vector....
-    for (int i = 0; i != 8; ++i) {
-      auto neigborPtr = q->neigbors[i];
-
+    for (auto & neighborPtr : q->neigbors) {
       // 3.c set its parent to q (last element of aStarClosedList)
-      neigborPtr->parent = &aStarClosedList_.back();
+      neighborPtr->parent = &aStarClosedList_.back();
 
       // 3.d.I If neigbor is goal, end search
-      if (neigborPtr->coords == endCoords_) {
-        return neigborPtr;
+      if (neighborPtr->coords == endCoords_) {
+        return neighborPtr;
       }
 
       // Compute g and h values for neigbor
-      neigborPtr->g = q->g + q->weight;
-      neigborPtr->h = aStarComputeHeuristics_(neigborPtr->coords);
+      neighborPtr->g = q->g + neighborPtr->weight;
+      neighborPtr->h = aStarComputeHeuristics_(neighborPtr->coords);
 
       // 3.d.II If a node with same position as neighbor but with lower f is
       // in open list, skip this neigbor
-      if (nodeWithLowerFInList_(*neigborPtr, aStarOpenList_) != aStarOpenList_.end()) {
+      if (nodeWithLowerFInList_(*neighborPtr, aStarOpenList_) != aStarOpenList_.end()) {
         continue;
       }
 
       // 3.d.III If a node with same position as neighbor but with lower f is
       // in closed list, add node to open list
-      if (nodeWithLowerFInList_(*neigborPtr, aStarClosedList_) != aStarClosedList_.end()) {
+      if (nodeWithLowerFInList_(*neighborPtr, aStarClosedList_) != aStarClosedList_.end()) {
         continue;
       }
 
       // Otherwise, add node to open list
-      aStarOpenList_.push_back(*neigborPtr);
+      aStarOpenList_.push_back(*neighborPtr);
     }
   }
 
-  return &(*startingNode);
+  return &(*startingNodeIt);
 }
 
 void Pathfinder::computeAStar() {
-  aStarNode* currentNode = generateTree();
+  aStarNode* currentNode = generateTree_();
   do {
     path_.push_back(currentNode->coords);
     currentNode = currentNode->parent;

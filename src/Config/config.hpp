@@ -8,20 +8,22 @@ typedef std::pair<int, int> Coords;
 
 class Config {
   // Weights for pathfinding
-  int PARK_COLOR_WEIGHT{2};
-  int SHOP_COLOR_WEIGHT{10};
-  int PARTY_COLOR_WEIGHT{5};
-  int ROAD_COLOR_WEIGHT{1};
+  int HOUSE_COLOR_WEIGHT {15};
+  int PARK_COLOR_WEIGHT  {2};
+  int SHOP_COLOR_WEIGHT  {10};
+  int PARTY_COLOR_WEIGHT {5};
+  int ROAD_COLOR_WEIGHT  {1};
 
  public:
   // todo all of these probably need to be changed. We want some error handling on
   //  these values.
 
   // POI Colors
-  sf::Color PARK_COLOR{0x00, 0xff, 0x00};
-  sf::Color SHOP_COLOR{0xff, 0xff, 0x00};
-  sf::Color PARTY_COLOR{0xff, 0x00, 0xff};
-  sf::Color ROAD_COLOR{0xee, 0xee, 0xee};
+  sf::Color HOUSE_COLOR {0xff, 0xff, 0xff};
+  sf::Color PARK_COLOR  {0x00, 0xff, 0x00};
+  sf::Color SHOP_COLOR  {0xff, 0xff, 0x00};
+  sf::Color PARTY_COLOR {0xff, 0x00, 0xff};
+  sf::Color ROAD_COLOR  {0xee, 0xee, 0xee};
 
   // Number of minutes after every day loop.
   int MINUTES_IN_A_DAY{9000};

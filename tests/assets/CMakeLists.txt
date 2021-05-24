@@ -1,0 +1,1 @@
+CONFIGURE_FILE(background.test.bmp "${PROJECT_BINARY_DIR}" COPYONLY)

@@ -26,8 +26,8 @@ struct aStarNode {
 
   aStarNode* parent{};
 
-  // todo make vector
   std::vector<aStarNode*> neigbors;
+  std::vector<int> neighborOffset;
 
   aStarNode(const Coords& coords, int weight) : coords{coords}, weight{weight} {};
 };
@@ -46,9 +46,14 @@ class Pathfinder {
   Coords endCoords_;
   int step_{-1};
 
+  // Create graph for A* and save results to vector. Return pointer to last
+  // graph element.
+  aStarNode* generateTree_();
+
   auto aStarFindLowestF_(const aStarList& list);
   auto nodeWithLowerFInList_(const aStarNode& node, const aStarList& list) ;
   int aStarComputeHeuristics_(const Coords& nodeCoords) const;
+  void aStarAssignNodeNeigbors_() noexcept;
 
  public:
   //todo move back
@@ -61,9 +66,6 @@ class Pathfinder {
 
   // Set start and end positions. Calls reset() method.
   void init(const Coords& startCoords, const Coords& endCoords);
-
-  // Create graph for A* and save results to vector.
-  aStarNode* generateTree();
 
   void computeAStar();
 

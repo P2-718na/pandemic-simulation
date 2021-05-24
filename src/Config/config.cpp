@@ -2,6 +2,9 @@
 
 int Config::A_STAR_WEIGHT_BY_COLOR(const sf::Color& color) const noexcept {
   // Return correct weight based on color.
+  if (color == HOUSE_COLOR) {
+    return HOUSE_COLOR_WEIGHT;
+  }
   if (color == PARK_COLOR) {
     return PARK_COLOR_WEIGHT;
   }
@@ -14,6 +17,7 @@ int Config::A_STAR_WEIGHT_BY_COLOR(const sf::Color& color) const noexcept {
   if (color == ROAD_COLOR) {
     return ROAD_COLOR_WEIGHT;
   }
+  //todo add wotk color, uni color, school color
 
   // Todo this will need to be replaced with "return -1", but for now
   //  this will do. Need to add additional logic in A*
