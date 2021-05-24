@@ -4,6 +4,7 @@
 #include "doctest/doctest.h"
 #include "pathfinder.hpp"
 #include "config.hpp"
+#include "map.hpp"
 
 std::ostream& operator<<(std::ostream& os, const Coords& coords) {
   os << '(' << coords.first << ", " << coords.second << ')';
@@ -14,14 +15,15 @@ std::ostream& operator<<(std::ostream& os, const Coords& coords) {
 TEST_CASE("Pathfinder") {
   Config config{};
   Pathfinder pathfinder;
+  Map map;
   sf::Image img;
 
   REQUIRE(img.loadFromFile("./background.test.bmp"));
 
-  pathfinder.loadMap(config, img);
+  map.init(config, img);
+  Pathfinder::setMap(&map);
 
-  pathfinder.computePath({0, 0}, {4, 5});
-  pathfinder.computeAStar();
+  pathfinder.loadPath({0, 0}, {3, 4});
 
   do {
     std::cout << pathfinder.step() << std::endl;

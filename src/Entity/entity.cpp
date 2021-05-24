@@ -17,7 +17,7 @@ Entity::Entity(World* world, int uid, int posX, int posY, entityAI AI)
 // Methods /////////////////////////////////////////////////////////////////////
 void Entity::setDestination(int destX, int destY) {
   // Todo pathfinder will need to tell whether or not position is inside grid.
-  pathfinder_.computePath(pos(), {destX, destY});
+  pathfinder_.loadPath(pos(), {destX, destY});
 }
 void Entity::setDestination(const Coords& destination) {
   this->setDestination(destination.first, destination.second);

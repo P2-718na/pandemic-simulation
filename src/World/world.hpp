@@ -5,6 +5,8 @@
 #include <string>
 #include <SFML/Graphics/Image.hpp>
 
+#include "map.hpp"
+
 typedef std::pair<int, int> Coords;
 
 class Config;
@@ -25,6 +27,9 @@ class World {
   // Handler to config instance. This can be modified externally by modifying
   // the referenced instance of config.
   Config& config_;
+
+  // Map instance. Required for MicroPather to work.
+  Map map_;
 
   // Vector containing all entities. Initialized in constructor by
   // parsing entities file.

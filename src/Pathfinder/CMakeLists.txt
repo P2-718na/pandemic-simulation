@@ -1,3 +1,5 @@
 ADD_LIBRARY(Pathfinder STATIC pathfinder.cpp)
 
-TARGET_LINK_LIBRARIES(Pathfinder sfml-graphics)
+ADD_SUBDIRECTORY(Map)
+
+TARGET_LINK_LIBRARIES(Pathfinder Map MicroPather)

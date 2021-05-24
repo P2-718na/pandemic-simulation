@@ -123,8 +123,9 @@ World::World(const std::string &backgroundImagePath,
     throw std::runtime_error("Error parsing points of interest for entities.");
   }
 
-  // Initialize Pathfinder
-  Pathfinder::loadMap(config_, backgroundImage_);
+  // Initialize Pathfinder using MicroPather.
+  map_.init(config_, backgroundImage_);
+  Pathfinder::setMap(&map_);
 }
 
 // Accessors ///////////////////////////////////////////////////////////////////
