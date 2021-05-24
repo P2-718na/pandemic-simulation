@@ -20,7 +20,11 @@ void Pathfinder::loadPath(const Coords& startCoords, const Coords& endCoords) {
 
   float _ = 0;
   // todo check for return value;
-  int res = map_->pather().Solve(startState, endState, &path_, &_);
+  const int result = map_->pather().Solve(startState, endState, &path_, &_);
+
+  if (result != mp::MicroPather::SOLVED) {
+    step_ = -1;
+  }
 }
 
 Coords Pathfinder::step() noexcept {

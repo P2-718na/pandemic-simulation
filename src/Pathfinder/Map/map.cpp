@@ -97,7 +97,6 @@ void Map::init(const Config& config, const sf::Image& map) {
 
           // Finally, we can add this neighbor to grid
           const State neighborState = coordsToState({neighborX, neighborY});
-          printf("%d, %d, s:%d, cpst:%f\n", x, y, neighborState, tempGrid[neighborX][neighborY]);
           grid_[x][y].push_back({neighborState, tempGrid[neighborX][neighborY]});
         }
       }
