@@ -56,7 +56,7 @@ void World::spreadVirus_() {
 
     // If entity succeeds a virusSpreadChance test, add tile to infective
     // tiles.
-    if (AI::chanceCheck(infectiveEntity.virusSpreadChance)) {
+    if (Config::chanceCheck(infectiveEntity.virusSpreadChance)) {
       infectiveTiles.push_back(infectiveEntity.pos());
     }
   }
@@ -92,9 +92,9 @@ void World::handleQuarantine_(Entity &entity) {
   // If entity is infected and not quarantined, put it in quarantine.
   // All this checks are needed to avoid unwanted behaviour (e.g. an entity
   // staying in quarantine forever).
-  if (entity.infected() && !entity.quarantined &&
+  if (entity.infected() && !entity.quarantined() &&
       entity.daysSinceLastInfection() > config_.DAYS_AFTER_QUARANTINE) {
-    entity.quarantined = true;
+    entity.quarantined(true);
     return;
   }
 
@@ -102,8 +102,8 @@ void World::handleQuarantine_(Entity &entity) {
   // quarantine.
   const bool quarantineCheckDay =
     entity.daysSinceLastInfection() % config_.QUARANTINE_CHECK_INTERVAL == 0;
-  if (entity.quarantined && !entity.infected() && quarantineCheckDay) {
-    entity.quarantined = false;
+  if (entity.quarantined() && !entity.infected() && quarantineCheckDay) {
+    entity.quarantined(false);
     return;
   }
 }
@@ -152,15 +152,15 @@ const std::vector<Entity> &World::entities() const noexcept {
 }
 
 const Coords &World::randomParkCoords() {
-  return parkCoords_[AI::randInt(0, parkCoords_.size())];
+  return parkCoords_[Config::randInt(0, parkCoords_.size())];
 }
 
 const Coords &World::randomShopCoords() {
-  return shopCoords_[AI::randInt(0, shopCoords_.size())];
+  return shopCoords_[Config::randInt(0, shopCoords_.size())];
 }
 
 const Coords &World::randomPartyCoords() {
-  return partyCoords_[AI::randInt(0, partyCoords_.size())];
+  return partyCoords_[Config::randInt(0, partyCoords_.size())];
 }
 
 int World::infectedCount() const noexcept {

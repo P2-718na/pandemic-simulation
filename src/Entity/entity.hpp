@@ -8,6 +8,7 @@
 #include "types.hpp"
 
 class World;
+class Config;
 
 class Entity {
   // World this entity belongs to.
@@ -35,6 +36,9 @@ class Entity {
   // Note that infected and infective are two separate conditions.
   bool infected_{false};
 
+  // Quarantined status.
+  bool quarantined_{false};
+
   // Pathfinder. Will be changed in the future.
   // TODO shared pointer to global pathfinder instance
   Pathfinder pathfinder_{};
@@ -43,12 +47,10 @@ class Entity {
   // This will set the new path.
   entityAI nextAi_{AI::nullAI};
 
- public:
-  // Quarantined status. Public, since this is regulated by outside
-  // factors.
-  // Todo move quarantine logic to WORLD
-  bool quarantined{false};
+  // Convert AI name string to function pointer.
+  static entityAI parseAI_(const std::string &AIName);
 
+ public:
   // Infection-related stats of any entity.
   // Affects virus symptoms and recovery time
   float symptomsResistance{.9};
@@ -67,10 +69,11 @@ class Entity {
   //  implement pathfinder reset method and add pathfinder in constructor.
   // Default entityAi is nullAi.
   Entity(World* world, int uid, int posX, int posY);
-  Entity(World* world, int uid, int posX, int posY, entityAI AI);
+  Entity(World* world, int uid, int posX, int posY, const std::string& AIName);
 
   // Getters ///////////////////////////////////////////////////////////////////
-  // fixme should I add noexcept?
+  // fixme should I add noexcept? yes.
+  const Config& config() const noexcept;
   int uid() const;
   int posX() const;
   int posY() const;
@@ -79,6 +82,7 @@ class Entity {
   bool dead() const;
   bool infected() const;
   bool infective() const;
+  bool quarantined() const noexcept;
 
   // Setters ///////////////////////////////////////////////////////////////////
   // This should be used in initialization and by private members.
@@ -89,6 +93,9 @@ class Entity {
   // calls infected(true) and sets daysSinceLastInfection.
   // This should be used only in constructor.
   void infective(bool status);
+
+  // Sets quarantined to true
+  void quarantined(bool status);
 
   // Methods ///////////////////////////////////////////////////////////////////
   // Load path to destination.

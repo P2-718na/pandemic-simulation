@@ -1,29 +1,17 @@
 #include "ai.hpp"
 #include "entity.hpp"
-#include <cstdlib>
+#include "config.hpp"
 
 //todo check this
 // Todo move
-int AI::randInt(int min, int max) {
-  if (max < min) {
-    return AI::randInt(max, min);
-  }
-  return rand() % (max - min) + min;
-}
-
-// Todo move
-bool AI::chanceCheck(float chance) {
-  return AI::randInt(0, 100) < (int)(100 * chance);
-}
-
 void AI::nullAI(Entity* _this, int time) {}
 
 void AI::randomAI(Entity* _this, int time) {
   int x, y;
-  x = randInt(100, 700);
-  y = randInt(100, 700);
+  x = Config::randInt(100, 700);
+  y = Config::randInt(100, 700);
 
-  if (_this->quarantined) {
+  if (_this->quarantined()) {
     return _this->goHome();
   }
 
@@ -31,7 +19,7 @@ void AI::randomAI(Entity* _this, int time) {
 }
 
 void AI::testAI(Entity* _this, int time) {
-  if (_this->quarantined) {
+  if (_this->quarantined()) {
     return _this->goHome();
   } else if (time > 7000) {
     return _this->goParty();
@@ -42,7 +30,7 @@ void AI::testAI(Entity* _this, int time) {
   }
 
   int x, y;
-  x = randInt(100, 700);
-  y = randInt(100, 700);
+  x = Config::randInt(100, 700);
+  y = Config::randInt(100, 700);
   _this->setDestination(x, y);
 }
