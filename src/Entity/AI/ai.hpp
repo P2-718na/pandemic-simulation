@@ -14,6 +14,9 @@ typedef void (*entityAI)(Entity*, int, int);
 void nullAI(Entity* _this, int time = 0, int day = 0);
 void randomAI(Entity* entity, int time = 0, int day = 0);
 
+// Variants ////////////////////////////////////////////////////////////////////
+void oldAI(Entity* entity, int time = 0, int day = 0);
+
 };
 
 // Include AI variants
