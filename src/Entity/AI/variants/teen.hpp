@@ -4,9 +4,7 @@
 
 namespace AI {
 
-inline void teenAI(Entity* entity, int time = 0, int day = 0) {
-
-}
+// todo
 
 }
 
