@@ -1,6 +1,7 @@
 #include "world.hpp"
 
 #include <algorithm>
+#include <stdexcept>
 
 #include "config.hpp"
 #include "entity.hpp"
