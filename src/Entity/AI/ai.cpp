@@ -20,24 +20,11 @@ void randomAI(Entity* entity, int minute, int day) {
 // Variants ////////////////////////////////////////////////////////////////////
 void manAI(Entity* entity, int time, int day) {
   if (entity->quarantined()) {
-    return entity->goHome();
+    entity->goHome();
+    return;
   }
 
   const Config& config = entity->config();
-
-  // During weekdays...
-  if (day < config.DAYS_IN_A_WEEK - 2) {
-    // Gets home at 18
-    if (time > config.hourToMinutes(18)) {
-      entity->goHome();
-      return;
-    }
-    // Goes to work at 9
-    if (time > config.hourToMinutes(9)) {
-      entity->goWork();
-      return;
-    }
-  }
 
   // on Saturday
   if (day == config.DAYS_IN_A_WEEK - 2) {
@@ -46,6 +33,8 @@ void manAI(Entity* entity, int time, int day) {
       entity->goWalk();
       return;
     }
+
+    return;
   }
 
   // on Sunday
@@ -60,6 +49,20 @@ void manAI(Entity* entity, int time, int day) {
       entity->goShop();
       return;
     }
+
+    return;
+  }
+
+  // During weekdays...
+  // Gets home at 18
+  if (time > config.hourToMinutes(18)) {
+    entity->goHome();
+    return;
+  }
+  // Goes to work at 9
+  if (time > config.hourToMinutes(9)) {
+    entity->goWork();
+    return;
   }
 }
 
@@ -67,7 +70,8 @@ void manAI(Entity* entity, int time, int day) {
 void oldAI(Entity* entity, int time, int day) {
   // Se è in quarantena, sta a casa.
   if (entity->quarantined()) {
-    return entity->goHome();
+    entity->goHome();
+    return;
   }
 
   const Config& config = entity->config();
