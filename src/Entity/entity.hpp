@@ -49,7 +49,7 @@ class Entity {
 
   // Convert AI name string to function pointer.
   static entityAI parseAI_(const std::string &AIName);
-
+  
  public:
   // Infection-related stats of any entity.
   // Affects virus symptoms and recovery time
