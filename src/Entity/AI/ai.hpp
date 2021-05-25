@@ -15,6 +15,7 @@ void nullAI(Entity* _this, int time = 0, int day = 0);
 void randomAI(Entity* entity, int time = 0, int day = 0);
 
 // Variants ////////////////////////////////////////////////////////////////////
+void manAI(Entity* entity, int time = 0, int day = 0);
 void oldAI(Entity* entity, int time = 0, int day = 0);
 
 };

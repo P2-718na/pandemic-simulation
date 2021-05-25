@@ -4,9 +4,7 @@
 
 namespace AI {
 
-inline void manAI(Entity* entity, int time = 0, int day = 0) {
-
-}
+// todo
 
 }
 
