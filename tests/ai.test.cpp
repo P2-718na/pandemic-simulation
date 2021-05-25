@@ -1,4 +1,4 @@
-#include "Entity/AI/ai.hpp"
+#include "config.hpp"
 
 #include "../doctest.h"
 
@@ -11,7 +11,7 @@ TEST_CASE("Check AI::randInt function") {
     bool good = true;
 
     for (int i = 0; i < iterations; ++i) {
-      int randInt = AI::randInt(low, high);
+      int randInt = Config::randInt(low, high);
 
       if (randInt < low || randInt >= high) {
         good = false;
@@ -28,7 +28,7 @@ TEST_CASE("Check AI::randInt function") {
     bool good = true;
 
     for (int i = 0; i < iterations; ++i) {
-      int randInt = AI::randInt(low, high);
+      int randInt = Config::randInt(low, high);
 
       if (randInt < low || randInt >= high) {
         good = false;
@@ -45,7 +45,7 @@ TEST_CASE("Check AI::randInt function") {
     bool good = true;
 
     for (int i = 0; i < iterations; ++i) {
-      int randInt = AI::randInt(low, high);
+      int randInt = Config::randInt(low, high);
 
       if (randInt < high || randInt >= low) {
         good = false;

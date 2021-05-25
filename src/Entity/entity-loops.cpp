@@ -28,12 +28,12 @@ void Entity::dayLoop() {
 
   // if infected, handle virus...
   if (infected_) {
-    bool resistSymptoms = AI::chanceCheck(this->symptomsResistance);
+    bool resistSymptoms = Config::chanceCheck(this->symptomsResistance);
 
     // An entity can only die if it starts to show symptoms.
     // aka if it's infective.
     if (this->infective() && !resistSymptoms) {
-      if (AI::chanceCheck(world_->config().VIRUS_DEATH_RATE)) {
+      if (Config::chanceCheck(world_->config().VIRUS_DEATH_RATE)) {
         dead_ = true;
         return;
       }
@@ -48,7 +48,7 @@ void Entity::dayLoop() {
 
   // Increment daysSinceLastInfection only if quarantined or infected
   // since this is used to check for quarantine healing.
-  if (quarantined || infected()) {
+  if (quarantined() || infected()) {
     ++daysSinceLastInfection_;
   }
 }

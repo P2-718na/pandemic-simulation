@@ -1,5 +1,6 @@
 #include "entity.hpp"
 #include "world.hpp"
+#include "config.hpp"
 
 #include <string>
 
@@ -9,9 +10,9 @@
 Entity::Entity(World* world, int uid, int posX, int posY)
   : world_{world}, uid_{uid}, posX_{posX}, posY_{posY} {}
 
-Entity::Entity(World* world, int uid, int posX, int posY, entityAI AI)
+Entity::Entity(World* world, int uid, int posX, int posY, const std::string& AIName)
   : Entity(world, uid, posX, posY) {
-  nextAi_ = AI;
+  nextAi_ = parseAI_(AIName);
 }
 
 // Methods /////////////////////////////////////////////////////////////////////
@@ -47,7 +48,7 @@ bool Entity::tryInfect() {
   // Do not infect an already infected person. (It is required to check this,
   // since infected() will reset daysSinceLastInfection).
   // "Removed" people will have their infectionChance go up.
-  if (!infected_ && AI::chanceCheck(this->infectionResistance)) {
+  if (!infected_ && Config::chanceCheck(this->infectionResistance)) {
     this->infected(true);
 
     // New person infected.
@@ -56,4 +57,18 @@ bool Entity::tryInfect() {
 
   // No new person infected.
   return false;
+}
+
+entityAI Entity::parseAI_(const std::string &AIName) {
+  if (AIName == "nullAI") {
+    return AI::nullAI;
+  }
+  if (AIName == "randomAI") {
+    return AI::randomAI;
+  }
+  if (AIName == "testAI") {
+    return AI::testAI;
+  }
+
+  return AI::testAI;
 }

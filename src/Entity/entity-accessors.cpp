@@ -3,6 +3,10 @@
 #include "config.hpp"
 
 // Getters /////////////////////////////////////////////////////////////////////
+const Config& Entity::config() const noexcept {
+  return world_->config();
+}
+
 int Entity::uid() const {
   return uid_;
 }
@@ -35,6 +39,10 @@ bool Entity::infective() const {
   return infected_ && daysSinceLastInfection_ > world_->config().DAYS_AFTER_INFECTIVE;
 }
 
+bool Entity::quarantined() const noexcept {
+  return quarantined_;
+}
+
 // Setters /////////////////////////////////////////////////////////////////////
 void Entity::infected(bool status) {
   // Set new status.
@@ -58,4 +66,8 @@ void Entity::infective(bool status) {
     daysSinceLastInfection_ = world_->config().DAYS_AFTER_INFECTIVE + 1;
     return;
   }
+}
+
+void Entity::quarantined(bool status) {
+  quarantined_ = status;
 }

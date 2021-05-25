@@ -66,7 +66,7 @@ bool Parser::parseEntitiesFile(
     }
 
     if (line == "[entity]") {
-      entities.emplace_back(parentPtr, uid, homex, homey, parseEntityAI(ai));
+      entities.emplace_back(parentPtr, uid, homex, homey, ai);
 
       Entity &entity = entities.back();
       entity.homeLocation = {homex, homey};
@@ -130,18 +130,4 @@ bool Parser::parseEntitiesFile(
     }
   }
   return true;
-}
-
-entityAI Parser::parseEntityAI(const std::string &AIName) {
-  if (AIName == "nullAI") {
-    return AI::nullAI;
-  }
-  if (AIName == "randomAI") {
-    return AI::randomAI;
-  }
-  if (AIName == "testAI") {
-    return AI::testAI;
-  }
-
-  return AI::testAI;
 }

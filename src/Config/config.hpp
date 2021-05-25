@@ -2,14 +2,28 @@
 #define CONFIG_HPP
 #include <SFML/Graphics/Color.hpp>
 #include <utility>
+#include <random>
 
 // fixme ask where i should put this
 typedef std::pair<int, int> Coords;
 
 class Config {
+  // Initialize random number generator_
+  static std::default_random_engine& generator_(unsigned long seed = 0);
+
+ public:
+  static void initRandomGenerator(unsigned long seed);
+
+  // Utils /////////////////////////////////////////////////////////////////////
+  // Generate random int in [min, max[.
+  static int randInt(int min, int max);
+
+  // Return true "chance" percent of the times.
+  static bool chanceCheck(float chance);
+
   // todo these probably need to be changed. We want some error handling on
   // these values.
- public:
+  // Config values /////////////////////////////////////////////////////////////
   // POI Colors
   sf::Color PARK_COLOR{0x00, 0xff, 0x00};
   sf::Color SHOP_COLOR{0xff, 0xff, 0x00};
