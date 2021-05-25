@@ -5,7 +5,7 @@
 
 #include "config.hpp"
 #include "entity.hpp"
-#include "parser.hpp"
+#include "Parser/parser.hpp"
 
 // Loops ///////////////////////////////////////////////////////////////////////
 void World::dayLoop_() {
