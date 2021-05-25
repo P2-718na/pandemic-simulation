@@ -15,7 +15,7 @@ float randFloat(float a, float b) {
   return a + r;
 }
 
-struct Entity {
+struct seederEntity {
   int age;
   float symptomsResistance;
   float virusSpreadChance;
@@ -25,7 +25,7 @@ struct Entity {
   pair<int, int> workLocation{};
 };
 
-Entity OLD_MAN() {
+seederEntity OLD_MAN() {
   int age = (int)randFloat(70, 95);
 
   return {
@@ -37,7 +37,7 @@ Entity OLD_MAN() {
   };
 }
 
-Entity OLD_WOMAN() {
+seederEntity OLD_WOMAN() {
   int age = (int)randFloat(70, 100);
 
   return {
@@ -49,7 +49,7 @@ Entity OLD_WOMAN() {
   };
 }
 
-Entity MAN() {
+seederEntity MAN() {
   return {
     (int)randFloat(35, 70),
     randFloat(.4, .7),
@@ -59,7 +59,7 @@ Entity MAN() {
   };
 }
 
-Entity WOMAN() {
+seederEntity WOMAN() {
   return {
     (int)randFloat(35, 70),
     randFloat(.45, .75),
@@ -70,7 +70,7 @@ Entity WOMAN() {
   };
 }
 
-Entity GRADUATE() {
+seederEntity GRADUATE() {
   return {
     (int)randFloat(25, 35),
     randFloat(.70, .80),
@@ -80,7 +80,7 @@ Entity GRADUATE() {
   };
 }
 
-Entity UNI_STUDENT() {
+seederEntity UNI_STUDENT() {
   return {
     (int)randFloat(18, 25),
     randFloat(.80, .90),
@@ -90,7 +90,7 @@ Entity UNI_STUDENT() {
   };
 };
 
-Entity TEEN() {
+seederEntity TEEN() {
   return {
     (int)randFloat(12, 18),
     randFloat(.8, .95),
@@ -100,7 +100,7 @@ Entity TEEN() {
   };
 }
 
-Entity NOMASK() {
+seederEntity NOMASK() {
   return {
     (int)randFloat(35, 45),
     randFloat(.40, .70),
@@ -112,7 +112,7 @@ Entity NOMASK() {
 
 // Houses //////////////////////////////////////////////////////////////////////
 struct House {
-  vector<Entity> inhabs{};
+  vector<seederEntity> inhabs{};
 };
 
 House FAMILY1() {

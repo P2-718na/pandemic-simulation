@@ -33,7 +33,7 @@ string outFile = "entities";
 
 void help() {
   char help[] =
-    "Seeder for entities.\n"
+    "seederEntity for entities.\n"
     "Commands:\n"
     "--help         Show this message.\n"
     "\n"
@@ -167,14 +167,16 @@ void populateHouses() {
 
       // No work location needed for elder people
       // and younger than 12 years
-      if (inhab.age >= 12) {
-        // Todo this should be set to nearest school to homeLocation
+      if (inhab.age <= 18) {
         inhab.workLocation = randomLocation(schoolLocations);
-      } else if (inhab.age >= 18) {
-        inhab.workLocation = randomLocation(uniLocations);
-      } else if (inhab.age >= 30) {
-        inhab.workLocation = randomLocation(workLocations);
+        continue;
       }
+      if (inhab.age <= 25) {
+        inhab.workLocation = randomLocation(uniLocations);
+        continue;
+      }
+
+      inhab.workLocation = randomLocation(workLocations);
     }
   }
 }
@@ -190,7 +192,7 @@ int countEntities() {
   return count;
 }
 
-void writeEntity(const Entity &entity, int uid) {
+void writeEntity(const seederEntity &entity, int uid) {
   // (See entity format in entities.sample.txt)
   ofs << "\n";
   ofs << "uid=" << uid << "\n";
