@@ -17,6 +17,9 @@ class Config {
   // Return true "chance" percent of the times.
   static bool chanceCheck(float chance);
 
+  // Return current "hour", given current minute.
+  int hourToMinutes(float hour) const noexcept;
+
   // todo these probably need to be changed. We want some error handling on
   // these values.
   // Config values /////////////////////////////////////////////////////////////

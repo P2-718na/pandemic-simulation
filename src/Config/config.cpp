@@ -13,11 +13,20 @@ void Config::initRandomGenerator(unsigned long seed) {
 }
 
 int Config::randInt(int min, int max) {
-  std::uniform_int_distribution<int> stepCount(min, max);
+  if (min > max) {
+    std::swap(min, max);
+  }
+
+  std::uniform_int_distribution<int> stepCount(min, max - 1);
 
   return stepCount(generator_());
 }
 
 bool Config::chanceCheck(float chance) {
   return static_cast<float >(randInt(0, 100)) < (100.f * chance);
+}
+
+int Config::hourToMinutes(float hour) const noexcept {
+  const float minutes = hour / 24.f * static_cast<float>(MINUTES_IN_A_DAY);
+  return static_cast<int>(minutes);
 }

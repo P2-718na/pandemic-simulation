@@ -1,8 +1,14 @@
+#include "../doctest.h"
 #include "config.hpp"
 
-#include "../doctest.h"
+TEST_CASE("Testing Config::hourToMinutes function") {
+  Config config;
 
-TEST_CASE("Check AI::randInt function") {
+  config.MINUTES_IN_A_DAY = 9000;
+  CHECK_EQ(config.hourToMinutes(5), 1875);
+}
+
+TEST_CASE("Check Config::randInt function") {
   const int iterations = 100000;
 
   SUBCASE("First number is zero") {
