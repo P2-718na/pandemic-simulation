@@ -1,8 +1,14 @@
 #ifndef CONFIG_HPP
 #define CONFIG_HPP
 #include <SFML/Graphics/Color.hpp>
+#include <utility>
+
+// fixme ask where i should put this
+typedef std::pair<int, int> Coords;
 
 class Config {
+  // todo these probably need to be changed. We want some error handling on
+  // these values.
  public:
   // POI Colors
   sf::Color PARK_COLOR{0x00, 0xff, 0x00};
@@ -11,6 +17,9 @@ class Config {
 
   // Number of minutes after every day loop.
   int MINUTES_IN_A_DAY{9000};
+
+  // Number of days in a week.
+  int DAYS_IN_A_WEEK{7};
 
   // Day count after which infected entity becomes infective. This is checked
   // using ">", which means the actual number of days is this value + 1.

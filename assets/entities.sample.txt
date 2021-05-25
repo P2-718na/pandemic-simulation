@@ -1,7 +1,6 @@
 [count]
 2
 
-[entity]
 uid=0
 homex=0
 homey=0
@@ -11,9 +10,8 @@ virus_resistance=.9
 virus_spread_chance=.5
 infection_chance=.8
 ai=randomAi
-
 [entity]
-[infected]
+
 uid=1
 homex=1
 homey=1
@@ -23,3 +21,5 @@ virus_resistance=.8
 virus_spread_chance=.9
 infection_chance=.9
 ai=randomAI
+[entity]
+[infected]

@@ -1,8 +1,45 @@
 #include <fstream>
 
-#include "world.hpp"
+#include "parser.hpp"
+#include "config.hpp"
+#include "entity.hpp"
 
-bool World::parseEntitiesFromFile_(
+bool Parser::parsePointsOfInterests(const Config &config,
+  const sf::Image &backgroundImage, std::vector<Coords> &parkCoords,
+  std::vector<Coords> &shopCoords, std::vector<Coords> &partyCoords) noexcept {
+  const int height = backgroundImage.getSize().x;
+  const int width = backgroundImage.getSize().y;
+
+  for (int row = 0; row < height; ++row) {
+    for (int column = 0; column < width; ++column) {
+      sf::Color color = backgroundImage.getPixel(row, column);
+
+      if (color == config.PARK_COLOR) {
+        parkCoords.emplace_back(row, column);
+        continue;
+      }
+      if (color == config.SHOP_COLOR) {
+        shopCoords.emplace_back(row, column);
+        continue;
+      }
+      if (color == config.PARTY_COLOR) {
+        partyCoords.emplace_back(row, column);
+        continue;
+      }
+    }
+  }
+
+  // We want at least one POI in every list.
+  if (parkCoords.empty() || shopCoords.empty() || partyCoords.empty()) {
+    return false;
+  }
+
+  return true;
+}
+
+bool Parser::parseEntitiesFile(
+  //todo rewrite this
+  World* parentPtr,
   const std::string &entitiesFile, std::vector<Entity> &entities) {
   if (!entities.empty()) {
     return false;
@@ -17,7 +54,7 @@ bool World::parseEntitiesFromFile_(
 
   int count = 0;
 
-  while(std::getline(ifs, line)) {
+  while (std::getline(ifs, line)) {
     if (line == "[count]") {
       if (count != 0) {
         return false;
@@ -29,9 +66,9 @@ bool World::parseEntitiesFromFile_(
     }
 
     if (line == "[entity]") {
-      entities.emplace_back((IWorld*)this, uid, homex, homey, parseEntityAi(ai));
+      entities.emplace_back(parentPtr, uid, homex, homey, parseEntityAI(ai));
 
-      Entity& entity = entities.back();
+      Entity &entity = entities.back();
       entity.homeLocation = {homex, homey};
       entity.workLocation = {workx, worky};
       entity.symptomsResistance = virus_resistance;
@@ -95,14 +132,14 @@ bool World::parseEntitiesFromFile_(
   return true;
 }
 
-entityAi World::parseEntityAi(const std::string &value) {
-  if (value == "nullAI") {
+entityAI Parser::parseEntityAI(const std::string &AIName) {
+  if (AIName == "nullAI") {
     return AI::nullAI;
   }
-  if (value == "randomAI") {
+  if (AIName == "randomAI") {
     return AI::randomAI;
   }
-  if (value == "testAI") {
+  if (AIName == "testAI") {
     return AI::testAI;
   }
 

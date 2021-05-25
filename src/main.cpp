@@ -4,6 +4,7 @@
 
 #include "config.hpp"
 #include "world.hpp"
+#include "entity.hpp"
 
 // values near the mean are the most likely
 // standard deviation affects the dispersion of generated values from the mean
@@ -41,7 +42,7 @@ int main() {
     world.loop();
 
     for (int i = 0; i < 1000; i++) {
-      auto e = &world.entities[i];
+      auto e = &world.entities()[i];
       //printf("entity %d is at pos x:%d, y:%d", i, e->posX(), e->posY());
       _entities[i].position = sf::Vector2f(e->posX(), e->posY());
       if (e->dead()) {

@@ -2,6 +2,9 @@
 
 class Entity;
 
+// Entity*, points to current entity, int is the current time of day.
+typedef void (*entityAI)(Entity*, int);
+
 struct AI {
   // Utils /////////////////////////////////////////////////////////////////////
   static int randInt(int min, int max);
