@@ -1,13 +1,27 @@
-#pragma once
+#ifndef AI_HPP
+#define AI_HPP
 
 class Entity;
 
-// Entity*, points to current entity, int is the current time of day.
-typedef void (*entityAI)(Entity*, int);
+// fixme ask if this is ok
+namespace AI {
 
-struct AI {
-  // Static AI /////////////////////////////////////////////////////////////////
-  static void nullAI(Entity* _this, int time = 0);
-  static void randomAI(Entity* _this, int time = 0);
-  static void testAI(Entity* _this, int time);
+// Entity*, points to current entity, int are current minute and current
+// day of the week.
+typedef void (*entityAI)(Entity*, int, int);
+
+// Default AI //////////////////////////////////////////////////////////////////
+void nullAI(Entity* _this, int time = 0, int day = 0);
+void randomAI(Entity* entity, int time = 0, int day = 0);
+
 };
+
+// Include AI variants
+// fixme ask if this is ok
+#include "variants/man.hpp"
+#include "variants/old.hpp"
+#include "variants/grad.hpp"
+#include "variants/uni.hpp"
+#include "variants/teen.hpp"
+
+#endif // define AI_HPP

@@ -3,7 +3,7 @@
 
 #include <string>
 
-#include "Entity/AI/ai.hpp"
+#include "AI/ai.hpp"
 #include "pathfinder.hpp"
 #include "types.hpp"
 
@@ -28,7 +28,6 @@ class Entity {
   int daysSinceLastInfection_{0};
 
   // Dead status.
-  // todo add death logic.
   bool dead_{false};
 
   // Infected status. If this is true, every day loop we check if entity can
@@ -40,17 +39,18 @@ class Entity {
   bool quarantined_{false};
 
   // Pathfinder. Will be changed in the future.
-  // TODO shared pointer to global pathfinder instance
   Pathfinder pathfinder_{};
 
   // AI of the entity, called every time it reaches the end of its path.
   // This will set the new path.
-  entityAI nextAi_{AI::nullAI};
+  // Todo add access to current day for ai.
+  AI::entityAI currentAI{AI::nullAI};
 
-  // Convert AI name string to function pointer.
-  static entityAI parseAI_(const std::string &AIName);
-  
+  // Convert AI name string to entityAI function pointer.
+  static AI::entityAI parseAI_(const std::string &AIName);
+
  public:
+  // fixme move all this variables to private section
   // Infection-related stats of any entity.
   // Affects virus symptoms and recovery time
   float symptomsResistance{.9};
@@ -65,8 +65,7 @@ class Entity {
   Coords workLocation{0, 0};
 
   // Constructors //////////////////////////////////////////////////////////////
-  // Todo Pathfinder will be map-dependant.
-  //  implement pathfinder reset method and add pathfinder in constructor.
+  // Todo implement pathfinder reset method.
   // Default entityAi is nullAi.
   Entity(World* world, int uid, int posX, int posY);
   Entity(World* world, int uid, int posX, int posY, const std::string& AIName);
@@ -98,12 +97,11 @@ class Entity {
   void quarantined(bool status);
 
   // Methods ///////////////////////////////////////////////////////////////////
-  // Load path to destination.
+  // Load path to destination. Calls pathfinder.
   void setDestination(int destX, int destY);
   void setDestination(const Coords& destination);
 
-  // Todo add access to current day for ai.
-  void goHome();  // todo quarantine logic
+  void goHome();
   void goWork();
   void goWalk();
   void goShop();

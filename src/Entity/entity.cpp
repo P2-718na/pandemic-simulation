@@ -1,10 +1,8 @@
-#include "entity.hpp"
-#include "world.hpp"
-#include "config.hpp"
-
 #include <string>
 
-#include "AI/ai.hpp"
+#include "world.hpp"
+#include "entity.hpp"
+#include "config.hpp"
 
 // Constructors ////////////////////////////////////////////////////////////////
 Entity::Entity(World* world, int uid, int posX, int posY)
@@ -13,7 +11,7 @@ Entity::Entity(World* world, int uid, int posX, int posY)
 Entity::Entity(
   World* world, int uid, int posX, int posY, const std::string& AIName)
   : Entity(world, uid, posX, posY) {
-  nextAi_ = parseAI_(AIName);
+  currentAI = parseAI_(AIName);
 }
 
 // Getters /////////////////////////////////////////////////////////////////////
@@ -140,7 +138,7 @@ void Entity::loop() {
 
   // IF arrived to destination, call AI
   if (pathfinder_.isArrived()) {
-    return nextAi_(this, world_->currentMinute());
+    return currentAI(this, world_->currentMinute(), world_->currentDay());
   }
 
   // Else, move one tile.
@@ -183,16 +181,31 @@ void Entity::dayLoop() {
 }
 
 // Other ///////////////////////////////////////////////////////////////////////
-entityAI Entity::parseAI_(const std::string& AIName) {
+AI::entityAI Entity::parseAI_(const std::string& AIName) {
+  // Default AIs
   if (AIName == "nullAI") {
     return AI::nullAI;
   }
   if (AIName == "randomAI") {
     return AI::randomAI;
   }
-  if (AIName == "testAI") {
-    return AI::testAI;
+
+  // AI Variants
+  if (AIName == "manAI") {
+    return AI::manAI;
+  }
+  if (AIName == "oldAI") {
+    return AI::oldAI;
+  }
+  if (AIName == "gradAI") {
+    return AI::gradAI;
+  }
+  if (AIName == "uniAI") {
+    return AI::uniAI;
+  }
+  if (AIName == "teenAI") {
+    return AI::teenAI;
   }
 
-  return AI::testAI;
+  return AI::nullAI;
 }
