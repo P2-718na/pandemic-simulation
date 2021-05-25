@@ -21,7 +21,7 @@ class Config {
   int hourToMinutes(float hour) const noexcept;
 
   // todo these probably need to be changed. We want some error handling on
-  // these values.
+  //  these values.
   // Config values /////////////////////////////////////////////////////////////
   // POI Colors
   sf::Color PARK_COLOR{0x00, 0xff, 0x00};

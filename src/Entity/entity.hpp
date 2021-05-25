@@ -43,7 +43,6 @@ class Entity {
 
   // AI of the entity, called every time it reaches the end of its path.
   // This will set the new path.
-  // Todo add access to current day for ai.
   AI::entityAI currentAI{AI::nullAI};
 
   // Convert AI name string to entityAI function pointer.
