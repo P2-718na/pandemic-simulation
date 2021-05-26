@@ -1,18 +1,35 @@
 #ifndef CONFIG_HPP
 #define CONFIG_HPP
 #include <SFML/Graphics/Color.hpp>
+#include <random>
 
 class Config {
-  // todo these probably need to be changed. We want some error handling on
-  // these values.
+  // Initialize random number generator_
+  static std::default_random_engine& generator_();
+
  public:
+  static void initRandomGenerator();
+
+  // Utils /////////////////////////////////////////////////////////////////////
+  // Generate random int in [min, max[.
+  static int randInt(int min, int max);
+
+  // Return true "chance" percent of the times.
+  static bool chanceCheck(float chance);
+
+  // Return current "hour", given current minute.
+  int hourToMinutes(float hour) const noexcept;
+
+  // todo these probably need to be changed. We want some error handling on
+  //  these values.
+  // Config values /////////////////////////////////////////////////////////////
   // POI Colors
   sf::Color PARK_COLOR{0x00, 0xff, 0x00};
   sf::Color SHOP_COLOR{0xff, 0xff, 0x00};
   sf::Color PARTY_COLOR{0xff, 0x00, 0xff};
 
   // Number of minutes after every day loop.
-  int MINUTES_IN_A_DAY{9000};
+  int MINUTES_IN_A_DAY{2400};
 
   // Number of days in a week.
   int DAYS_IN_A_WEEK{7};
@@ -29,12 +46,11 @@ class Config {
   int QUARANTINE_CHECK_INTERVAL{7};
 
   // Infection resistance increment after defeating the virus.
-  // Calculated with (1.f - infResistance) / INFECTION_RESISTANCE_INCREMENT;
-  float INFECTION_RESISTANCE_INCREMENT{1.5f};
+  float INFECTION_RESISTANCE_INCREMENT{.4f};
 
   // Every day, if an infected entity loses a virus symptoms check,
   // it performs a VIRUS_DEATH_RATE check
-  float VIRUS_DEATH_RATE{0.1f};
+  float VIRUS_DEATH_RATE{0.05f};
 
   // Number of days after which an entity can recover from the virus.
   int VIRUS_DURATION{7};

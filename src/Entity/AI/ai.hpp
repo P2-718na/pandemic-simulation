@@ -1,17 +1,17 @@
-#pragma once
+#ifndef AI_HPP
+#define AI_HPP
+#include <memory>
 
 class Entity;
 
-// Entity*, points to current entity, int is the current time of day.
-typedef void (*entityAI)(Entity*, int);
-
-struct AI {
-  // Utils /////////////////////////////////////////////////////////////////////
-  static int randInt(int min, int max);
-  static bool chanceCheck(float chance);
-
-  // Static AI /////////////////////////////////////////////////////////////////
-  static void nullAI(Entity* _this, int time = 0);
-  static void randomAI(Entity* _this, int time = 0);
-  static void testAI(Entity* _this, int time);
+class AI {
+ public:
+  virtual void operator()(Entity* entity, int time, int day) = 0;
+  virtual ~AI() = 0;
 };
+
+inline AI::~AI() = default;
+
+typedef std::unique_ptr<AI> entityAI;
+
+#endif // define AI_HPP

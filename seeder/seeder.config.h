@@ -15,7 +15,7 @@ float randFloat(float a, float b) {
   return a + r;
 }
 
-struct Entity {
+struct seederEntity {
   int age;
   float symptomsResistance;
   float virusSpreadChance;
@@ -25,86 +25,86 @@ struct Entity {
   pair<int, int> workLocation{};
 };
 
-Entity OLD_MAN() {
+seederEntity OLD_MAN() {
   int age = (int)randFloat(70, 95);
 
   return {
     age,
     randFloat(0, 100 - age) / 100.f,
-    randFloat(.04, .06),
-    randFloat(.5, .7),
+    randFloat(.02, .03),
+    randFloat(.6, .7),
     "oldAI"
   };
 }
 
-Entity OLD_WOMAN() {
+seederEntity OLD_WOMAN() {
   int age = (int)randFloat(70, 100);
 
   return {
     (int)randFloat(70, 100),
     randFloat(10, 110 - age) / 100.f,
     randFloat(.04, .06),
-    randFloat(.4, .6),
+    randFloat(.5, .6),
     "oldAI"
   };
 }
 
-Entity MAN() {
+seederEntity MAN() {
   return {
     (int)randFloat(35, 70),
-    randFloat(.4, .7),
-    randFloat(.04, .06),
-    randFloat(.3, .5),
+    randFloat(.6, .8),
+    randFloat(.02, .03),
+    randFloat(.6, .7),
     "manAI"
   };
 }
 
-Entity WOMAN() {
+seederEntity WOMAN() {
   return {
     (int)randFloat(35, 70),
-    randFloat(.45, .75),
-    randFloat(.04, .06),
-    randFloat(.1, .2),
+    randFloat(.65, .85),
+    randFloat(.02, .03),
+    randFloat(.3, .4),
     // We did it boys, we stopped gender inequality
     "manAI"
   };
 }
 
-Entity GRADUATE() {
+seederEntity GRADUATE() {
   return {
     (int)randFloat(25, 35),
-    randFloat(.70, .80),
-    randFloat(.05, .06),
-    randFloat(.4, .5),
-    "gradAi"
+    randFloat(.70, .90),
+    randFloat(.03, .05),
+    randFloat(.7, .8),
+    "gradAI"
   };
 }
 
-Entity UNI_STUDENT() {
+seederEntity UNI_STUDENT() {
   return {
     (int)randFloat(18, 25),
-    randFloat(.80, .90),
-    randFloat(.055, .065),
+    randFloat(.80, .95),
+    randFloat(.025, .035),
     randFloat(.5, .6),
     "uniAI"
   };
 };
 
-Entity TEEN() {
+seederEntity TEEN() {
   return {
     (int)randFloat(12, 18),
-    randFloat(.8, .95),
-    randFloat(.06, .07),
+    randFloat(.95, 1.f),
+    randFloat(.01, .02),
     randFloat(.5, .6),
     "teenAI"
   };
 }
 
-Entity NOMASK() {
+seederEntity NOMASK() {
   return {
     (int)randFloat(35, 45),
     randFloat(.40, .70),
-    randFloat(.1, .2),
+    randFloat(.8, 1),
     randFloat(.7, .9),
     "manAI"
   };
@@ -112,7 +112,7 @@ Entity NOMASK() {
 
 // Houses //////////////////////////////////////////////////////////////////////
 struct House {
-  vector<Entity> inhabs{};
+  vector<seederEntity> inhabs{};
 };
 
 House FAMILY1() {

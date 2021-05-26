@@ -1,6 +1,6 @@
 ADD_EXECUTABLE(seeder seeder.cpp)
 
-TARGET_LINK_LIBRARIES(seeder Entity Pathfinder)
+TARGET_LINK_LIBRARIES(seeder)
 TARGET_LINK_LIBRARIES(seeder sfml-graphics)
 
 SET_TARGET_PROPERTIES(seeder PROPERTIES

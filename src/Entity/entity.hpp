@@ -3,11 +3,12 @@
 
 #include <string>
 
-#include "Entity/AI/ai.hpp"
+#include "AI/ai.hpp"
 #include "pathfinder.hpp"
 #include "types.hpp"
 
 class World;
+class Config;
 
 class Entity {
   // World this entity belongs to.
@@ -27,7 +28,6 @@ class Entity {
   int daysSinceLastInfection_{0};
 
   // Dead status.
-  // todo add death logic.
   bool dead_{false};
 
   // Infected status. If this is true, every day loop we check if entity can
@@ -35,22 +35,24 @@ class Entity {
   // Note that infected and infective are two separate conditions.
   bool infected_{false};
 
+  // Quarantined status.
+  bool quarantined_{false};
+
   // Pathfinder. Will be changed in the future.
-  // TODO shared pointer to global pathfinder instance
   Pathfinder pathfinder_{};
 
   // AI of the entity, called every time it reaches the end of its path.
   // This will set the new path.
-  entityAI nextAi_{AI::nullAI};
+  entityAI currentAI;
+
+  // Convert AI name string to entityAI function pointer.
+  static entityAI parseAI_(const std::string &AIName);
 
  public:
-  // Quarantined status. Public, since this is regulated by outside
-  // factors.
-  // Todo move quarantine logic to WORLD
-  bool quarantined{false};
-
+  // fixme move all this variables to private section
   // Infection-related stats of any entity.
-  // Affects virus symptoms and recovery time
+  // Affects virus symptoms and recovery time.
+  //todo justify float and not double
   float symptomsResistance{.9};
   // Base chance to spread virus to nearby entities
   float virusSpreadChance{.05};
@@ -63,14 +65,14 @@ class Entity {
   Coords workLocation{0, 0};
 
   // Constructors //////////////////////////////////////////////////////////////
-  // Todo Pathfinder will be map-dependant.
-  //  implement pathfinder reset method and add pathfinder in constructor.
+  // Todo implement pathfinder reset method.
   // Default entityAi is nullAi.
   Entity(World* world, int uid, int posX, int posY);
-  Entity(World* world, int uid, int posX, int posY, entityAI AI);
+  Entity(World* world, int uid, int posX, int posY, const std::string& AIName);
 
   // Getters ///////////////////////////////////////////////////////////////////
-  // fixme should I add noexcept?
+  // fixme should I add noexcept? yes.
+  const Config& config() const noexcept;
   int uid() const;
   int posX() const;
   int posY() const;
@@ -79,6 +81,7 @@ class Entity {
   bool dead() const;
   bool infected() const;
   bool infective() const;
+  bool quarantined() const noexcept;
 
   // Setters ///////////////////////////////////////////////////////////////////
   // This should be used in initialization and by private members.
@@ -90,13 +93,15 @@ class Entity {
   // This should be used only in constructor.
   void infective(bool status);
 
+  // Sets quarantined to true
+  void quarantined(bool status);
+
   // Methods ///////////////////////////////////////////////////////////////////
-  // Load path to destination.
+  // Load path to destination. Calls pathfinder.
   void setDestination(int destX, int destY);
   void setDestination(const Coords& destination);
 
-  // Todo add access to current day for ai.
-  void goHome();  // todo quarantine logic
+  void goHome();
   void goWork();
   void goWalk();
   void goShop();

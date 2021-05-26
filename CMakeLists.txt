@@ -13,7 +13,6 @@ INCLUDE_DIRECTORIES(
         "${PROJECT_SOURCE_DIR}/src/Pathfinder"
         "${PROJECT_SOURCE_DIR}/src/Entity"
         "${PROJECT_SOURCE_DIR}/src/World"
-        "${PROJECT_SOURCE_DIR}/src/World/Parser"
         "${PROJECT_SOURCE_DIR}/src/Config"
 )
 

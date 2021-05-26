@@ -1,13 +1,15 @@
+#ifndef PARSER_HPP
+#define PARSER_HPP
+
 #include <SFML/Graphics/Image.hpp>
 #include <string>
 #include <vector>
 
 #include "types.hpp"
-#include "config.hpp"
-#include "Entity/AI/ai.hpp"
 
 class Entity;
 class World;
+class Config;
 
 struct Parser {
   // returns false if one of the three lists is empty.
@@ -17,6 +19,6 @@ struct Parser {
 
   static bool parseEntitiesFile(World* parentPtr,
     const std::string& entitiesFile, std::vector<Entity>& entities);
-
-  static entityAI parseEntityAI(const std::string & AIName);
 };
+
+#endif // define PARSER_HPP
