@@ -1,35 +1,18 @@
 -covid simulation:
-    -map with heatpoints
-    -People will need waypoints to enable for proper ai
-    -restaurants, schools, workplaces (each with different parameters)
-    -(maybe) means of transport
-    -curfew
+    -curfew/lockdown
 
--Get a sample database of a population
--Each home will house a family
--Run simulation based on family (different workplaces, schools etc.)
--see result
+- Check seeder, general cleanup
 
 will need to implement:
-    -map import algorithm
-    -pathfinding algorithm (maybe using means of transport as well)
-    -find a suitable database
-    -find covid-related spread data
-
-
-    (maybe only relevant data is rt-index? This could lead to a way simpler project:
-        -random cells, people move, each infected person has rt-index percentage of infecting someone else. rt
-        will need to be either a derivative or be found. This could be way easier.
-
-first things to do:
-    -develop simpler version with random pathfinding and heatmap (something simple, maybe add weighted paths to simulate
-    means of transportation):
-        -image reading
-        -pathfinding system
-    -go next
-
+  -pathfinding algorithm (maybe not. Even a simpler "follow roads if possible" solution would be nice).
 
 General todos:
     - change cast to c++ style cast (maybe, maybe not)
-    - visualizzazione contagi con root
-    - Cambia seeder, usa lyra per parsare argomenti
+    - Add HUD to show day, infected, susceptible etc
+    - Write README
+    - Add different commands (toggle lockdown, maybe edit config on the go etc...)
+    - Use lyra to parse initial arguments
+    - Rewrite main to make it tidier
+
+- general cleanup of the code.
+- check cmake includes and linking
