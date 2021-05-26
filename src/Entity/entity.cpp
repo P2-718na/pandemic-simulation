@@ -57,6 +57,11 @@ bool Entity::quarantined() const noexcept {
 
 // Setters /////////////////////////////////////////////////////////////////////
 void Entity::infected(bool status) {
+  // InfectionResistance is only assigned when a person defeats virus.
+  // Since a person can onluy get virus if infRes < 1, infRes here must be
+  // lesser than 1.
+  assert(infectionResistance < 1);
+
   // Set new status.
   infected_ = status;
 
@@ -118,7 +123,13 @@ bool Entity::tryInfect() {
   // Do not infect an already infected person. (It is required to check this,
   // since infected() will reset daysSinceLastInfection).
   // "Removed" people will have their infectionChance go up.
-  if (!infected() && Config::chanceCheck(infectionResistance)) {
+  // Notice that we need to check for 1-infResistance, since a person with
+  // infResistance of 1 will have zero chance of being infected
+  if (!infected() && Config::chanceCheck(1 - infectionResistance)) {
+    // If infRes >= 1, it means that something went wrong with chanceCheck
+    // function.
+    assert(infectionResistance < 1);
+
     infected(true);
 
     // New person infected.
