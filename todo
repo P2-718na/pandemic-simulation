@@ -16,3 +16,5 @@ General todos:
 
 - general cleanup of the code.
 - check cmake includes and linking
+
+- on linux lags hard every 4th day. Maybe worth checking
