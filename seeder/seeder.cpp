@@ -161,9 +161,6 @@ void populateHouses() {
 
     House &house = houses.back();
 
-    house.posx = houseCoords.first;
-    house.posy = houseCoords.second;
-
     // Set POI coords for house inhabitants
     for (auto &inhab : house.inhabs) {
       inhab.homeLocation = houseCoords;

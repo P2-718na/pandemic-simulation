@@ -6,9 +6,6 @@
 #include "world.hpp"
 #include "entity.hpp"
 
-// values near the mean are the most likely
-// standard deviation affects the dispersion of generated values from the mean
-
 int main() {
   sf::RenderWindow window(sf::VideoMode(800, 800), "covid");
   sf::Texture backgroundTexture;

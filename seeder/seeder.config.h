@@ -14,10 +14,6 @@ float randFloat(float a, float b) {
   float r = random * diff;
   return a + r;
 }
-enum Sex {
-  male,
-  female
-};
 
 struct Entity {
   int age;
@@ -39,7 +35,7 @@ Entity OLD_MAN() {
     randFloat(.5, .7),
     "oldAI"
   };
-};
+}
 
 Entity OLD_WOMAN() {
   int age = (int)randFloat(70, 100);
@@ -51,7 +47,7 @@ Entity OLD_WOMAN() {
     randFloat(.4, .6),
     "oldAI"
   };
-};
+}
 
 Entity MAN() {
   return {
@@ -61,7 +57,7 @@ Entity MAN() {
     randFloat(.3, .5),
     "manAI"
   };
-};
+}
 
 Entity WOMAN() {
   return {
@@ -72,7 +68,7 @@ Entity WOMAN() {
     // We did it boys, we stopped gender inequality
     "manAI"
   };
-};
+}
 
 Entity GRADUATE() {
   return {
@@ -82,7 +78,7 @@ Entity GRADUATE() {
     randFloat(.4, .5),
     "gradAi"
   };
-};
+}
 
 Entity UNI_STUDENT() {
   return {
@@ -102,7 +98,7 @@ Entity TEEN() {
     randFloat(.5, .6),
     "teenAI"
   };
-};
+}
 
 Entity NOMASK() {
   return {
@@ -112,13 +108,11 @@ Entity NOMASK() {
     randFloat(.7, .9),
     "manAI"
   };
-};
+}
 
 // Houses //////////////////////////////////////////////////////////////////////
 struct House {
   vector<Entity> inhabs{};
-  int posx{};
-  int posy{};
 };
 
 House FAMILY1() {
@@ -128,7 +122,7 @@ House FAMILY1() {
     TEEN(),
     TEEN()
   }};
-};
+}
 
 House FAMILY2() {
   return House{{
@@ -138,7 +132,7 @@ House FAMILY2() {
     TEEN(),
     TEEN()
   }};
-};
+}
 
 House FAMILY3() {
   return House{{
@@ -146,34 +140,34 @@ House FAMILY3() {
     WOMAN(),
     TEEN()
   }};
-};
+}
 
 House COUPLE() {
   return House{{
     MAN(),
     WOMAN()
   }};
-};
+}
 
 House OLDIES() {
   return House{{
     OLD_MAN(),
     OLD_MAN()
   }};
-};
+}
 
 House SINGLE() {
   return House{{
     GRADUATE()
   }};
-};
+}
 
 House CON() {
   return House{{
     NOMASK(),
     OLD_WOMAN()
   }};
-};
+}
 
 House UNI1() {
   return House{{
@@ -183,7 +177,7 @@ House UNI1() {
     UNI_STUDENT(),
     UNI_STUDENT()
   }};
-};
+}
 
 House UNI2() {
   return House{{
@@ -191,4 +185,4 @@ House UNI2() {
     UNI_STUDENT(),
     UNI_STUDENT()
   }};
-};
+}
