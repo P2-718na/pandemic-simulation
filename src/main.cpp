@@ -11,10 +11,11 @@ int main() {
   sf::Texture backgroundTexture;
   sf::Sprite background;
 
-  sf::VertexArray _entities(sf::Points, 1000);
+  std::vector<sf::CircleShape> SFMLEntities(1000, sf::CircleShape{1.6, 4});
 
   Config config{};
-  config.initRandomGenerator();
+  // Unneeded?
+  //config.initRandomGenerator();
 
   World world("background.sample.bmp", "entities", config);
 
@@ -42,18 +43,20 @@ int main() {
     for (int i = 0; i < 1000; i++) {
       auto e = &world.entities()[i];
       //printf("entity %d is at pos x:%d, y:%d", i, e->posX(), e->posY());
-      _entities[i].position = sf::Vector2f(e->posX(), e->posY());
+      SFMLEntities[i].setPosition(e->posX(), e->posY());
       if (e->dead()) {
-        _entities[i].color = sf::Color::Black;
+        SFMLEntities[i].setFillColor(sf::Color::Black);
       } else if (e->infected()) {
-        _entities[i].color = sf::Color::Red;
+        SFMLEntities[i].setFillColor(sf::Color::Red);
       } else {
-        _entities[i].color = sf::Color::Blue;
+        SFMLEntities[i].setFillColor({0xaa, 0x00, 0xff});
       }
     }
 
     if (draw) {
-      window.draw(_entities);
+      for (auto & entity : SFMLEntities) {
+        window.draw(entity);
+      }
       window.display();
     }
   }
