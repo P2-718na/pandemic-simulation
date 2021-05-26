@@ -1,4 +1,5 @@
 #include <string>
+#include <cassert>
 
 #include "world.hpp"
 #include "entity.hpp"
