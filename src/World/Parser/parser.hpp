@@ -1,3 +1,6 @@
+#ifndef PARSER_HPP
+#define PARSER_HPP
+
 #include <SFML/Graphics/Image.hpp>
 #include <string>
 #include <vector>
@@ -17,3 +20,5 @@ struct Parser {
   static bool parseEntitiesFile(World* parentPtr,
     const std::string& entitiesFile, std::vector<Entity>& entities);
 };
+
+#endif // define PARSER_HPP
