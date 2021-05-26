@@ -64,6 +64,9 @@ void manAI(Entity* entity, int time, int day) {
     entity->goWork();
     return;
   }
+
+  // Added for gradAi, so it can get home after sunday night.
+  entity->goHome();
 }
 
 
@@ -96,6 +99,17 @@ void oldAI(Entity* entity, int time, int day) {
     entity->goWalk();
     return;
   }
+}
+
+void gradAI(Entity* entity, int time, int day) {
+  // On weekends, behave like an university student
+  if (day >= entity->config().DAYS_IN_A_WEEK - 2) {
+    uniAI(entity, time, day);
+    return;
+  }
+
+  // On weekdays, behave like a man.
+  manAI(entity, time, day);
 }
 
 void uniAI(Entity* entity, int time, int day) {

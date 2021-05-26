@@ -51,7 +51,8 @@ class Entity {
  public:
   // fixme move all this variables to private section
   // Infection-related stats of any entity.
-  // Affects virus symptoms and recovery time
+  // Affects virus symptoms and recovery time.
+  //todo justify float and not double
   float symptomsResistance{.9};
   // Base chance to spread virus to nearby entities
   float virusSpreadChance{.05};

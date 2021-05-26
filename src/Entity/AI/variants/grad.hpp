@@ -4,9 +4,7 @@
 
 namespace AI {
 
-inline void gradAI(Entity* entity, int time = 0, int day = 0) {
-
-}
+// todo
 
 }
 

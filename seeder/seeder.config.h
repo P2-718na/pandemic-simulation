@@ -76,7 +76,7 @@ seederEntity GRADUATE() {
     randFloat(.70, .80),
     randFloat(.05, .06),
     randFloat(.4, .5),
-    "gradAi"
+    "gradAI"
   };
 }
 
