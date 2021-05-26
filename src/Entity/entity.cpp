@@ -92,7 +92,11 @@ void Entity::quarantined(bool status) {
 
 // Methods /////////////////////////////////////////////////////////////////////
 void Entity::setDestination(int destX, int destY) {
-  // Todo pathfinder will need to tell whether or not position is inside grid.
+  // Avoid unnecessary pathfinder calls
+  if (posX() == destX && posY() == destY) {
+    return;
+  }
+
   pathfinder_ = Pathfinder{posX_, posY_, destX, destY};
 }
 void Entity::setDestination(const Coords& destination) {
