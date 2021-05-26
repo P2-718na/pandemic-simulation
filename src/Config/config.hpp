@@ -46,8 +46,7 @@ class Config {
   int QUARANTINE_CHECK_INTERVAL{7};
 
   // Infection resistance increment after defeating the virus.
-  // Calculated with (1.f - infResistance) / INFECTION_RESISTANCE_INCREMENT;
-  float INFECTION_RESISTANCE_INCREMENT{1.5f};
+  float INFECTION_RESISTANCE_INCREMENT{.4f};
 
   // Every day, if an infected entity loses a virus symptoms check,
   // it performs a VIRUS_DEATH_RATE check

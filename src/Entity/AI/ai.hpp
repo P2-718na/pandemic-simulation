@@ -8,7 +8,7 @@ namespace AI {
 
 // Entity*, points to current entity, int are current minute and current
 // day of the week.
-typedef void (*entityAI)(Entity*, int, int);
+using entityAI = void(*)(Entity*, int, int);
 
 // Default AI //////////////////////////////////////////////////////////////////
 void nullAI(Entity* _this, int time = 0, int day = 0);
@@ -21,7 +21,7 @@ void gradAI(Entity* entity, int time = 0, int day = 0);
 void uniAI(Entity* entity, int time = 0, int day = 0);
 void teenAI(Entity* entity, int time = 0, int day = 0);
 
-};
+}
 
 // Include AI variants
 // fixme ask if this is ok

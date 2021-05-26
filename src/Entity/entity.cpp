@@ -72,7 +72,7 @@ void Entity::infected(bool status) {
   }
 
   // If infection is cleared, increase infectionResistance.
-  infectionResistance += (1.f - infectionResistance) / config().INFECTION_RESISTANCE_INCREMENT ;
+  infectionResistance +=  config().INFECTION_RESISTANCE_INCREMENT ;
 }
 
 void Entity::infective(bool status) {
