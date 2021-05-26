@@ -43,10 +43,10 @@ class Entity {
 
   // AI of the entity, called every time it reaches the end of its path.
   // This will set the new path.
-  AI::entityAI currentAI{AI::nullAI};
+  entityAI currentAI;
 
   // Convert AI name string to entityAI function pointer.
-  static AI::entityAI parseAI_(const std::string &AIName);
+  static entityAI parseAI_(const std::string &AIName);
 
  public:
   // fixme move all this variables to private section

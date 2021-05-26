@@ -1,34 +1,17 @@
 #ifndef AI_HPP
 #define AI_HPP
+#include <memory>
 
 class Entity;
 
-// fixme ask if this is ok
-namespace AI {
+class AI {
+ public:
+  virtual void operator()(Entity* entity, int time, int day) = 0;
+  virtual ~AI() = 0;
+};
 
-// Entity*, points to current entity, int are current minute and current
-// day of the week.
-using entityAI = void(*)(Entity*, int, int);
+inline AI::~AI() = default;
 
-// Default AI //////////////////////////////////////////////////////////////////
-void nullAI(Entity* _this, int time = 0, int day = 0);
-void randomAI(Entity* entity, int time = 0, int day = 0);
-
-// Variants ////////////////////////////////////////////////////////////////////
-void manAI(Entity* entity, int time = 0, int day = 0);
-void oldAI(Entity* entity, int time = 0, int day = 0);
-void gradAI(Entity* entity, int time = 0, int day = 0);
-void uniAI(Entity* entity, int time = 0, int day = 0);
-void teenAI(Entity* entity, int time = 0, int day = 0);
-
-}
-
-// Include AI variants
-// fixme ask if this is ok
-#include "variants/man.hpp"
-#include "variants/old.hpp"
-#include "variants/grad.hpp"
-#include "variants/uni.hpp"
-#include "variants/teen.hpp"
+typedef std::unique_ptr<AI> entityAI;
 
 #endif // define AI_HPP
