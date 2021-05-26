@@ -154,6 +154,18 @@ void teenAI(Entity* entity, int time, int day) {
     entity->goParty();
     return;
   }
+
+  // On weekdays...
+  // Gets home at 18
+  if (time > config.hourToMinutes(13)) {
+    entity->goHome();
+    return;
+  }
+  // Goes to school
+  if (time > config.hourToMinutes(7.5)) {
+    entity->goWork();
+    return;
+  }
 }
 
 }
