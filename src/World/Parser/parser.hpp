@@ -1,15 +1,13 @@
 #include <SFML/Graphics/Image.hpp>
 #include <string>
-#include <utility>
 #include <vector>
 
+#include "types.hpp"
 #include "config.hpp"
 #include "Entity/AI/ai.hpp"
 
 class Entity;
 class World;
-
-typedef std::pair<int, int> Coords;
 
 struct Parser {
   // returns false if one of the three lists is empty.

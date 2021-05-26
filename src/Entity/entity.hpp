@@ -1,11 +1,11 @@
 #ifndef ENTITY_HPP
 #define ENTITY_HPP
+
 #include <string>
 
 #include "Entity/AI/ai.hpp"
 #include "pathfinder.hpp"
-
-typedef std::pair<int, int> Coords;
+#include "types.hpp"
 
 class World;
 

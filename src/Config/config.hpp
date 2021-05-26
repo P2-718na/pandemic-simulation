@@ -1,10 +1,6 @@
 #ifndef CONFIG_HPP
 #define CONFIG_HPP
 #include <SFML/Graphics/Color.hpp>
-#include <utility>
-
-// fixme ask where i should put this
-typedef std::pair<int, int> Coords;
 
 class Config {
   // todo these probably need to be changed. We want some error handling on

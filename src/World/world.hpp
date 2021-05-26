@@ -5,7 +5,7 @@
 #include <string>
 #include <SFML/Graphics/Image.hpp>
 
-typedef std::pair<int, int> Coords;
+#include "types.hpp"
 
 class Config;
 class Entity;
