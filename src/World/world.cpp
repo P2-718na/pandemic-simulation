@@ -79,6 +79,10 @@ void World::spreadVirus_() {
   }
 }
 
+// Disable clang tidy "function can be made const" check, since this function
+// is not actually const
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "readability-make-member-function-const"
 void World::handleQuarantine_(Entity &entity) {
   // Note: this checks are performed on dead entities as well.
   // We could add additional checks to skip dead entities, but it wouldn't
@@ -103,6 +107,7 @@ void World::handleQuarantine_(Entity &entity) {
     return;
   }
 }
+#pragma clang diagnostic pop
 
 // Constructors ////////////////////////////////////////////////////////////////
 World::World(const std::string &backgroundImagePath,
