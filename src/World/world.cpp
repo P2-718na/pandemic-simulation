@@ -21,8 +21,8 @@ void World::dayLoop_() {
   }
 
   // Todo move this elsewhere
-  printf("New day! %d\nInfected: %d, Dead: %d\n", currentDay_, infectedCount(),
-    deadCount());
+  printf("New day! %d\nInfected: %d, Dead: %d, Immune: %d\n", currentDay_, infectedCount(),
+    deadCount(), immuneCount());
 }
 
 void World::loop() {
@@ -50,7 +50,8 @@ void World::spreadVirus_() {
 
   // Loop through every infective entity...
   for (auto &infectiveEntity : entities_) {
-    if (!infectiveEntity.infective()) {
+    // Dead and not infective entities do not spread the virus.
+    if (!infectiveEntity.infective() || infectiveEntity.dead()) {
       continue;
     }
 
@@ -166,8 +167,8 @@ const Coords &World::randomPartyCoords() {
 int World::infectedCount() const noexcept {
   int infected = 0;
 
-  for (auto &entity : this->entities_) {
-    if (entity.infected()) {
+  for (auto &entity : entities_) {
+    if (entity.infected() && !entity.dead()) {
       ++infected;
     }
   }
@@ -178,11 +179,25 @@ int World::infectedCount() const noexcept {
 int World::deadCount() const noexcept {
   int dead = 0;
 
-  for (auto &entity : this->entities_) {
+  for (auto &entity : entities_) {
     if (entity.dead()) {
       ++dead;
     }
   }
 
   return dead;
+}
+
+int World::immuneCount() const noexcept {
+  int immune = 0;
+
+  for (auto &entity : entities_) {
+    // Todo this will need some thinking.
+    //  and by this i mean all the infection resistance stuff a well
+    if (entity.infectionResistance >= .99f) {
+      ++immune;
+    }
+  }
+
+  return immune;
 }

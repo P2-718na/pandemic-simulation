@@ -90,6 +90,9 @@ class World {
   // Compute and return dead count.
   int deadCount() const noexcept;
 
+  // Compute immune count by looking at infectionResistance
+  int immuneCount() const noexcept;
+
   // Loop //////////////////////////////////////////////////////////////////////
   // World main loop. Must be called repeatedly to advance the simulation.
   void loop();

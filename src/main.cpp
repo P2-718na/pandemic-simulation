@@ -48,6 +48,8 @@ int main() {
         SFMLEntities[i].setFillColor(sf::Color::Black);
       } else if (e->infected()) {
         SFMLEntities[i].setFillColor(sf::Color::Red);
+      } else if (e->infectionResistance >= .99f) {
+        SFMLEntities[i].setFillColor(sf::Color::Cyan);
       } else {
         SFMLEntities[i].setFillColor({0xaa, 0x00, 0xff});
       }
