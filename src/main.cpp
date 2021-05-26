@@ -14,7 +14,7 @@ int main() {
   sf::VertexArray _entities(sf::Points, 1000);
 
   Config config{};
-  config.initRandomGenerator(42);
+  config.initRandomGenerator();
 
   World world("background.sample.bmp", "entities", config);
 

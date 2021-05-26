@@ -3,13 +3,14 @@
 #include "config.hpp"
 
 // I did this to avoid static storage duration warnings
-std::default_random_engine & Config::generator_(unsigned long seed) {
-  static std::default_random_engine generator{seed};
+std::default_random_engine & Config::generator_() {
+  static std::random_device rd;
+  static std::default_random_engine generator{rd()};
   return generator;
 }
 
-void Config::initRandomGenerator(unsigned long seed) {
-  generator_(seed);
+void Config::initRandomGenerator() {
+  generator_();
 }
 
 int Config::randInt(int min, int max) {

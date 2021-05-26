@@ -5,10 +5,10 @@
 
 class Config {
   // Initialize random number generator_
-  static std::default_random_engine& generator_(unsigned long seed = 0);
+  static std::default_random_engine& generator_();
 
  public:
-  static void initRandomGenerator(unsigned long seed);
+  static void initRandomGenerator();
 
   // Utils /////////////////////////////////////////////////////////////////////
   // Generate random int in [min, max[.
