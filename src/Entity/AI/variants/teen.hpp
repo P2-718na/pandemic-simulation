@@ -4,34 +4,37 @@
 #include "entity.hpp"
 
 class teenAI : public AI {
-  inline void operator()(Entity* entity, int time, int day) override {
-    if (entity->quarantined()) {
-      entity->goHome();
+ public:
+  inline explicit teenAI(Entity* parent) : AI{parent} {}
+
+  inline void operator()(int time, int day) override {
+    if (stayHome_(day)) {
+      parent_->goHome();
       return;
     }
 
-    const Config& config = entity->config();
+    const Config& config = parent_->config();
 
     // on Saturday
     if (day == config.DAYS_IN_A_WEEK - 2) {
       // Go party for the rest of the day
       if (time > config.hourToMinutes(20)) {
-        entity->goParty();
+        parent_->goParty();
         return;
       }
       // Either go party or go shop in afternoon
       if (time > config.hourToMinutes(15)) {
-        Config::chanceCheck(0.5) ? entity->goParty() : entity->goShop();
+        Config::chanceCheck(0.5) ? parent_->goParty() : parent_->goShop();
         return;
       }
       // Get home after school
       if (time > config.hourToMinutes(13)) {
-        entity->goHome();
+        parent_->goHome();
         return;
       }
       // Go to school
       if (time > config.hourToMinutes(7.5)) {
-        entity->goWork();
+        parent_->goWork();
         return;
       }
 
@@ -42,34 +45,34 @@ class teenAI : public AI {
     if (day == config.DAYS_IN_A_WEEK - 1) {
       // Get back home
       if (time > config.hourToMinutes(19.5)) {
-        entity->goHome();
+        parent_->goHome();
         return;
       }
       // Either go party or go shop
       if (time > config.hourToMinutes(15)) {
-        Config::chanceCheck(0.5) ? entity->goParty() : entity->goShop();
+        Config::chanceCheck(0.5) ? parent_->goParty() : parent_->goShop();
         return;
       }
       // Go home
       if (time > config.hourToMinutes(3)) {
-        entity->goHome();
+        parent_->goHome();
         return;
       }
 
       // Keep partying
-      entity->goParty();
+      parent_->goParty();
       return;
     }
 
     // On weekdays...
     // Gets home at 18
     if (time > config.hourToMinutes(13)) {
-      entity->goHome();
+      parent_->goHome();
       return;
     }
     // Goes to school
     if (time > config.hourToMinutes(7.5)) {
-      entity->goWork();
+      parent_->goWork();
       return;
     }
   }

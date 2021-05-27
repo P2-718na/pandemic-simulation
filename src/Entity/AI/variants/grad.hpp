@@ -4,56 +4,59 @@
 #include "entity.hpp"
 
 class gradAI : public AI {
-  inline void operator()(Entity* entity, int time, int day) override {
-    if (entity->quarantined()) {
-      entity->goHome();
+ public:
+  explicit inline gradAI(Entity* parent) : AI{parent} {}
+
+  inline void operator()(int time, int day) override {
+    if (stayHome_(day)) {
+      parent_->goHome();
       return;
     }
 
-    const Config& config = entity->config();
+    const Config& config = parent_->config();
 
     // On weekends, behave like an university student
-    if (day >= entity->config().DAYS_IN_A_WEEK - 2) {
+    if (day >= parent_->config().DAYS_IN_A_WEEK - 2) {
       // Go party at night
       if (time > config.hourToMinutes(21)) {
-        entity->goParty();
+        parent_->goParty();
         return;
       }
       // Go to random places all day
       if (time > config.hourToMinutes(9)) {
         switch (Config::randInt(0, 3)) {
           case 0:
-            entity->goWalk();
+            parent_->goWalk();
             return;
           case 1:
-            entity->goShop();
+            parent_->goShop();
             return;
           case 2:
-            entity->goParty();
+            parent_->goParty();
             return;
           default:
             return;
         }
       }
 
-      entity->goHome();
+      parent_->goHome();
       return;
     }
 
     // During weekdays...
     // Gets home at 18
     if (time > config.hourToMinutes(18)) {
-      entity->goHome();
+      parent_->goHome();
       return;
     }
     // Goes to work at 9
     if (time > config.hourToMinutes(9)) {
-      entity->goWork();
+      parent_->goWork();
       return;
     }
 
     // Added so it can get home after sunday night.
-    entity->goHome();
+    parent_->goHome();
   }
 };
 
