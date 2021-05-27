@@ -19,8 +19,8 @@ int main() {
   backgroundTexture.loadFromImage(world.background());
   background.setTexture(backgroundTexture);
   //background.setScale(2, 2);
-
   bool draw = true;
+  bool daylightCycle = false;
   while (window.isOpen()) {
     sf::Event event{};
     while (window.pollEvent(event)) {
@@ -37,10 +37,22 @@ int main() {
         if (event.key.code == sf::Keyboard::L) {
           world.lockdown(!world.lockdown());
         }
+
+        if (event.key.code == sf::Keyboard::K) {
+          daylightCycle = !daylightCycle;
+        }
       }
     }
 
     //window.clear();
+    if (daylightCycle) {
+      if (world.currentMinute() > config.hourToMinutes(21) || world.currentMinute() < config.hourToMinutes(6)) {
+        background.setColor({0xaa, 0xaa, 0xff});
+      } else {
+        background.setColor({0xff, 0xff, 0xff});
+      }
+    }
+
     window.draw(background);
     world.loop();
 
