@@ -131,13 +131,17 @@ World::World(const std::string &backgroundImagePath,
   }
 }
 
-// Accessors ///////////////////////////////////////////////////////////////////
+// Getters /////////////////////////////////////////////////////////////////////
 int World::currentDay() const noexcept {
   return currentDay_ % config_.DAYS_IN_A_WEEK;
 }
 
 int World::currentMinute() const noexcept {
-  return this->currentMinute_;
+  return currentMinute_;
+}
+
+bool World::lockdown() const noexcept {
+  return lockdown_;
 }
 
 const sf::Image &World::background() {
@@ -200,4 +204,9 @@ int World::immuneCount() const noexcept {
   }
 
   return immune;
+}
+
+// Setters /////////////////////////////////////////////////////////////////////
+void World::lockdown(bool status) noexcept {
+  lockdown_ = status;
 }

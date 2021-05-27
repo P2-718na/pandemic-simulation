@@ -28,8 +28,15 @@ int main() {
         window.close();
       }
 
-      if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::D) {
-        draw = !draw;
+      if (event.type == sf::Event::KeyReleased) {
+        if (event.key.code == sf::Keyboard::D) {
+          draw = !draw;
+          continue;
+        }
+
+        if (event.key.code == sf::Keyboard::L) {
+          world.lockdown(!world.lockdown());
+        }
       }
     }
 

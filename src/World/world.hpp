@@ -17,6 +17,11 @@ class World {
   // Current minute counter. It will be reset each day.
   int currentMinute_{0};
 
+  // Whether or not we are in a lockdown. Currently lockdown status
+  // can only be set manually. It can be improved by having it start
+  // automatically after x number of infected people.
+  bool lockdown_{false};
+
   // Background image. We want this to be stored inside World and be private,
   // since we don't want to make changes to this while the simulation
   // is running.
@@ -28,8 +33,6 @@ class World {
 
   // Vector containing all entities. Initialized in constructor by
   // parsing entities file.
-  // This is private, since we don't want to give arbitrary write access to all
-  // entities.
   std::vector<Entity> entities_;
 
   // These vectors hold coords for POIs. They are initialized by parsing
@@ -60,7 +63,7 @@ class World {
     const std::string &entitiesFile,
     Config& config);
 
-  // Accessors /////////////////////////////////////////////////////////////////
+  // Getters /////////////////////////////////////////////////////////////////
   // Return current day of the week.
   // Current day is not an enum. This allows us to have weeks with an
   // arbitrary number of days, not exactly 7.
@@ -68,6 +71,9 @@ class World {
 
   // Return current minute of the day.
   int currentMinute() const noexcept;
+
+  // Return current lockdown status
+  bool lockdown() const noexcept;
 
   // Return reference to world background. This will be used to call draw
   // function on background image.
@@ -92,6 +98,10 @@ class World {
 
   // Compute immune count by looking at infectionResistance
   int immuneCount() const noexcept;
+
+  // Setters ///////////////////////////////////////////////////////////////////
+  // Manually set lockdown status.
+  void lockdown(bool status) noexcept;
 
   // Loop //////////////////////////////////////////////////////////////////////
   // World main loop. Must be called repeatedly to advance the simulation.
