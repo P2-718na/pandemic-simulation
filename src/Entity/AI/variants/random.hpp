@@ -11,7 +11,7 @@ class randomAI : public AI {
 
     const int x = Config::randInt(100, 700);
     const int y = Config::randInt(100, 700);
-    entity->setDestination(x, y);
+    entity->setDestination({x, y});
   }
 };
 

@@ -157,6 +157,10 @@ const std::vector<Entity> &World::entities() const noexcept {
 }
 
 const Coords &World::randomParkCoords() {
+  if (lockdown()) {
+    return invalidCoords_;
+  }
+
   return parkCoords_[Config::randInt(0, parkCoords_.size())];
 }
 
@@ -165,7 +169,15 @@ const Coords &World::randomShopCoords() {
 }
 
 const Coords &World::randomPartyCoords() {
+  if (lockdown()) {
+    return invalidCoords_;
+  }
+
   return partyCoords_[Config::randInt(0, partyCoords_.size())];
+}
+
+const Coords& World::invalidCoords() noexcept {
+  return invalidCoords_;
 }
 
 int World::infectedCount() const noexcept {

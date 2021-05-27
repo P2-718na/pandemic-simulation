@@ -98,7 +98,6 @@ class Entity {
 
   // Methods ///////////////////////////////////////////////////////////////////
   // Load path to destination. Calls pathfinder.
-  void setDestination(int destX, int destY);
   void setDestination(const Coords& destination);
 
   void goHome();

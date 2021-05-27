@@ -20,6 +20,7 @@ class World {
   // Whether or not we are in a lockdown. Currently lockdown status
   // can only be set manually. It can be improved by having it start
   // automatically after x number of infected people.
+  // Lockdown "closes" parks and party locations.
   bool lockdown_{false};
 
   // Background image. We want this to be stored inside World and be private,
@@ -40,6 +41,10 @@ class World {
   std::vector<Coords> parkCoords_;
   std::vector<Coords> shopCoords_;
   std::vector<Coords> partyCoords_;
+
+  // This is used in case of a lockdown: parks and parties are closed, so
+  // when we call randomXXXXcoords(), we return a reference to this object.
+  const Coords invalidCoords_{-1, -1};
 
   // Private methods ///////////////////////////////////////////////////////////
   // Day loop, called at the end of loop() once every x minutes have passed.
@@ -89,6 +94,9 @@ class World {
   const Coords& randomParkCoords();
   const Coords& randomShopCoords();
   const Coords& randomPartyCoords();
+
+  // Return reference to invalid coords, to check if a function returned them.
+  const Coords& invalidCoords() noexcept;
 
   // Compute and return infected count.
   int infectedCount() const noexcept;
