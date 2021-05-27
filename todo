@@ -18,3 +18,4 @@ General todos:
 - check cmake includes and linking
 
 - on linux lags hard every 4th day. Maybe worth checking
+- valgrind memcheck smart pointers AI stuff
