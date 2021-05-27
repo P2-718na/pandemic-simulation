@@ -14,9 +14,6 @@ int main() {
   std::vector<sf::CircleShape> SFMLEntities(1000, sf::CircleShape{1.6, 4});
 
   Config config{};
-  // Unneeded?
-  //config.initRandomGenerator();
-
   World world("background.sample.bmp", "entities", config);
 
   backgroundTexture.loadFromImage(world.background());

@@ -9,10 +9,6 @@ std::default_random_engine & Config::generator_() {
   return generator;
 }
 
-void Config::initRandomGenerator() {
-  generator_();
-}
-
 int Config::randInt(int min, int max) {
   if (min > max) {
     std::swap(min, max);

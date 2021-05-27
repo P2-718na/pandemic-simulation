@@ -8,8 +8,6 @@ class Config {
   static std::default_random_engine& generator_();
 
  public:
-  static void initRandomGenerator();
-
   // Utils /////////////////////////////////////////////////////////////////////
   // Generate random int in [min, max[.
   static int randInt(int min, int max);
