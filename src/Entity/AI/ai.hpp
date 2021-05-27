@@ -9,7 +9,6 @@ class AI {
  protected:
   Entity* parent_;
 
-  // todo
   // When on lockdown, people must still be able to go shop for groceries,
   // even tho the number of people around is smaller.
   // The easiest way to implement this is to load their AI only for one day of
