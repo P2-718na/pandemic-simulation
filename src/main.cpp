@@ -5,6 +5,7 @@
 #include "config.hpp"
 #include "world.hpp"
 #include "entity.hpp"
+#include "engine.hpp"
 
 int main() {
   sf::RenderWindow window(sf::VideoMode(800, 800), "covid");

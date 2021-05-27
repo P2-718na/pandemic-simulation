@@ -11,6 +11,7 @@ INCLUDE_DIRECTORIES(
         lab PUBLIC
         "${PROJECT_SOURCE_DIR}/src"
         "${PROJECT_SOURCE_DIR}/src/Pathfinder"
+        "${PROJECT_SOURCE_DIR}/src/Engine"
         "${PROJECT_SOURCE_DIR}/src/Entity"
         "${PROJECT_SOURCE_DIR}/src/World"
         "${PROJECT_SOURCE_DIR}/src/Config"
