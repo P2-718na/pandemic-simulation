@@ -4,18 +4,21 @@
 #include "entity.hpp"
 
 class uniAI : public AI {
-  inline void operator()(Entity* entity, int time, int day) override {
-    if (entity->quarantined()) {
-      entity->goHome();
+ public:
+  explicit inline uniAI(Entity* parent) : AI{parent} {}
+
+  inline void operator()(int time, int day) override {
+    if (stayHome_(day)) {
+      parent_->goHome();
       return;
     }
 
-    const Config& config = entity->config();
+    const Config& config = parent_->config();
     const bool weekend = day >= config.DAYS_IN_A_WEEK - 3;
 
     // Gets home at 21 on weekdays. Otherwise go party.
     if (time > config.hourToMinutes(21)) {
-      weekend ?  entity->goParty() : entity->goHome();
+      weekend ? parent_->goParty() : parent_->goHome();
       return;
     }
     // Goes to uni/party/shop/walk for the entire day.
@@ -24,21 +27,21 @@ class uniAI : public AI {
       // happening than other actions, since we want entities to stay there a bit.
       switch (Config::randInt(0, weekend ? 3 : 200)) {
         case 0:
-          entity->goWalk();
+          parent_->goWalk();
           return;
         case 1:
-          entity->goShop();
+          parent_->goShop();
           return;
         case 2:
-          entity->goParty();
+          parent_->goParty();
           return;
         default:
-          entity->goWork();
+          parent_->goWork();
           return;
       }
     }
 
-    entity->goHome();
+    parent_->goHome();
   }
 };
 

@@ -11,6 +11,8 @@ class World;
 class Config;
 
 class Entity {
+  friend class AI;
+
   // World this entity belongs to.
   World* world_;
 
@@ -46,7 +48,7 @@ class Entity {
   entityAI currentAI;
 
   // Convert AI name string to entityAI function pointer.
-  static entityAI parseAI_(const std::string &AIName);
+  entityAI parseAI_(const std::string &AIName);
 
  public:
   // fixme move all this variables to private section
@@ -98,7 +100,6 @@ class Entity {
 
   // Methods ///////////////////////////////////////////////////////////////////
   // Load path to destination. Calls pathfinder.
-  void setDestination(int destX, int destY);
   void setDestination(const Coords& destination);
 
   void goHome();

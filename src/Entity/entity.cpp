@@ -93,16 +93,19 @@ void Entity::quarantined(bool status) {
 }
 
 // Methods /////////////////////////////////////////////////////////////////////
-void Entity::setDestination(int destX, int destY) {
-  // Avoid unnecessary pathfinder calls
-  if (posX() == destX && posY() == destY) {
+void Entity::setDestination(const Coords& destination) {
+  // Avoid unnecessary pathfinder calls if we are already at position.
+  if (pos() == destination) {
     return;
   }
 
-  pathfinder_ = Pathfinder{posX_, posY_, destX, destY};
-}
-void Entity::setDestination(const Coords& destination) {
-  setDestination(destination.first, destination.second);
+  // If the destinations is world::invalidLocation, stay still.
+  if (destination == world_->invalidCoords()) {
+    return;
+  }
+
+  // Otherwise, reset pathfinder.
+  pathfinder_ = Pathfinder{posX_, posY_, destination.first, destination.second};
 }
 
 void Entity::goHome() {
@@ -155,7 +158,8 @@ void Entity::loop() {
 
   // IF arrived to destination, call AI
   if (pathfinder_.isArrived()) {
-    return (*currentAI)(this, world_->currentMinute(), world_->currentDay());
+    (*currentAI)(world_->currentMinute(), world_->currentDay());
+    return;
   }
 
   // Else, move one tile.
@@ -201,28 +205,28 @@ void Entity::dayLoop() {
 entityAI Entity::parseAI_(const std::string& AIName) {
   // Default AIs
   if (AIName == "nullAI") {
-    return std::make_unique<nullAI>();
+    return std::make_unique<nullAI>(this);
   }
   if (AIName == "randomAI") {
-    return std::make_unique<randomAI>();
+    return std::make_unique<randomAI>(this);
   }
 
   // AI Variants
   if (AIName == "manAI") {
-    return std::make_unique<manAI>();
+    return std::make_unique<manAI>(this);
   }
   if (AIName == "oldAI") {
-    return std::make_unique<oldAI>();
+    return std::make_unique<oldAI>(this);
   }
   if (AIName == "gradAI") {
-    return std::make_unique<gradAI>();
+    return std::make_unique<gradAI>(this);
   }
   if (AIName == "uniAI") {
-    return std::make_unique<uniAI>();
+    return std::make_unique<uniAI>(this);
   }
   if (AIName == "teenAI") {
-    return std::make_unique<teenAI>();
+    return std::make_unique<teenAI>(this);
   }
 
-  return std::make_unique<nullAI>();
+  return std::make_unique<nullAI>(this);
 }

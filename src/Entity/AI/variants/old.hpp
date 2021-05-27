@@ -4,33 +4,35 @@
 #include "entity.hpp"
 
 class oldAI : public AI {
-  inline void operator()(Entity* entity, int time, int day) override {
-    // If quarantined, stay at home.
-    if (entity->quarantined()) {
-      entity->goHome();
+ public:
+  explicit inline oldAI(Entity* parent) : AI{parent} {}
+
+  inline void operator()(int time, int day) override {
+    if (stayHome_(day)) {
+      parent_->goHome();
       return;
     }
 
-    const Config& config = entity->config();
+    const Config& config = parent_->config();
 
     // Alle 18 torna a casa-
     if (time > config.hourToMinutes(18)) {
-      entity->goHome();
+      parent_->goHome();
       return;
     }
     // Alle 17 va a fare la spesa.
     if (time > config.hourToMinutes(17)) {
-      entity->goShop();
+      parent_->goShop();
       return;
     }
     // Alle 10 torna a casa e pranza.
     if (time > config.hourToMinutes(10)) {
-      entity->goHome();
+      parent_->goHome();
       return;
     }
     // Si sveglia alle 5 e va a passeggiare.
     if (time > config.hourToMinutes(5)) {
-      entity->goWalk();
+      parent_->goWalk();
       return;
     }
   }

@@ -4,14 +4,18 @@
 #include "entity.hpp"
 
 class randomAI : public AI {
-  inline void operator()(Entity* entity, int time, int day) override {
-    if (entity->quarantined()) {
-      return entity->goHome();
+ public:
+  explicit inline randomAI(Entity* parent) : AI{parent} {}
+
+  inline void operator()(int time, int day) override {
+    if (stayHome_(day)) {
+      parent_->goHome();
+      return;
     }
 
     const int x = Config::randInt(100, 700);
     const int y = Config::randInt(100, 700);
-    entity->setDestination(x, y);
+    parent_->setDestination({x, y});
   }
 };
 

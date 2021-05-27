@@ -4,7 +4,10 @@
 #include "entity.hpp"
 
 class nullAI : public AI {
-  inline void operator()(Entity* entity, int time, int day) override {}
+ public:
+  explicit inline nullAI(Entity* parent) : AI{parent} {}
+
+  inline void operator()(int time, int day) override {}
 };
 
 #endif // define UNI_HPP

@@ -4,19 +4,22 @@
 #include "entity.hpp"
 
 class manAI : public AI {
-  inline void operator()(Entity* entity, int time, int day) override {
-    if (entity->quarantined()) {
-      entity->goHome();
+ public:
+  explicit inline manAI(Entity* parent) : AI{parent} {}
+
+  inline void operator()(int time, int day) override {
+    if (stayHome_(day)) {
+      parent_->goHome();
       return;
     }
 
-    const Config& config = entity->config();
+    const Config& config = parent_->config();
 
     // on Saturday
     if (day == config.DAYS_IN_A_WEEK - 2) {
       // Relax
       if (time > config.hourToMinutes(15)) {
-        entity->goWalk();
+        parent_->goWalk();
         return;
       }
 
@@ -27,12 +30,12 @@ class manAI : public AI {
     if (day == config.DAYS_IN_A_WEEK - 1) {
       // Go home
       if (time > config.hourToMinutes(13)) {
-        entity->goHome();
+        parent_->goHome();
         return;
       }
       // Go shopping
       if (time > config.hourToMinutes(10)) {
-        entity->goShop();
+        parent_->goShop();
         return;
       }
 
@@ -42,12 +45,12 @@ class manAI : public AI {
     // During weekdays...
     // Gets home at 18
     if (time > config.hourToMinutes(18)) {
-      entity->goHome();
+      parent_->goHome();
       return;
     }
     // Goes to work at 9
     if (time > config.hourToMinutes(9)) {
-      entity->goWork();
+      parent_->goWork();
       return;
     }
   }

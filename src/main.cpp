@@ -14,16 +14,13 @@ int main() {
   std::vector<sf::CircleShape> SFMLEntities(1000, sf::CircleShape{1.6, 4});
 
   Config config{};
-  // Unneeded?
-  //config.initRandomGenerator();
-
   World world("background.sample.bmp", "entities", config);
 
   backgroundTexture.loadFromImage(world.background());
   background.setTexture(backgroundTexture);
   //background.setScale(2, 2);
-
   bool draw = true;
+  bool daylightCycle = false;
   while (window.isOpen()) {
     sf::Event event{};
     while (window.pollEvent(event)) {
@@ -31,12 +28,31 @@ int main() {
         window.close();
       }
 
-      if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::D) {
-        draw = !draw;
+      if (event.type == sf::Event::KeyReleased) {
+        if (event.key.code == sf::Keyboard::D) {
+          draw = !draw;
+          continue;
+        }
+
+        if (event.key.code == sf::Keyboard::L) {
+          world.lockdown(!world.lockdown());
+        }
+
+        if (event.key.code == sf::Keyboard::K) {
+          daylightCycle = !daylightCycle;
+        }
       }
     }
 
     //window.clear();
+    if (daylightCycle) {
+      if (world.currentMinute() > config.hourToMinutes(21) || world.currentMinute() < config.hourToMinutes(6)) {
+        background.setColor({0xaa, 0xaa, 0xff});
+      } else {
+        background.setColor({0xff, 0xff, 0xff});
+      }
+    }
+
     window.draw(background);
     world.loop();
 
