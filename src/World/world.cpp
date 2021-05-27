@@ -1,6 +1,6 @@
 #include "world.hpp"
 
-#include <algorithm>
+#include <set>
 #include <stdexcept>
 
 #include "config.hpp"
@@ -46,7 +46,7 @@ void World::loop() {
 // Other methods ///////////////////////////////////////////////////////////////
 void World::spreadVirus_() {
   // We want to write all tiles with infective entities in here...
-  std::vector<Coords> infectiveTiles;
+  std::set<Coords> infectiveTiles;
 
   // Loop through every infective entity...
   for (auto &infectiveEntity : entities_) {
@@ -58,24 +58,28 @@ void World::spreadVirus_() {
     // If entity succeeds a virusSpreadChance test, add tile to infective
     // tiles.
     if (Config::chanceCheck(infectiveEntity.virusSpreadChance)) {
-      infectiveTiles.push_back(infectiveEntity.pos());
+      infectiveTiles.insert(infectiveEntity.pos());
     }
   }
 
-  // Then, loop through every entity and check if they are in an infective
-  // tile. (Note the order of the loops: entities->infectiveTiles. It would
-  // be less efficient to do the opposite).
-  for (auto &entity : entities_) {
-    // todo this could probably be optimized using a set.
-    const auto &first = infectiveTiles.begin();
-    const auto &last = infectiveTiles.end();
+  // Then, loop through every healthy entity and check if they are in an
+  // infective tile. (Note the order of the loops: entities->infectiveTiles.
+  // It would be less efficient to do the opposite).
+  for (auto &healthyEntity : entities_) {
+    // Dead and already infected entities cannot get the virus
+    if (healthyEntity.infective() || healthyEntity.dead()) {
+      continue;
+    }
 
-    // Check if current entity is in an infected tile.
-    const bool isInInfectedTile = std::find(first, last, entity.pos()) != last;
-
-    // If it is, try to infect it.
-    if (isInInfectedTile) {
-      entity.tryInfect();
+    // If an entity is an infected tile, try to infect it.
+    // Note: I considered three algorithms to make this step as efficeint
+    // as possible : linear std::find in a vector, binary search and
+    // set::count(). The latter is the most efficient one in every case.
+    // Also note that set::find() is less efficient than set::count().
+    // The three only differ significantly for large numbers of infective
+    // entities.
+    if (infectiveTiles.count(healthyEntity.pos())) {
+      healthyEntity.tryInfect();
     }
   }
 }
