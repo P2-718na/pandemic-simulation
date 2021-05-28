@@ -65,7 +65,7 @@ class World {
   // Throws a runtime_error if any of these functions fails.
   World(
     const std::string &backgroundImagePath,
-    const std::string &entitiesFile,
+    const std::string & entitiesFilePath,
     Config& config);
 
   // Getters /////////////////////////////////////////////////////////////////

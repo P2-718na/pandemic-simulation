@@ -7,7 +7,6 @@ ADD_SUBDIRECTORY(Pathfinder)
 ADD_SUBDIRECTORY(World)
 
 TARGET_LINK_LIBRARIES(lab Entity Pathfinder World Engine)
-TARGET_LINK_LIBRARIES(lab sfml-graphics sfml-window sfml-audio)
 
 SET_TARGET_PROPERTIES(lab PROPERTIES
         RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR})
