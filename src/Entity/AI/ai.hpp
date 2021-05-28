@@ -28,8 +28,6 @@ class AI {
   virtual void operator()(int time, int day) = 0;
 };
 
-inline AI::~AI() noexcept = default;
-
 typedef std::unique_ptr<AI> entityAI;
 
 #endif // define AI_HPP
