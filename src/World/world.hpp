@@ -18,7 +18,7 @@ class World {
   int currentMinute_{0};
 
   // Whether or not we are in a lockdown. Currently lockdown status
-  // can only be set manually. It can be improved by having it start
+  // can only be set manually. It can be improved by having it startSimulation
   // automatically after x number of infected people.
   // Lockdown "closes" parks and party locations.
   bool lockdown_{false};
@@ -65,7 +65,7 @@ class World {
   // Throws a runtime_error if any of these functions fails.
   World(
     const std::string &backgroundImagePath,
-    const std::string & entitiesFilePath,
+    const std::string &entitiesFilePath,
     Config& config);
 
   // Getters /////////////////////////////////////////////////////////////////
@@ -87,8 +87,8 @@ class World {
   // Return reference to config.
   const Config& config() const noexcept;
 
-  // Return reference to entities vector.
-  const std::vector<Entity>& entities() const noexcept;
+  // Return reference to entity at index
+  const Entity& entity(int index) const noexcept;
 
   // Return random coordinate from POI lists.
   const Coords& randomParkCoords();
@@ -97,6 +97,8 @@ class World {
 
   // Return reference to invalid coords, to check if a function returned them.
   const Coords& invalidCoords() noexcept;
+
+  int entityCount() const noexcept;
 
   // Compute and return infected count.
   int infectedCount() const noexcept;

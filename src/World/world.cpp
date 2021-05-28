@@ -156,8 +156,8 @@ const Config &World::config() const noexcept {
   return config_;
 }
 
-const std::vector<Entity> &World::entities() const noexcept {
-  return entities_;
+const Entity &World::entity(int index) const noexcept {
+  return entities_[index];
 }
 
 const Coords &World::randomParkCoords() {
@@ -182,6 +182,10 @@ const Coords &World::randomPartyCoords() {
 
 const Coords& World::invalidCoords() noexcept {
   return invalidCoords_;
+}
+
+int World::entityCount() const noexcept {
+  return entities_.size();
 }
 
 int World::infectedCount() const noexcept {
