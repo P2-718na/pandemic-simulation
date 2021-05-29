@@ -24,6 +24,12 @@ ADD_SUBDIRECTORY(seeder)
 
 CONFIGURE_FILE(assets/background.sample.bmp "${PROJECT_BINARY_DIR}" COPYONLY)
 
-#todo release and debug
-SET(GCC_COVERAGE_COMPILE_FLAGS "-Wall -Wextra -g")
-SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${GCC_COVERAGE_COMPILE_FLAGS} ")
+if(NOT CMAKE_BUILD_TYPE)
+  set(CMAKE_BUILD_TYPE Debug)
+endif()
+
+MESSAGE("Building using ${CMAKE_BUILD_TYPE} configuration")
+
+SET(CMAKE_CXX_FLAGS  "-Wall -Wextra")
+SET(CMAKE_CXX_FLAGS_DEBUG "-g -fsanitize=\"address\"")
+SET(CMAKE_CXX_FLAGS_RELEASE "-O3 -DNDEBUG")
