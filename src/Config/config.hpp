@@ -27,7 +27,7 @@ class Config {
   sf::Color PARTY_COLOR{0xff, 0x00, 0xff};
 
   // Number of minutes after every day loop.
-  int MINUTES_IN_A_DAY{2400};
+  int MINUTES_IN_A_DAY{3000};
 
   // Number of days in a week.
   int DAYS_IN_A_WEEK{7};
