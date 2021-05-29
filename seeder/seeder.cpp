@@ -123,6 +123,10 @@ void parseImage() {
       }
     }
   }
+
+  if (workLocations.empty() || houseLocations.empty() || schoolLocations.empty() || uniLocations.empty()) {
+    throw std::runtime_error("Missing locations in image!");
+  }
 }
 
 void populateHouses() {
@@ -249,14 +253,14 @@ int main(int argc, char* argv[]) {
 
     // Open output file. Throws on fail.
     ofs.open(outFile);
+
+    // Load POI locations from image into memory
+    parseImage();
   } catch (runtime_error &err) {
     cerr << "Error initialising: " << err.what() << endl;
 
     exit(1);
   }
-
-  // Load POI locations from image into memory
-  parseImage();
 
   // Reserve space for houses (Not needed, increases performance a bit)
   houses.reserve(houseLocations.size());
