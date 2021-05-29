@@ -1,5 +1,5 @@
-#ifndef AI_UNI_HPP
-#define AI_UNI_HPP
+#ifndef PANDEMIC_UNI_HPP
+#define PANDEMIC_UNI_HPP
 
 #include "entity.hpp"
 
@@ -49,4 +49,4 @@ class uniAI : public AI {
 
 } // namespace pandemic
 
-#endif // define UNI_HPP
+#endif // define PANDEMIC_UNI_HPP

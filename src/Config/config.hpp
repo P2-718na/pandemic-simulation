@@ -1,5 +1,6 @@
-#ifndef CONFIG_HPP
-#define CONFIG_HPP
+#ifndef PANDEMIC_CONFIG_HPP
+#define PANDEMIC_CONFIG_HPP
+
 #include <SFML/Graphics/Color.hpp>
 #include <random>
 
@@ -54,11 +55,8 @@ class Config {
 
   // Number of days after which an entity can recover from the virus.
   int VIRUS_DURATION{7};
-
-  // todo loadFromFile
-  // bool loadFromFile(string filename);
 };
 
 } // namespace pandemic
 
-#endif // define CONFIG_HPP
+#endif // define PANDEMIC_CONFIG_HPP

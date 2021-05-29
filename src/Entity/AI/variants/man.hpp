@@ -1,5 +1,5 @@
-#ifndef AI_MAN_HPP
-#define AI_MAN_HPP
+#ifndef PANDEMIC_MAN_HPP
+#define PANDEMIC_MAN_HPP
 
 #include "entity.hpp"
 

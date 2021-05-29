@@ -1,5 +1,5 @@
-#ifndef PATHFINDER_HPP
-#define PATHFINDER_HPP
+#ifndef PANDEMIC_PATHFINDER_HPP
+#define PANDEMIC_PATHFINDER_HPP
 
 #include <vector>
 
@@ -34,4 +34,4 @@ class Pathfinder {
 
 } // namespace pandemic
 
-#endif // define PATHFINDER_HPP
+#endif // define PANDEMIC_PATHFINDER_HPP

@@ -1,5 +1,5 @@
-#ifndef AI_HPP
-#define AI_HPP
+#ifndef PANDEMIC_AI_HPP
+#define PANDEMIC_AI_HPP
 #include <memory>
 
 namespace pandemic {
@@ -32,4 +32,4 @@ typedef std::unique_ptr<AI> entityAI;
 
 } // namespace pandemic
 
-#endif // define AI_HPP
+#endif // define PANDEMIC_AI_HPP

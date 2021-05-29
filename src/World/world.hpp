@@ -1,5 +1,5 @@
-#ifndef WORLD_HPP
-#define WORLD_HPP
+#ifndef PANDEMIC_WORLD_HPP
+#define PANDEMIC_WORLD_HPP
 
 #include <vector>
 #include <string>
@@ -122,4 +122,4 @@ class World {
 
 } // namespace pandemic
 
-#endif // define WORLD_HPP
+#endif // define PANDEMIC_WORLD_HPP

@@ -1,5 +1,5 @@
-#ifndef PARSER_HPP
-#define PARSER_HPP
+#ifndef PANDEMIC_PARSER_HPP
+#define PANDEMIC_PARSER_HPP
 
 #include <SFML/Graphics/Image.hpp>
 #include <string>
@@ -25,4 +25,4 @@ struct World::Parser {
 
 } // namespace pandemic
 
-#endif // define PARSER_HPP
+#endif // define PANDEMIC_PARSER_HPP

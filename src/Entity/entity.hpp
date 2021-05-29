@@ -1,5 +1,5 @@
-#ifndef ENTITY_HPP
-#define ENTITY_HPP
+#ifndef PANDEMIC_ENTITY_HPP
+#define PANDEMIC_ENTITY_HPP
 
 #include <string>
 #include <memory>
@@ -129,4 +129,4 @@ class Entity {
 
 } // namespace pandemic
 
-#endif // define ENTITY_HPP
+#endif // define PANDEMIC_ENTITY_HPP

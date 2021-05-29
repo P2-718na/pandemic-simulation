@@ -1,5 +1,5 @@
-#ifndef AI_RANDOM_HPP
-#define AI_RANDOM_HPP
+#ifndef PANDEMIC_RANDOM_HPP
+#define PANDEMIC_RANDOM_HPP
 
 #include "entity.hpp"
 
@@ -23,4 +23,4 @@ class randomAI : public AI {
 
 } // namespace pandemic
 
-#endif // define UNI_HPP
+#endif // define PANDEMIC_UNI_HPP

@@ -1,5 +1,5 @@
-#ifndef AI_OLD_HPP
-#define AI_OLD_HPP
+#ifndef PANDEMIC_OLD_HPP
+#define PANDEMIC_OLD_HPP
 
 #include "entity.hpp"
 
@@ -42,4 +42,4 @@ class oldAI : public AI {
 
 } // namespace pandemic
 
-#endif // define OLD_HPP
+#endif // define PANDEMIC_OLD_HPP

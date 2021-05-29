@@ -1,5 +1,5 @@
-#ifndef AI_GRAD_HPP
-#define AI_GRAD_HPP
+#ifndef PANDEMIC_GRAD_HPP
+#define PANDEMIC_GRAD_HPP
 
 #include "entity.hpp"
 
@@ -64,4 +64,4 @@ class gradAI : public AI {
 
 } // namespace pandemic
 
-#endif // define GRAD_HPP
+#endif // define PANDEMIC_GRAD_HPP

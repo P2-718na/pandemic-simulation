@@ -1,5 +1,5 @@
-#ifndef AI_TEEN_HPP
-#define AI_TEEN_HPP
+#ifndef PANDEMIC_TEEN_HPP
+#define PANDEMIC_TEEN_HPP
 
 #include "entity.hpp"
 
@@ -82,4 +82,4 @@ class teenAI : public AI {
 
 } // namespace pandemic
 
-#endif // define TEEN_HPP
+#endif // define PANDEMIC_TEEN_HPP

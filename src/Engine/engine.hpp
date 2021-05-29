@@ -1,5 +1,5 @@
-#ifndef ENGINE_HPP
-#define ENGINE_HPP
+#ifndef PANDEMIC_ENGINE_HPP
+#define PANDEMIC_ENGINE_HPP
 
 #include <SFML/Graphics.hpp>
 #include <vector>
@@ -71,4 +71,4 @@ class Engine {
 
 } // namespace pandemic
 
-#endif // define ENGINE_HPP
+#endif // define PANDEMIC_ENGINE_HPP
