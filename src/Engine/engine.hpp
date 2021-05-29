@@ -10,13 +10,9 @@
 #include "entity.hpp"
 
 class Engine {
-  sf::RenderWindow window_{sf::VideoMode{800, 800}, "Simulation"};
+  sf::RenderWindow window_;
   sf::Texture backgroundTexture_;
 
-  // SFML documentation states that Sprite is initialized by taking a texture
-  // reference. However, if I pass the texture to the sprite constructor
-  // before the texture is initialized, the sprite doesn't update its texture.
-  // This means that this has to be initialized in constructor.
   sf::Sprite backgroundSprite_;
 
   sf::Clock clock_{};
@@ -50,6 +46,13 @@ class Engine {
   // Note that we can't return const reference, because the default
   // color is not a sf::Color constant.
   static sf::Color getEntityColour_(Entity const& entity) noexcept;
+
+  // Return a float from 0 to 1 which represents the current light level.
+  float currentLightLevel_() noexcept;
+
+  // Tint background sprite based on time of day. Gets called only if
+  // daylightCycle is enabled.
+  void tintBackground_() noexcept;
 
  public:
   // Constructor ///////////////////////////////////////////////////////////////

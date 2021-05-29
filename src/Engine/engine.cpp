@@ -1,3 +1,4 @@
+#include <cmath>
 #include <vector>
 #include <iostream>
 #include <cassert>
@@ -11,15 +12,24 @@ Engine::Engine(
   std::string const& backgroundPath, std::string const& entitiesPath)
   : world_{backgroundPath, entitiesPath, config_} {
   if (!backgroundTexture_.loadFromImage(world_.background())) {
-   throw std::runtime_error("Cannot load background texture.");
+    throw std::runtime_error("Cannot load background texture.");
   }
 
+  // Set video mode based on background size
+  const sf::VideoMode videoMode{
+    backgroundTexture_.getSize().x, backgroundTexture_.getSize().y};
+  window_.create(videoMode, "Simulation");
+
+  // SFML documentation states that Sprite is initialized by taking a texture
+  // reference. However, if I pass the texture to the sprite constructor
+  // before the texture is initialized, the sprite doesn't update its texture.
+  // This means that this has to be initialized in constructor.
   backgroundSprite_.setTexture(backgroundTexture_);
 
   // we must do this here instead of initialization list, because world must be
   // initialized before
-  SFMLEntities_ = std::vector<sf::CircleShape>(
-    world_.entityCount(), sf::CircleShape{1.6, 4});
+  SFMLEntities_ =
+    std::vector<sf::CircleShape>(world_.entityCount(), sf::CircleShape{1.6, 4});
 }
 
 // Methods /////////////////////////////////////////////////////////////////////
@@ -62,17 +72,16 @@ void Engine::handleEvents_(const sf::Event& event) noexcept {
     }
     if (event.key.code == sf::Keyboard::L) {
       world_.lockdown(!world_.lockdown());
-      const std::string message = world_.lockdown()
-                                  ? "Lockdown enabled!"
-                                  : "Lockdown disabled!";
+      const std::string message =
+        world_.lockdown() ? "Lockdown enabled!" : "Lockdown disabled!";
       printMessage(message);
       return;
     }
     if (event.key.code == sf::Keyboard::K) {
       daylightCycleEnabled ^= true;
       const std::string message = daylightCycleEnabled
-                                ? "Daylight cycle enabled!"
-                                : "Daylight cycle disabled!";
+                                  ? "Daylight cycle enabled!"
+                                  : "Daylight cycle disabled!";
       printMessage(message);
       return;
     }
@@ -80,17 +89,16 @@ void Engine::handleEvents_(const sf::Event& event) noexcept {
 }
 
 void Engine::graphicsLoop_() noexcept {
+  // This is not strictly needed, since we will be redrawing the background
+  // which takes up the whole screen, but it's recommended by sfml.
   window_.clear();
 
-  //todo refactor
+  // Tint background based on time of day, if daylightCycle is enabled
   if (daylightCycleEnabled) {
-    if (world_.currentMinute() > config_.hourToMinutes(21) || world_.currentMinute() < config_.hourToMinutes(6)) {
-      backgroundSprite_.setColor({0xaa, 0xaa, 0xff});
-    } else {
-      backgroundSprite_.setColor({0xff, 0xff, 0xff});
-    }
+    tintBackground_();
   }
 
+  // Draw background image
   window_.draw(backgroundSprite_);
 
   // Loop through every entity and set its respective sf::CircleShape
@@ -101,9 +109,7 @@ void Engine::graphicsLoop_() noexcept {
     sf::CircleShape& SFMLEntity = SFMLEntities_[i];
 
     SFMLEntity.setPosition(
-      static_cast<float>(entity.posX()),
-      static_cast<float>(entity.posY()));
-
+      static_cast<float>(entity.posX()), static_cast<float>(entity.posY()));
     SFMLEntity.setFillColor(getEntityColour_(entity));
 
     window_.draw(SFMLEntity);
@@ -142,4 +148,24 @@ sf::Color Engine::getEntityColour_(Entity const& entity) noexcept {
     return sf::Color::Cyan;
   }
   return {0xaa, 0x00, 0xff};
+}
+
+float Engine::currentLightLevel_() noexcept {
+  const float b = static_cast<float>(config_.MINUTES_IN_A_DAY) / 2.f;
+  const float a = M_PI / b;
+  const auto x = static_cast<float>(world_.currentMinute());
+
+  // Cosine function, transformed so that it is between 0 and 1.
+  // It has a peak for x=b, and period T=2b
+  return static_cast<float>((std::cos(a * (x - b)) + 1.f)) / 2.f;
+}
+
+void Engine::tintBackground_() noexcept {
+  // Do some math to calculate tint color.
+  // We want to colour the sprites from 0xaa,0xaa,0xff to 0xff,0xff,0xff
+  // 0x55 is the range (0xaa-0xff)
+  const sf::Uint8 tint = currentLightLevel_() * (0x55) + 0xaa;
+  assert(tint <= 0xff);
+  assert(tint >= 0xaa);
+  backgroundSprite_.setColor({tint, tint, 0xff});
 }
