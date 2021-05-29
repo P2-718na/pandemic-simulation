@@ -3,6 +3,8 @@
 
 #include "entity.hpp"
 
+namespace  pandemic {
+
 class randomAI : public AI {
  public:
   explicit inline randomAI(Entity* parent) : AI{parent} {}
@@ -18,5 +20,7 @@ class randomAI : public AI {
     parent_->setDestination({x, y});
   }
 };
+
+} // namespace pandemic
 
 #endif // define UNI_HPP

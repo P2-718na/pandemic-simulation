@@ -5,9 +5,9 @@
 int main() {
 
   try {
-    Engine engine("./background.sample.bmp", "entities");
+    pandemic::Engine engine("./background.sample.bmp", "entities");
 
-    Engine::printMessage("Starting simulation...");
+    pandemic::Engine::printMessage("Starting simulation...");
     engine.startSimulation();
   } catch (std::runtime_error& err) {
     std::cerr << "An error occurred while initializing the simulation:"

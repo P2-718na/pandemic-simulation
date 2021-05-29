@@ -1,6 +1,8 @@
 #pragma once
 #include <vector>
 
+namespace pandemic {
+
 class Pathfinder {
   int _startX{};
   int _startY{};
@@ -10,31 +12,21 @@ class Pathfinder {
   std::vector<std::pair<int, int>> _path{};
 
   void _init(
-    const int &startX,
-    const int &startY,
-    const int &endX,
-    const int &endY
-  );
+    const int& startX, const int& startY, const int& endX, const int& endY);
   bool _calcPath();
 
  public:
   // todo fratm riscrivi sta roba 🤡
   Pathfinder();
   Pathfinder(
-    const int &startX,
-    const int &startY,
-    const int &endX,
-    const int &endY
-  );
+    const int& startX, const int& startY, const int& endX, const int& endY);
 
   void init(
-    const int &startX,
-    const int &startY,
-    const int &endX,
-    const int &endY
-  );
+    const int& startX, const int& startY, const int& endX, const int& endY);
 
   std::vector<std::pair<int, int>> getPath() const;
   std::pair<int, int> step();
   bool isArrived();
 };
+
+} // namespace pandemic

@@ -2,6 +2,8 @@
 #include <stdexcept>
 #include <vector>
 
+namespace pandemic {
+
 void Pathfinder::_init(const int &startX, const int &startY, const int &endX, const int &endY) {
   if (this->_step != -1) {
    throw std::runtime_error("Already initialised.");
@@ -85,3 +87,5 @@ std::pair<int, int> Pathfinder::step() {
 bool Pathfinder::isArrived() {
   return this->_step >= this->_path.size() - 1;
 }
+
+} // namespace pandemic

@@ -3,6 +3,8 @@
 
 #include "entity.hpp"
 
+namespace pandemic {
+
 class gradAI : public AI {
  public:
   explicit inline gradAI(Entity* parent) : AI{parent} {}
@@ -59,5 +61,7 @@ class gradAI : public AI {
     parent_->goHome();
   }
 };
+
+} // namespace pandemic
 
 #endif // define GRAD_HPP

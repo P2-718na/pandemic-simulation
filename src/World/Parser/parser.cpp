@@ -4,9 +4,11 @@
 #include "config.hpp"
 #include "entity.hpp"
 
-bool Parser::parsePointsOfInterests(const Config &config,
-  const sf::Image &backgroundImage, std::vector<Coords> &parkCoords,
-  std::vector<Coords> &shopCoords, std::vector<Coords> &partyCoords) noexcept {
+namespace pandemic {
+
+bool World::Parser::parsePointsOfInterests(const Config& config,
+  const sf::Image& backgroundImage, std::vector<Coords>& parkCoords,
+  std::vector<Coords>& shopCoords, std::vector<Coords>& partyCoords) noexcept {
   const int height = backgroundImage.getSize().x;
   const int width = backgroundImage.getSize().y;
 
@@ -37,10 +39,10 @@ bool Parser::parsePointsOfInterests(const Config &config,
   return true;
 }
 
-bool Parser::parseEntitiesFile(
-  //todo rewrite this
-  World* parentPtr,
-  const std::string &entitiesFile, std::vector<Entity> &entities) {
+bool World::Parser::parseEntitiesFile(
+  // todo rewrite this
+  World* parentPtr, const std::string& entitiesFile,
+  std::vector<Entity>& entities) {
   if (!entities.empty()) {
     return false;
   }
@@ -68,7 +70,7 @@ bool Parser::parseEntitiesFile(
     if (line == "[entity]") {
       entities.emplace_back(parentPtr, uid, homex, homey, ai);
 
-      Entity &entity = entities.back();
+      Entity& entity = entities.back();
       entity.homeLocation = {homex, homey};
       entity.workLocation = {workx, worky};
       entity.symptomsResistance = virus_resistance;
@@ -90,7 +92,7 @@ bool Parser::parseEntitiesFile(
 
     std::string key = line.substr(0, delim);
     std::string value = line.substr(delim + 1, std::string::npos);
-    Entity &currentEntity = entities[entities.size() - 1];
+    Entity& currentEntity = entities[entities.size() - 1];
 
     if (key == "uid") {
       uid = atoi(value.c_str());
@@ -131,3 +133,5 @@ bool Parser::parseEntitiesFile(
   }
   return true;
 }
+
+} // namespace pandemic

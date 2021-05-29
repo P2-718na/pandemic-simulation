@@ -7,10 +7,14 @@
 
 #include "types.hpp"
 
+namespace pandemic {
+
 class Config;
 class Entity;
 
 class World {
+  struct Parser;
+
   // Current day counter. This will always increment.
   int currentDay_{0};
 
@@ -63,10 +67,8 @@ class World {
   // Initialize world. Loads background image from file and calls
   // parseEntitiesFile() and parsePoiintsOfInteres().
   // Throws a runtime_error if any of these functions fails.
-  World(
-    const std::string &backgroundImagePath,
-    const std::string &entitiesFilePath,
-    Config& config);
+  World(const std::string& backgroundImagePath,
+    const std::string& entitiesFilePath, Config& config);
 
   // Getters /////////////////////////////////////////////////////////////////
   // Return current day of the week.
@@ -117,5 +119,7 @@ class World {
   // World main loop. Must be called repeatedly to advance the simulation.
   void loop();
 };
+
+} // namespace pandemic
 
 #endif // define WORLD_HPP

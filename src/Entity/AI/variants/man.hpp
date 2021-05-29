@@ -3,6 +3,8 @@
 
 #include "entity.hpp"
 
+namespace pandemic {
+
 class manAI : public AI {
  public:
   explicit inline manAI(Entity* parent) : AI{parent} {}
@@ -55,5 +57,7 @@ class manAI : public AI {
     }
   }
 };
+
+} // namespace pandemic
 
 #endif // define MAN_HPP

@@ -3,6 +3,8 @@
 #include <SFML/Graphics/Color.hpp>
 #include <random>
 
+namespace pandemic {
+
 class Config {
   // Initialize random number generator_
   static std::default_random_engine& generator_();
@@ -56,5 +58,7 @@ class Config {
   // todo loadFromFile
   // bool loadFromFile(string filename);
 };
+
+} // namespace pandemic
 
 #endif // define CONFIG_HPP

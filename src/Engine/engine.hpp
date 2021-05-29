@@ -9,6 +9,8 @@
 #include "world.hpp"
 #include "entity.hpp"
 
+namespace pandemic {
+
 class Engine {
   sf::RenderWindow window_;
   sf::Texture backgroundTexture_;
@@ -66,5 +68,7 @@ class Engine {
   // It can be upgraded by printing a message to the simulation window instead.
   static void printMessage(std::string const& message) noexcept;
 };
+
+} // namespace pandemic
 
 #endif // define ENGINE_HPP

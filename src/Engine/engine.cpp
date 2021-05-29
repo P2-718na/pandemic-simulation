@@ -7,6 +7,8 @@
 #include "engine.hpp"
 #include "entity.hpp"
 
+namespace pandemic {
+
 // Constructor /////////////////////////////////////////////////////////////////
 Engine::Engine(
   std::string const& backgroundPath, std::string const& entitiesPath)
@@ -169,3 +171,5 @@ void Engine::tintBackground_() noexcept {
   assert(tint >= 0xaa);
   backgroundSprite_.setColor({tint, tint, 0xff});
 }
+
+} // namespace pandemic

@@ -3,6 +3,8 @@
 
 #include "entity.hpp"
 
+namespace pandemic {
+
 class uniAI : public AI {
  public:
   explicit inline uniAI(Entity* parent) : AI{parent} {}
@@ -44,5 +46,7 @@ class uniAI : public AI {
     parent_->goHome();
   }
 };
+
+} // namespace pandemic
 
 #endif // define UNI_HPP

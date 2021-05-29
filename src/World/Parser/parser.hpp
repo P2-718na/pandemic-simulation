@@ -6,12 +6,14 @@
 #include <vector>
 
 #include "types.hpp"
+#include "world.hpp"
+
+namespace pandemic {
 
 class Entity;
-class World;
 class Config;
 
-struct Parser {
+struct World::Parser {
   // returns false if one of the three lists is empty.
   static bool parsePointsOfInterests(const Config& config,
     const sf::Image& backgroundImage, std::vector<Coords>& parkCoords,
@@ -20,5 +22,7 @@ struct Parser {
   static bool parseEntitiesFile(World* parentPtr,
     const std::string& entitiesFile, std::vector<Entity>& entities);
 };
+
+} // namespace pandemic
 
 #endif // define PARSER_HPP

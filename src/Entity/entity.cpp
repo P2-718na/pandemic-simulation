@@ -6,6 +6,8 @@
 #include "config.hpp"
 #include "AI/variants/ai-variants.hpp"
 
+namespace pandemic {
+
 // Constructors ////////////////////////////////////////////////////////////////
 Entity::Entity(World* world, int uid, int posX, int posY)
   : Entity(world, uid, posX, posY, "nullAI") {}
@@ -74,7 +76,7 @@ void Entity::infected(bool status) {
   }
 
   // If infection is cleared, increase infectionResistance.
-  infectionResistance +=  config().INFECTION_RESISTANCE_INCREMENT ;
+  infectionResistance += config().INFECTION_RESISTANCE_INCREMENT;
 }
 
 void Entity::infective(bool status) {
@@ -230,3 +232,5 @@ entityAI Entity::parseAI_(const std::string& AIName) {
 
   return std::make_unique<nullAI>(this);
 }
+
+} // namespace pandemic

@@ -3,6 +3,8 @@
 
 #include "entity.hpp"
 
+namespace  pandemic {
+
 class oldAI : public AI {
  public:
   explicit inline oldAI(Entity* parent) : AI{parent} {}
@@ -37,5 +39,7 @@ class oldAI : public AI {
     }
   }
 };
+
+} // namespace pandemic
 
 #endif // define OLD_HPP

@@ -2,10 +2,13 @@
 #define ENTITY_HPP
 
 #include <string>
+#include <memory>
 
 #include "AI/ai.hpp"
 #include "pathfinder.hpp"
 #include "types.hpp"
+
+namespace pandemic {
 
 class World;
 class Config;
@@ -48,13 +51,13 @@ class Entity {
   entityAI currentAI;
 
   // Convert AI name string to entityAI function pointer.
-  entityAI parseAI_(const std::string &AIName);
+  entityAI parseAI_(const std::string& AIName);
 
  public:
   // fixme move all this variables to private section
   // Infection-related stats of any entity.
   // Affects virus symptoms and recovery time.
-  //todo justify float and not double
+  // todo justify float and not double
   float symptomsResistance{.9};
   // Base chance to spread virus to nearby entities
   float virusSpreadChance{.05};
@@ -123,5 +126,7 @@ class Entity {
   // Entity day loop, must be run every day.
   void dayLoop();
 };
+
+} // namespace pandemic
 
 #endif // define ENTITY_HPP
