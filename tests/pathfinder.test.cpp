@@ -1,5 +1,5 @@
 #include <iostream>
-#include "../doctest.h"
+#include "doctest.h"
 #include "pathfinder.hpp"
 #include "types.hpp"
 

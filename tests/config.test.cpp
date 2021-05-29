@@ -1,4 +1,4 @@
-#include "../doctest.h"
+#include "doctest.h"
 #include "config.hpp"
 
 using pandemic::Config;
