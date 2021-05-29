@@ -116,7 +116,7 @@ void World::handleQuarantine_(Entity &entity) {
 
 // Constructors ////////////////////////////////////////////////////////////////
 World::World(const std::string &backgroundImagePath,
-  const std::string &entitiesFile, Config &config)
+  const std::string & entitiesFilePath, Config &config)
   : config_{config} {
   // Load background image
   if (!backgroundImage_.loadFromFile(backgroundImagePath)) {
@@ -124,7 +124,7 @@ World::World(const std::string &backgroundImagePath,
   }
 
   // Load entities
-  if (!Parser::parseEntitiesFile(this, entitiesFile, entities_)) {
+  if (!Parser::parseEntitiesFile(this, entitiesFilePath, entities_)) {
     throw std::runtime_error("Error parsing entities file.");
   }
 
@@ -156,8 +156,8 @@ const Config &World::config() const noexcept {
   return config_;
 }
 
-const std::vector<Entity> &World::entities() const noexcept {
-  return entities_;
+const Entity &World::entity(int index) const noexcept {
+  return entities_[index];
 }
 
 const Coords &World::randomParkCoords() {
@@ -182,6 +182,10 @@ const Coords &World::randomPartyCoords() {
 
 const Coords& World::invalidCoords() noexcept {
   return invalidCoords_;
+}
+
+int World::entityCount() const noexcept {
+  return entities_.size();
 }
 
 int World::infectedCount() const noexcept {
