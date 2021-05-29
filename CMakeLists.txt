@@ -1,6 +1,12 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 3.11)
 
-PROJECT(Lab VERSION 0.1)
+PROJECT(
+        pandemic-simulation
+        VERSION 1.0
+        DESCRIPTION "Graphical pandemic simulator"
+        HOMEPAGE_URL https://github.com/P2-718na/pandemic-simulation
+        LANGUAGES CXX
+)
 
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
@@ -8,7 +14,6 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 FIND_PACKAGE(SFML 2.5 COMPONENTS graphics window REQUIRED)
 
 INCLUDE_DIRECTORIES(
-        lab PUBLIC
         "${PROJECT_SOURCE_DIR}/src"
         "${PROJECT_SOURCE_DIR}/src/Pathfinder"
         "${PROJECT_SOURCE_DIR}/src/Engine"
@@ -28,7 +33,7 @@ if(NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE Debug)
 endif()
 
-MESSAGE("Building using ${CMAKE_BUILD_TYPE} configuration")
+MESSAGE("-- Building using ${CMAKE_BUILD_TYPE} configuration")
 
 SET(CMAKE_CXX_FLAGS  "-Wall -Wextra")
 SET(CMAKE_CXX_FLAGS_DEBUG "-g -fsanitize=\"address\"")
