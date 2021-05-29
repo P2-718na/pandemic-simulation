@@ -43,8 +43,8 @@ class Entity {
   // Quarantined status.
   bool quarantined_{false};
 
-  // Pathfinder. Will be changed in the future.
-  Pathfinder pathfinder_{};
+  // Pathfinder instance. Initialize with an arbitrary size to store paths.
+  Pathfinder pathfinder_{1000};
 
   // AI of the entity, called every time it reaches the end of its path.
   // This will set the new path.
@@ -117,7 +117,7 @@ class Entity {
   // Loops /////////////////////////////////////////////////////////////////////
   // Entity loop, must be run every game loop.
   // Checks whether or not an entity is arrived to its set destination by
-  // calling Pathfinder::isArrived().
+  // calling Pathfinder::arrived().
   // If it is, it will call its ai to decide what to do next.
   // If it isn't, it will move forward one tile.
   // If an entity is dead, it will do nothing.

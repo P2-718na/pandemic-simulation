@@ -1,6 +1,8 @@
 #include "../doctest.h"
 #include "config.hpp"
 
+using pandemic::Config;
+
 TEST_CASE("Testing Config::hourToMinutes function") {
   Config config;
 

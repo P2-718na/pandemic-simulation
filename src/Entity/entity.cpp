@@ -107,7 +107,7 @@ void Entity::setDestination(const Coords& destination) {
   }
 
   // Otherwise, reset pathfinder.
-  pathfinder_ = Pathfinder{posX_, posY_, destination.first, destination.second};
+  pathfinder_.loadPath(pos(), destination);
 }
 
 void Entity::goHome() {
@@ -159,7 +159,7 @@ void Entity::loop() {
   }
 
   // IF arrived to destination, call AI
-  if (pathfinder_.isArrived()) {
+  if (pathfinder_.arrived()) {
     (*currentAI)(world_->currentMinute(), world_->currentDay());
     return;
   }

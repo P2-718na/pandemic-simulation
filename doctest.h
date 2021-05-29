@@ -6369,7 +6369,7 @@ int Context::run() {
 
             DOCTEST_ITERATE_THROUGH_REPORTERS(test_case_start, tc);
 
-            p->timer.startSimulation();
+            p->timer.start();
 
             bool run_test = true;
 
