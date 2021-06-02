@@ -52,7 +52,7 @@ bool Entity::infected() const {
 }
 
 bool Entity::infective() const {
-  return infected_ && daysSinceLastInfection_ > config().DAYS_AFTER_INFECTIVE;
+  return infected_ && daysSinceLastInfection_ > config().DAYS_AFTER_INFECTIVE();
 }
 
 bool Entity::quarantined() const noexcept {
@@ -76,7 +76,7 @@ void Entity::infected(bool status) {
   }
 
   // If infection is cleared, increase infectionResistance.
-  infectionResistance += config().INFECTION_RESISTANCE_INCREMENT;
+  infectionResistance += config().INFECTION_RESISTANCE_INCREMENT();
 }
 
 void Entity::infective(bool status) {
@@ -85,7 +85,7 @@ void Entity::infective(bool status) {
 
   // Make sure that all calls to infective() will return true.
   if (status) {
-    daysSinceLastInfection_ = config().DAYS_AFTER_INFECTIVE + 1;
+    daysSinceLastInfection_ = config().DAYS_AFTER_INFECTIVE() + 1;
     return;
   }
 }
@@ -183,14 +183,14 @@ void Entity::dayLoop() {
     // An entity can only die if it starts to show symptoms.
     // aka if it's infective.
     if (infective() && !resistSymptoms) {
-      if (Config::chanceCheck(config().VIRUS_DEATH_RATE)) {
+      if (Config::chanceCheck(config().VIRUS_DEATH_RATE())) {
         dead_ = true;
         return;
       }
     }
 
     // chance to lose virus.
-    if (daysSinceLastInfection_ > config().VIRUS_DURATION && resistSymptoms) {
+    if (daysSinceLastInfection_ > config().VIRUS_DURATION() && resistSymptoms) {
       infected(false);
       return;
     }

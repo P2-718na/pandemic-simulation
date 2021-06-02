@@ -40,7 +40,7 @@ void World::loop() {
   spreadVirus_();
 
   // Execute next day logic (Must be called last)
-  if (currentMinute_ >= config_.MINUTES_IN_A_DAY) {
+  if (currentMinute_ >= config_.MINUTES_IN_A_DAY()) {
     dayLoop_();
   }
 }
@@ -100,7 +100,7 @@ void World::handleQuarantine_(Entity& entity) {
   // All this checks are needed to avoid unwanted behaviour (e.g. an entity
   // staying in quarantine forever).
   if (entity.infected() && !entity.quarantined()
-      && entity.daysSinceLastInfection() > config_.DAYS_AFTER_QUARANTINE) {
+      && entity.daysSinceLastInfection() > config_.DAYS_AFTER_QUARANTINE()) {
     entity.quarantined(true);
     return;
   }
@@ -108,7 +108,7 @@ void World::handleQuarantine_(Entity& entity) {
   // If an entity is  quarantined, check every x days if it can leave
   // quarantine.
   const bool quarantineCheckDay =
-    entity.daysSinceLastInfection() % config_.QUARANTINE_CHECK_INTERVAL == 0;
+    entity.daysSinceLastInfection() % config_.QUARANTINE_CHECK_INTERVAL() == 0;
   if (entity.quarantined() && !entity.infected() && quarantineCheckDay) {
     entity.quarantined(false);
     return;
@@ -139,7 +139,7 @@ World::World(const std::string& backgroundImagePath,
 
 // Getters /////////////////////////////////////////////////////////////////////
 int World::currentDay() const noexcept {
-  return currentDay_ % config_.DAYS_IN_A_WEEK;
+  return currentDay_ % config_.DAYS_IN_A_WEEK();
 }
 
 int World::currentMinute() const noexcept {

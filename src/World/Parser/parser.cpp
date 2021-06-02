@@ -16,15 +16,15 @@ bool World::Parser::parsePointsOfInterests(const Config& config,
     for (int column = 0; column < width; ++column) {
       sf::Color color = backgroundImage.getPixel(row, column);
 
-      if (color == config.PARK_COLOR) {
+      if (color == config.PARK_COLOR()) {
         parkCoords.emplace_back(row, column);
         continue;
       }
-      if (color == config.SHOP_COLOR) {
+      if (color == config.SHOP_COLOR()) {
         shopCoords.emplace_back(row, column);
         continue;
       }
-      if (color == config.PARTY_COLOR) {
+      if (color == config.PARTY_COLOR()) {
         partyCoords.emplace_back(row, column);
         continue;
       }

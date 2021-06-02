@@ -18,7 +18,7 @@ class manAI : public AI {
     const Config& config = parent_->config();
 
     // on Saturday
-    if (day == config.DAYS_IN_A_WEEK - 2) {
+    if (day == config.DAYS_IN_A_WEEK() - 2) {
       // Relax
       if (time > config.hourToMinutes(15)) {
         parent_->goWalk();
@@ -29,7 +29,7 @@ class manAI : public AI {
     }
 
     // on Sunday
-    if (day == config.DAYS_IN_A_WEEK - 1) {
+    if (day == config.DAYS_IN_A_WEEK() - 1) {
       // Go home
       if (time > config.hourToMinutes(13)) {
         parent_->goHome();

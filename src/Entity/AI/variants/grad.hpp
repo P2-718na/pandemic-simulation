@@ -18,7 +18,7 @@ class gradAI : public AI {
     const Config& config = parent_->config();
 
     // On weekends, behave like an university student
-    if (day >= parent_->config().DAYS_IN_A_WEEK - 2) {
+    if (day >= parent_->config().DAYS_IN_A_WEEK() - 2) {
       // Go party at night
       if (time > config.hourToMinutes(21)) {
         parent_->goParty();

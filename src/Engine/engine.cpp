@@ -153,7 +153,7 @@ sf::Color Engine::getEntityColour_(Entity const& entity) noexcept {
 }
 
 float Engine::currentLightLevel_() noexcept {
-  const float b = static_cast<float>(config_.MINUTES_IN_A_DAY) / 2.f;
+  const float b = static_cast<float>(config_.MINUTES_IN_A_DAY()) / 2.f;
   const float a = M_PI / b;
   const auto x = static_cast<float>(world_.currentMinute());
 
