@@ -51,6 +51,11 @@ void Engine::startSimulation() noexcept {
 
     // Loop simulation world
     world_.loop();
+
+    // Print data for current day every day loop
+    if (world_.currentMinute() == config_.MINUTES_IN_A_DAY() - 1) {
+      handleDayLoop_();
+    }
   }
 }
 
@@ -88,6 +93,17 @@ void Engine::handleEvents_(const sf::Event& event) noexcept {
       return;
     }
   }
+}
+
+void Engine::handleDayLoop_() noexcept {
+  const int newInfected = world_.infectedCount() - lastDayInfectedCount_;
+  printf(
+    "New day! %d\n"
+    "Total infected: %d, New Infected: %d, Dead: %d, Immune: %d\n",
+    world_.currentDay(), world_.infectedCount(), newInfected,
+    world_.deadCount(), world_.immuneCount());
+
+  lastDayInfectedCount_ = world_.infectedCount();
 }
 
 void Engine::graphicsLoop_() noexcept {
@@ -172,4 +188,4 @@ void Engine::tintBackground_() noexcept {
   backgroundSprite_.setColor({tint, tint, 0xff});
 }
 
-} // namespace pandemic
+}  // namespace pandemic

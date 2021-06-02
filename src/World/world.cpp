@@ -21,10 +21,6 @@ void World::dayLoop_() {
     entity.dayLoop();
     handleQuarantine_(entity);
   }
-
-  // Todo move this elsewhere
-  printf("New day! %d\nInfected: %d, Dead: %d, Immune: %d\n", currentDay_,
-    infectedCount(), deadCount(), immuneCount());
 }
 
 void World::loop() {
@@ -218,8 +214,6 @@ int World::immuneCount() const noexcept {
   int immune = 0;
 
   for (auto& entity : entities_) {
-    // Todo this will need some thinking.
-    //  and by this i mean all the infection resistance stuff a well
     if (entity.infectionResistance >= .99f) {
       ++immune;
     }

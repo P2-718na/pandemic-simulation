@@ -34,8 +34,12 @@ class Engine {
   // Draw a blue shade when it's night time.
   bool daylightCycleEnabled{true};
 
+  int lastDayInfectedCount_{0};
+
   // Handle all sfml events
   void handleEvents_(sf::Event const& event) noexcept;
+
+  void handleDayLoop_() noexcept;
 
   // Display the simulation. Gets called based on refresh rate.
   void graphicsLoop_() noexcept;
