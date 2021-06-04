@@ -34,6 +34,10 @@ Coords Entity::pos() const {
   return {posX_, posY_};
 }
 
+float Entity::virusSpreadChance() const noexcept {
+  return virusSpreadChance_;
+}
+
 int Entity::daysSinceLastInfection() const {
   return daysSinceLastInfection_;
 }
@@ -54,12 +58,51 @@ bool Entity::quarantined() const noexcept {
   return quarantined_;
 }
 
+bool Entity::immune() const noexcept {
+  return infectionResistance_ >= 1.f;
+}
+
 // Setters /////////////////////////////////////////////////////////////////////
+bool Entity::symptomsResistance(float value) noexcept {
+  if (value < 0) {
+    return false;
+  }
+
+  symptomsResistance_ = value;
+  return true;
+}
+
+bool Entity::virusSpreadChance(float value) noexcept {
+  if (value < 0) {
+    return false;
+  }
+
+  virusSpreadChance_ = value;
+  return true;
+}
+
+bool Entity::infectionResistance(float value) noexcept {
+  if (value < 0) {
+    return false;
+  }
+
+  infectionResistance_ = value;
+  return true;
+}
+
+void Entity::workLocation(Coords value) noexcept {
+  workLocation_ = std::move(value);
+}
+
+void Entity::homeLocation(Coords value) noexcept {
+  homeLocation_ = std::move(value);
+}
+
 void Entity::infected(bool status) {
   // InfectionResistance is only assigned when a person defeats virus.
   // Since a person can onluy get virus if infRes < 1, infRes here must be
   // lesser than 1.
-  assert(infectionResistance < 1);
+  assert(infectionResistance_ < 1);
 
   // Set new status.
   infected_ = status;
@@ -70,8 +113,8 @@ void Entity::infected(bool status) {
     return;
   }
 
-  // If infection is cleared, increase infectionResistance.
-  infectionResistance += config().INFECTION_RESISTANCE_INCREMENT();
+  // If infection is cleared, increase infectionResistance_.
+  infectionResistance_ += config().INFECTION_RESISTANCE_INCREMENT();
 }
 
 void Entity::infective(bool status) {
@@ -96,6 +139,7 @@ void Entity::setDestination(const Coords& destination) {
     return;
   }
 
+  // todo this is bad. Make function to check if coords are valid
   // If the destinations is world::invalidLocation, stay still.
   if (destination == world_->invalidCoords()) {
     return;
@@ -106,11 +150,11 @@ void Entity::setDestination(const Coords& destination) {
 }
 
 void Entity::goHome() {
-  setDestination(homeLocation);
+  setDestination(homeLocation_);
 }
 
 void Entity::goWork() {
-  setDestination(workLocation);
+  setDestination(workLocation_);
 }
 
 void Entity::goWalk() {
@@ -131,10 +175,10 @@ bool Entity::tryInfect() {
   // "Removed" people will have their infectionChance go up.
   // Notice that we need to check for 1-infResistance, since a person with
   // infResistance of 1 will have zero chance of being infected
-  if (!infected() && Config::chanceCheck(1 - infectionResistance)) {
+  if (!infected() && Config::chanceCheck(1 - infectionResistance_)) {
     // If infRes >= 1, it means that something went wrong with chanceCheck
     // function.
-    assert(infectionResistance < 1);
+    assert(infectionResistance_ < 1);
 
     infected(true);
 
@@ -173,7 +217,7 @@ void Entity::dayLoop() {
 
   // if infected, handle virus...
   if (infected()) {
-    bool resistSymptoms = Config::chanceCheck(symptomsResistance);
+    bool resistSymptoms = Config::chanceCheck(symptomsResistance_);
 
     // An entity can only die if it starts to show symptoms.
     // aka if it's infective.

@@ -53,9 +53,9 @@ void World::spreadVirus_() {
       continue;
     }
 
-    // If entity succeeds a virusSpreadChance test, add tile to infective
+    // If entity succeeds a virusSpreadChance_ test, add tile to infective
     // tiles.
-    if (Config::chanceCheck(infectiveEntity.virusSpreadChance)) {
+    if (Config::chanceCheck(infectiveEntity.virusSpreadChance())) {
       infectiveTiles.insert(infectiveEntity.pos());
     }
   }
@@ -214,7 +214,7 @@ int World::immuneCount() const noexcept {
   int immune = 0;
 
   for (auto& entity : entities_) {
-    if (entity.infectionResistance >= .99f) {
+    if (entity.immune()) {
       ++immune;
     }
   }

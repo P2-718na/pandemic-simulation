@@ -98,10 +98,10 @@ void Engine::handleEvents_(const sf::Event& event) noexcept {
 void Engine::handleDayLoop_() noexcept {
   const int newInfected = world_.infectedCount() - lastDayInfectedCount_;
   printf(
-    "New day! %d\n"
+    "New day!\n"
     "Total infected: %d, New Infected: %d, Dead: %d, Immune: %d\n",
-    world_.currentDay(), world_.infectedCount(), newInfected,
-    world_.deadCount(), world_.immuneCount());
+    world_.infectedCount(), newInfected, world_.deadCount(),
+    world_.immuneCount());
 
   lastDayInfectedCount_ = world_.infectedCount();
 }
@@ -162,7 +162,7 @@ sf::Color Engine::getEntityColour_(Entity const& entity) noexcept {
   if (entity.infected()) {
     return sf::Color::Red;
   }
-  if (entity.infectionResistance >= .99f) {
+  if (entity.immune()) {
     return sf::Color::Cyan;
   }
   return {0xaa, 0x00, 0xff};

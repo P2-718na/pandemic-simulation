@@ -27,12 +27,30 @@ class Entity {
   int posX_;
   int posY_;
 
+  // todo justify float and not double
+  // Infection-related stats of any entity.
+  // Chance to resist virus symptoms. Affects probability of death
+  // and recovery time.
+  float symptomsResistance_{.9};
+  // Chance to spread virus to nearby entities.
+  float virusSpreadChance_{.05};
+  // Chance to get infected by virus spread
+  float infectionResistance_{.8};
+
+  // Entity-based Point of Interest Coordinates
+  // workLocation_ can represent work, school or uni location. It's up to
+  // each entity's ai to use this accordingly (e.g. teens go to school
+  // only for five hours a day, so their AI will call Entity::goWork()
+  // for just five hours in the morning.
+  Coords workLocation_{0, 0};
+  Coords homeLocation_{0, 0};
+
   // Days since infection. Updated at the end of each dayLoop.
   // The value is rounded up (e.g., if an entity is infected in the last
   // minute of day 1, as soon as day 2 begins, this value will be 1).
   int daysSinceLastInfection_{0};
 
-  // Dead status.
+  // Dead status. Dead entities will do nothing and will not spread the virus.
   bool dead_{false};
 
   // Infected status. If this is true, every day loop we check if entity can
@@ -54,21 +72,6 @@ class Entity {
   entityAI parseAI_(const std::string& AIName);
 
  public:
-  // fixme move all this variables to private section
-  // Infection-related stats of any entity.
-  // Affects virus symptoms and recovery time.
-  // todo justify float and not double
-  float symptomsResistance{.9};
-  // Base chance to spread virus to nearby entities
-  float virusSpreadChance{.05};
-  // Base chance to get infected by virus spread
-  float infectionResistance{.8};
-
-  // Entity-based Point of Interest Coordinates
-  // workLocation can represent work, school or uni location.
-  Coords homeLocation{0, 0};
-  Coords workLocation{0, 0};
-
   // Constructors //////////////////////////////////////////////////////////////
   // Default entityAi is nullAi.
   Entity(World* world, int uid, int posX, int posY,
@@ -81,16 +84,35 @@ class Entity {
   int posX() const;
   int posY() const;
   Coords pos() const;
+  float virusSpreadChance() const noexcept;
   int daysSinceLastInfection() const;
   bool dead() const;
   bool infected() const;
   bool infective() const;
   bool quarantined() const noexcept;
+  bool immune() const noexcept;
 
   // Setters ///////////////////////////////////////////////////////////////////
-  // This should be used in initialization and by private members.
+  // todo basically everything here has to have noexcept
+  // These methods are used only in entity initialization and for internal
+  // logic. Having these methods public makes it easier to add additional
+  // functionality in the future (example: increase infection resistance
+  // globally to simulate the use of face masks).
+
+  // if value is >= 0, these functions return true and change the
+  // parameter accordingly. Otherwise, they return false and leave
+  // the parameter unchanged
+  bool symptomsResistance(float value) noexcept;
+  bool virusSpreadChance(float value) noexcept;
+  bool infectionResistance(float value) noexcept;
+
+  // Checking that these coordinates are valid is up to whoever initialises
+  // the entity
+  void workLocation(Coords value) noexcept;
+  void homeLocation(Coords value) noexcept;
+
   // Sets daysSinceLastInfection and infective.
-  // If a person is not infected anymore, adds some infectionResistance.
+  // If a person is not infected anymore, adds some infectionResistance_.
   void infected(bool status);
 
   // calls infected(true) and sets daysSinceLastInfection.
@@ -110,7 +132,7 @@ class Entity {
   void goShop();
   void goParty();
 
-  // Try to infect this entity. Affected by infectionResistance.
+  // Try to infect this entity. Affected by infectionResistance_.
   bool tryInfect();
 
   // Loops /////////////////////////////////////////////////////////////////////

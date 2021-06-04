@@ -71,11 +71,11 @@ bool World::Parser::parseEntitiesFile(
       entities.emplace_back(parentPtr, uid, homex, homey, ai);
 
       Entity& entity = entities.back();
-      entity.homeLocation = {homex, homey};
-      entity.workLocation = {workx, worky};
-      entity.symptomsResistance = virus_resistance;
-      entity.virusSpreadChance = virus_spread_chance;
-      entity.infectionResistance = infection_chance;
+      entity.homeLocation({homex, homey});
+      entity.workLocation({workx, worky});
+      entity.symptomsResistance(virus_resistance);
+      entity.virusSpreadChance(virus_spread_chance);
+      entity.infectionResistance(infection_chance);
 
       continue;
     }

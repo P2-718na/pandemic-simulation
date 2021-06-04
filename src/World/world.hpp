@@ -108,7 +108,7 @@ class World {
   // Compute and return dead count.
   int deadCount() const noexcept;
 
-  // Compute immune count by looking at infectionResistance
+  // Compute immune count by looking at infectionResistance_
   int immuneCount() const noexcept;
 
   // Setters ///////////////////////////////////////////////////////////////////
