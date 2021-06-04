@@ -22,10 +22,9 @@ class AI {
   bool stayHome_(int day) const noexcept;
 
  public:
-  // todo add noexcept everywhere
-  explicit AI(Entity* parent);
+  explicit AI(Entity* parent) noexcept;
   virtual ~AI() noexcept = 0;
-  virtual void operator()(int time, int day) = 0;
+  virtual void operator()(int time, int day) noexcept = 0;
 };
 
 typedef std::unique_ptr<AI> entityAI;

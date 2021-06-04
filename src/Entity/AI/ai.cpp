@@ -5,9 +5,10 @@
 
 namespace pandemic {
 
-AI::AI(Entity* parent)
-  : parent_{parent}, lockdownFreeDay_{
-                       Config::randInt(0, parent->config().DAYS_IN_A_WEEK())} {}
+AI::AI(Entity* parent) noexcept
+  : parent_{parent}
+  , lockdownFreeDay_{Config::randInt(0, parent->config().DAYS_IN_A_WEEK())}
+{}
 
 AI::~AI() noexcept = default;
 
@@ -23,4 +24,4 @@ bool AI::stayHome_(int day) const noexcept {
   return false;
 }
 
-} // namespace pandemic
+}  // namespace pandemic

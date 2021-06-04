@@ -9,7 +9,7 @@ class nullAI : public AI {
  public:
   explicit inline nullAI(Entity* parent) : AI{parent} {}
 
-  inline void operator()(int time, int day) override {}
+  inline void operator()(int time, int day) noexcept override {}
 };
 
 } // namespace pandemic

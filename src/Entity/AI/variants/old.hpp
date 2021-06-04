@@ -9,7 +9,7 @@ class oldAI : public AI {
  public:
   explicit inline oldAI(Entity* parent) : AI{parent} {}
 
-  inline void operator()(int time, int day) override {
+  inline void operator()(int time, int day) noexcept override {
     if (stayHome_(day)) {
       parent_->goHome();
       return;
