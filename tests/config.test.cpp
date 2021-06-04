@@ -6,8 +6,7 @@ using pandemic::Config;
 TEST_CASE("Testing Config::hourToMinutes function") {
   Config config;
 
-  config.MINUTES_IN_A_DAY = 9000;
-  CHECK_EQ(config.hourToMinutes(5), 1875);
+  CHECK_EQ(config.hourToMinutes(4), 500);
 }
 
 TEST_CASE("Check Config::randInt function") {
