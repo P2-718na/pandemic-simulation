@@ -9,14 +9,9 @@
 namespace pandemic {
 
 // Constructors ////////////////////////////////////////////////////////////////
-Entity::Entity(World* world, int uid, int posX, int posY)
-  : Entity(world, uid, posX, posY, "nullAI") {}
-
 Entity::Entity(
   World* world, int uid, int posX, int posY, const std::string& AIName)
-  : world_{world}, uid_{uid}, posX_{posX}, posY_{posY} {
-  currentAI = parseAI_(AIName);
-}
+  : world_{world}, uid_{uid}, posX_{posX}, posY_{posY}, AI_{parseAI_(AIName)} {}
 
 // Getters /////////////////////////////////////////////////////////////////////
 const Config& Entity::config() const noexcept {
@@ -160,7 +155,7 @@ void Entity::loop() {
 
   // IF arrived to destination, call AI
   if (pathfinder_.arrived()) {
-    (*currentAI)(world_->currentMinute(), world_->currentDay());
+    (*AI_)(world_->currentMinute(), world_->currentDay());
     return;
   }
 

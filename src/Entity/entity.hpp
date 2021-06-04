@@ -48,7 +48,7 @@ class Entity {
 
   // AI of the entity, called every time it reaches the end of its path.
   // This will set the new path.
-  entityAI currentAI;
+  entityAI AI_;
 
   // Convert AI name string to entityAI function pointer.
   entityAI parseAI_(const std::string& AIName);
@@ -65,18 +65,17 @@ class Entity {
   float infectionResistance{.8};
 
   // Entity-based Point of Interest Coordinates
-  // workLocation can be work, school or uni location.
+  // workLocation can represent work, school or uni location.
   Coords homeLocation{0, 0};
   Coords workLocation{0, 0};
 
   // Constructors //////////////////////////////////////////////////////////////
-  // Todo implement pathfinder reset method.
   // Default entityAi is nullAi.
-  Entity(World* world, int uid, int posX, int posY);
-  Entity(World* world, int uid, int posX, int posY, const std::string& AIName);
+  Entity(World* world, int uid, int posX, int posY,
+    const std::string& AIName = "nullAI");
 
   // Getters ///////////////////////////////////////////////////////////////////
-  // fixme should I add noexcept? yes.
+  // todo add noexcept to everything
   const Config& config() const noexcept;
   int uid() const;
   int posX() const;
@@ -127,6 +126,6 @@ class Entity {
   void dayLoop();
 };
 
-} // namespace pandemic
+}  // namespace pandemic
 
-#endif // define PANDEMIC_ENTITY_HPP
+#endif  // define PANDEMIC_ENTITY_HPP
