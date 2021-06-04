@@ -48,6 +48,8 @@ class World {
 
   // This is used in case of a lockdown: parks and parties are closed, so
   // when we call randomXXXXcoords(), we return a reference to this object.
+  // World::validPosition(invalidCoords_) must return false. (see assert
+  // in constructor).
   const Coords invalidCoords_{-1, -1};
 
   // Private methods ///////////////////////////////////////////////////////////
@@ -97,9 +99,11 @@ class World {
   const Coords& randomShopCoords();
   const Coords& randomPartyCoords();
 
-  // Return reference to invalid coords, to check if a function returned them.
-  const Coords& invalidCoords() noexcept;
+  // Check if a set of coordinates is considered valid.
+  // (And if an entity can pathfind to it).
+  bool validPosition(const Coords& coords) const noexcept;
 
+  // Return size of entities vector.
   int entityCount() const noexcept;
 
   // Compute and return infected count.

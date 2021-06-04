@@ -139,9 +139,8 @@ void Entity::setDestination(const Coords& destination) {
     return;
   }
 
-  // todo this is bad. Make function to check if coords are valid
   // If the destinations is world::invalidLocation, stay still.
-  if (destination == world_->invalidCoords()) {
+  if (!world_->validPosition(destination)) {
     return;
   }
 

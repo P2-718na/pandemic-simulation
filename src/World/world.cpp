@@ -2,6 +2,7 @@
 
 #include <set>
 #include <stdexcept>
+#include <cassert>
 
 #include "config.hpp"
 #include "entity.hpp"
@@ -116,6 +117,9 @@ void World::handleQuarantine_(Entity& entity) {
 World::World(const std::string& backgroundImagePath,
   const std::string& entitiesFilePath, Config& config)
   : config_{config} {
+  // (See invalidCoords_ comment)
+  assert(!validPosition(invalidCoords_));
+
   // Load background image
   if (!backgroundImage_.loadFromFile(backgroundImagePath)) {
     throw std::runtime_error("Cannot load image from file.");
@@ -178,8 +182,15 @@ const Coords& World::randomPartyCoords() {
   return partyCoords_[Config::randInt(0, partyCoords_.size())];
 }
 
-const Coords& World::invalidCoords() noexcept {
-  return invalidCoords_;
+bool World::validPosition(const Coords& coords) const noexcept {
+  // The only invalid position for now is the one defined in
+  // invalidCoords_. (We don't really care if entities end up
+  // wandering out of bounds. Can still be expanded later if needed.
+  if (coords == invalidCoords_) {
+    return false;
+  }
+
+  return true;
 }
 
 int World::entityCount() const noexcept {
