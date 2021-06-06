@@ -4,12 +4,6 @@
 
 namespace pandemic {
 
-std::default_random_engine& Config::generator_() {
-  static std::random_device rd;
-  static std::default_random_engine generator{rd()};
-  return generator;
-}
-
 // Constructor /////////////////////////////////////////////////////////////////
 Config::Config() {
   // Initialize generator. This way we can check for errors the first time
@@ -19,6 +13,12 @@ Config::Config() {
 }
 
 // Utils ///////////////////////////////////////////////////////////////////////
+std::default_random_engine& Config::generator_() {
+  static std::random_device rd;
+  static std::default_random_engine generator{rd()};
+  return generator;
+}
+
 int Config::randInt(int min, int max) noexcept {
   if (min > max) {
     std::swap(min, max);

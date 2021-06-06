@@ -1,102 +1,53 @@
 // todo refactor this
 
-#include <fstream>
-#include <iostream>
 #include <random>
 #include <string>
-#include <cstring>
 #include <vector>
 #include <SFML/Graphics/Image.hpp>
 
-#include "seeder.config.h"
-// todo include config here
+#include "seeder.hpp"
+#include "configurations/houses.hpp"
 
-using namespace std;
+namespace seeder {
+// Constructors ////////////////////////////////////////////////////////////////
+Seeder::Seeder() noexcept = default;
 
-// Globals
-sf::Image background;
-ofstream ofs;
-
-vector<pair<int, int>> houseLocations;
-vector<pair<int, int>> workLocations;
-vector<pair<int, int>> schoolLocations;
-vector<pair<int, int>> uniLocations;
-
-// This is used for internal generation
-vector<House> houses;
-
-// Arguments
-int parsed = 1;
-int target = 0;
-string mapFile = "";
-string outFile = "entities";
-
-void help() {
-  char help[] =
-    "seederEntity for entities.\n"
-    "Commands:\n"
-    "--help         Show this message.\n"
-    "\n"
-    "--target       Target number of entities to generate (required).\n"
-    "               Use -1 for unlimited entities.\n"
-    "\n"
-    "--map          Map file to read entities from (required).\n"
-    "\n"
-    "--output       Output file (default: ./entities).\n";
-
-  cout << help;
+Seeder::Seeder(const std::string& backgroundPath) {
+  //todo
 }
 
-void parseArg(int argc, char* argv[]) {
-  if (strcmp(argv[parsed], "--help") == 0) {
-    help();
-    exit(0);
-  }
-  if (strcmp(argv[parsed], "--target") == 0) {
-    ++parsed;
-
-    if (parsed == argc) {
-      throw runtime_error("Invalid parameter count");
-    }
-    target = atoi(argv[parsed]);
-
-    if (target < -1) {
-      throw runtime_error("Invalid target");
-    }
-
-    cout << "Target: " << target << endl;
-    ++parsed;
-
-    return;
-  }
-  if (strcmp(argv[parsed], "--map") == 0) {
-    ++parsed;
-
-    if (parsed == argc) {
-      throw runtime_error("Invalid parameter count");
-    }
-    mapFile = argv[parsed];
-    cout << "Map file: " << mapFile << endl;
-    ++parsed;
-
-    return;
-  }
-  if (strcmp(argv[parsed], "--output") == 0) {
-    ++parsed;
-
-    if (parsed == argc) {
-      throw runtime_error("Invalid parameter count");
-    }
-    outFile = argv[parsed];
-    cout << "Output file: " << outFile << endl;
-    ++parsed;
-
-    return;
-  }
+// Methods /////////////////////////////////////////////////////////////////////
+const pandemic::Coords& Seeder::randomLocation_(
+  const std::vector<pandemic::Coords>& list) noexcept {
+  return list[randInt_(0, list.size())];
 }
 
-pair<int, int> randomLocation(const vector<pair<int, int>> &list) {
-  return list[(int)randFloat(0, list.size())];
+std::default_random_engine& Seeder::generator_() noexcept {
+  static std::random_device rd;
+  static std::default_random_engine generator{rd()};
+  return generator;
+}
+
+float Seeder::randFloat_(float a, float b) noexcept {
+  if (b > a) {
+    std::swap(a, b);
+  }
+
+  std::uniform_real_distribution<float> distrib(a, b);
+
+  return distrib(generator_());
+}
+
+float Seeder::randInt_(int a, int b) noexcept {
+  if (b > a) {
+    std::swap(a, b);
+  }
+
+  std::uniform_int_distribution<int> distrib(a, b - 1);
+
+  return distrib(generator_());
+}
+
 }
 
 void parseImage() {
@@ -196,6 +147,8 @@ int countEntities() {
   return count;
 }
 
+
+/*
 void writeEntity(const seederEntity &entity, int uid) {
   // (See entity format in entities.sample.txt)
   ofs << "\n";
@@ -228,63 +181,4 @@ void writeEntitiesUntilTarget() {
     }
   }
 }
-
-int main(int argc, char* argv[]) {
-  // Parse arguments
-  try {
-    // If no arguments provided, print help
-    if (argc < 2) {
-      help();
-      return 0;
-    }
-
-    // Parse each argument
-    while (parsed < argc) {
-      parseArg(argc, argv);
-    }
-
-    // MapFile is required. Check and open it
-    if (mapFile.empty()) {
-      throw runtime_error("Must specify input map file");
-    }
-    if (!background.loadFromFile(mapFile)) {
-      throw runtime_error("Invalid map file");
-    };
-
-    // Open output file. Throws on fail.
-    ofs.open(outFile);
-
-    // Load POI locations from image into memory
-    parseImage();
-  } catch (runtime_error &err) {
-    cerr << "Error initialising: " << err.what() << endl;
-
-    exit(1);
-  }
-
-  // Reserve space for houses (Not needed, increases performance a bit)
-  houses.reserve(houseLocations.size());
-
-  // Insert random families into available houses
-  populateHouses();
-
-  // Print info
-  ofs << "[count]" << endl;
-  ofs << (target > 0 ? target : countEntities()) << endl;
-  ofs << endl;
-
-  // Randomly shuffle houses, since we will be only
-  // picking the first [target]
-  shuffle(houses.begin(), houses.end(), std::mt19937(std::random_device()()));
-
-  // Write entities to file until target is reached
-  writeEntitiesUntilTarget();
-
-  // Save data to file
-  ofs.close();
-
-  // Print result
-  cout << "Finish. Wrote ";
-  cout << (target > 0 ? target : countEntities());
-  cout << " entities" << endl;
-}
+*/
