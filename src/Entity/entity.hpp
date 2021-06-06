@@ -27,7 +27,6 @@ class Entity {
   int posX_;
   int posY_;
 
-  // todo justify float and not double
   // Infection-related stats of any entity.
   // Chance to resist virus symptoms. Affects probability of death
   // and recovery time.
@@ -78,22 +77,20 @@ class Entity {
     const std::string& AIName = "nullAI");
 
   // Getters ///////////////////////////////////////////////////////////////////
-  // todo add noexcept to everything
   const Config& config() const noexcept;
-  int uid() const;
-  int posX() const;
-  int posY() const;
-  Coords pos() const;
+  int uid() const noexcept;
+  int posX() const noexcept;
+  int posY() const noexcept;
+  Coords pos() const noexcept;
   float virusSpreadChance() const noexcept;
-  int daysSinceLastInfection() const;
-  bool dead() const;
-  bool infected() const;
-  bool infective() const;
+  int daysSinceLastInfection() const noexcept;
+  bool dead() const noexcept;
+  bool infected() const noexcept;
+  bool infective() const noexcept;
   bool quarantined() const noexcept;
   bool immune() const noexcept;
 
-  // Setters ///////////////////////////////////////////////////////////////////
-  // todo basically everything here has to have noexcept
+  // Setters ///////////////////////////////////////////////////////////////////t
   // These methods are used only in entity initialization and for internal
   // logic. Having these methods public makes it easier to add additional
   // functionality in the future (example: increase infection resistance
@@ -113,27 +110,27 @@ class Entity {
 
   // Sets daysSinceLastInfection and infective.
   // If a person is not infected anymore, adds some infectionResistance_.
-  void infected(bool status);
+  void infected(bool status) noexcept;
 
   // calls infected(true) and sets daysSinceLastInfection.
   // This should be used only in constructor.
-  void infective(bool status);
+  void infective(bool status) noexcept;
 
   // Sets quarantined to true
-  void quarantined(bool status);
+  void quarantined(bool status) noexcept;
 
   // Methods ///////////////////////////////////////////////////////////////////
   // Load path to destination. Calls pathfinder.
-  void setDestination(const Coords& destination);
+  void setDestination(const Coords& destination) noexcept;
 
-  void goHome();
-  void goWork();
-  void goWalk();
-  void goShop();
-  void goParty();
+  void goHome() noexcept;
+  void goWork() noexcept;
+  void goWalk() noexcept;
+  void goShop() noexcept;
+  void goParty() noexcept;
 
   // Try to infect this entity. Affected by infectionResistance_.
-  bool tryInfect();
+  bool tryInfect() noexcept;
 
   // Loops /////////////////////////////////////////////////////////////////////
   // Entity loop, must be run every game loop.
@@ -142,10 +139,10 @@ class Entity {
   // If it is, it will call its ai to decide what to do next.
   // If it isn't, it will move forward one tile.
   // If an entity is dead, it will do nothing.
-  void loop();
+  void loop() noexcept;
 
   // Entity day loop, must be run every day.
-  void dayLoop();
+  void dayLoop() noexcept;
 };
 
 }  // namespace pandemic

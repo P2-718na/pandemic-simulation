@@ -19,17 +19,17 @@ Config::Config() {
 }
 
 // Utils ///////////////////////////////////////////////////////////////////////
-int Config::randInt(int min, int max) {
+int Config::randInt(int min, int max) noexcept {
   if (min > max) {
     std::swap(min, max);
   }
 
-  std::uniform_int_distribution<int> stepCount(min, max - 1);
+  std::uniform_int_distribution<int> distrib(min, max - 1);
 
-  return stepCount(generator_());
+  return distrib(generator_());
 }
 
-bool Config::chanceCheck(float chance) {
+bool Config::chanceCheck(float chance) noexcept {
   return static_cast<float>(randInt(0, 100)) < (100.f * chance);
 }
 

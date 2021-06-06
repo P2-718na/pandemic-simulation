@@ -18,19 +18,19 @@ const Config& Entity::config() const noexcept {
   return world_->config();
 }
 
-int Entity::uid() const {
+int Entity::uid() const noexcept {
   return uid_;
 }
 
-int Entity::posX() const {
+int Entity::posX() const noexcept {
   return posX_;
 }
 
-int Entity::posY() const {
+int Entity::posY() const noexcept {
   return posY_;
 }
 
-Coords Entity::pos() const {
+Coords Entity::pos() const noexcept {
   return {posX_, posY_};
 }
 
@@ -38,19 +38,19 @@ float Entity::virusSpreadChance() const noexcept {
   return virusSpreadChance_;
 }
 
-int Entity::daysSinceLastInfection() const {
+int Entity::daysSinceLastInfection() const noexcept {
   return daysSinceLastInfection_;
 }
 
-bool Entity::dead() const {
+bool Entity::dead() const noexcept {
   return dead_;
 }
 
-bool Entity::infected() const {
+bool Entity::infected() const noexcept {
   return infected_;
 }
 
-bool Entity::infective() const {
+bool Entity::infective() const noexcept {
   return infected_ && daysSinceLastInfection_ > config().DAYS_AFTER_INFECTIVE();
 }
 
@@ -98,7 +98,7 @@ void Entity::homeLocation(Coords value) noexcept {
   homeLocation_ = std::move(value);
 }
 
-void Entity::infected(bool status) {
+void Entity::infected(bool status) noexcept {
   // InfectionResistance is only assigned when a person defeats virus.
   // Since a person can onluy get virus if infRes < 1, infRes here must be
   // lesser than 1.
@@ -117,7 +117,7 @@ void Entity::infected(bool status) {
   infectionResistance_ += config().INFECTION_RESISTANCE_INCREMENT();
 }
 
-void Entity::infective(bool status) {
+void Entity::infective(bool status) noexcept {
   // We must call infected first, since infected sets daysSinceLastInfection to 0.
   infected(status);
 
@@ -128,12 +128,12 @@ void Entity::infective(bool status) {
   }
 }
 
-void Entity::quarantined(bool status) {
+void Entity::quarantined(bool status) noexcept {
   quarantined_ = status;
 }
 
 // Methods /////////////////////////////////////////////////////////////////////
-void Entity::setDestination(const Coords& destination) {
+void Entity::setDestination(const Coords& destination) noexcept {
   // Avoid unnecessary pathfinder calls if we are already at position.
   if (pos() == destination) {
     return;
@@ -148,27 +148,27 @@ void Entity::setDestination(const Coords& destination) {
   pathfinder_.loadPath(pos(), destination);
 }
 
-void Entity::goHome() {
+void Entity::goHome() noexcept {
   setDestination(homeLocation_);
 }
 
-void Entity::goWork() {
+void Entity::goWork() noexcept {
   setDestination(workLocation_);
 }
 
-void Entity::goWalk() {
+void Entity::goWalk() noexcept {
   setDestination(world_->randomParkCoords());
 }
 
-void Entity::goShop() {
+void Entity::goShop() noexcept {
   setDestination(world_->randomShopCoords());
 }
 
-void Entity::goParty() {
+void Entity::goParty() noexcept {
   setDestination(world_->randomPartyCoords());
 }
 
-bool Entity::tryInfect() {
+bool Entity::tryInfect() noexcept {
   // Do not infect an already infected person. (It is required to check this,
   // since infected() will reset daysSinceLastInfection).
   // "Removed" people will have their infectionChance go up.
@@ -190,7 +190,7 @@ bool Entity::tryInfect() {
 }
 
 // Loops ///////////////////////////////////////////////////////////////////////
-void Entity::loop() {
+void Entity::loop() noexcept {
   // Do nothing if dead.
   if (dead()) {
     return;
@@ -208,7 +208,7 @@ void Entity::loop() {
   posY_ = nextStep.second;
 }
 
-void Entity::dayLoop() {
+void Entity::dayLoop() noexcept {
   // Do nothing if dead.
   if (dead()) {
     return;
@@ -271,4 +271,4 @@ entityAI Entity::parseAI_(const std::string& AIName) {
   return std::make_unique<nullAI>(this);
 }
 
-} // namespace pandemic
+}  // namespace pandemic

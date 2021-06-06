@@ -59,10 +59,10 @@ class Config {
 
   // Utils /////////////////////////////////////////////////////////////////////
   // Generate random int in [min, max[.
-  static int randInt(int min, int max);
+  static int randInt(int min, int max) noexcept;
 
   // Return true "chance" percent of the times.
-  static bool chanceCheck(float chance);
+  static bool chanceCheck(float chance) noexcept;
 
   // Return current "hour", given current minute.
   int hourToMinutes(float hour) const noexcept;
