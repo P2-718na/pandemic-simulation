@@ -51,4 +51,6 @@ int main(int argc, char* argv[]) {
     std::cerr << "Something went horribly wrong! Terminating..." << std::endl;
     exit(EXIT_FAILURE);
   }
+
+  return EXIT_SUCCESS;
 }
