@@ -65,7 +65,8 @@ class Entity {
 
   // AI of the entity, called every time it reaches the end of its path.
   // This will set the new path.
-  entityAI AI_;
+  // This is a pointer, since AI use class inheritance to work.
+  entityAI aiPtr_;
 
   // Convert AI name string to entityAI function pointer.
   entityAI parseAI_(const std::string& AIName);

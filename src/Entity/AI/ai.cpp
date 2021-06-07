@@ -5,7 +5,6 @@
 
 namespace pandemic {
 
-// todo maybe rename this to entity
 AI::AI(Entity* parent) noexcept
   : parent_{parent}
   , lockdownFreeDay_{Config::randInt(0, parent->config().DAYS_IN_A_WEEK())}
