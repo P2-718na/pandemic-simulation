@@ -18,6 +18,10 @@ Seeder::Seeder(const std::string& backgroundPath) {
 
   parseBackground_();
   populateHouses_();
+
+  // Shuffle houses. This will make generated entities live in random locations
+  // across the map, and not all at the top
+  std::shuffle(houses_.begin(), houses_.end(), generator_());
 }
 
 // Methods /////////////////////////////////////////////////////////////////////
@@ -55,7 +59,7 @@ int Seeder::randInt(int a, int b) noexcept {
 void Seeder::parseBackground_() {
   // Loop through every pixel in image and load POIs into memory
   for (int y = 0; y < background_.getSize().y; ++y) {
-    for (int x = 0; x < background_.getSize().x; ++x ) {
+    for (int x = 0; x < background_.getSize().x; ++x) {
       sf::Color color = background_.getPixel(x, y);
 
       if (color == sf::Color(0xff, 0xaa, 0x00)) {
@@ -77,13 +81,14 @@ void Seeder::parseBackground_() {
     }
   }
 
-  if (workLocations_.empty() || houseLocations_.empty() || schoolLocations_.empty() || uniLocations_.empty()) {
+  if (workLocations_.empty() || houseLocations_.empty()
+      || schoolLocations_.empty() || uniLocations_.empty()) {
     throw std::runtime_error("Missing locations in image!");
   }
 }
 
 void Seeder::populateHouses_() {
-  for (auto &houseCoords : houseLocations_) {
+  for (auto& houseCoords : houseLocations_) {
     // Generate one house with random type
     switch (randInt(0, 10)) {
       case 0:
@@ -119,7 +124,7 @@ void Seeder::populateHouses_() {
 
     // Assign to each entity of last lastHouse generated its home location
     // and a random work/school/uni location.
-    for (auto & inhabitant : houses_.back()) {
+    for (auto& inhabitant : houses_.back()) {
       inhabitant.homeLocation = houseCoords;
 
       // Note that school and uni locations are stored in the same
@@ -139,12 +144,14 @@ void Seeder::populateHouses_() {
   }
 }
 
-std::string Seeder::makePrintable_(const seederEntity& entity, int uid, bool infected) {
+std::string Seeder::makePrintable_(
+  const seederEntity& entity, int uid, bool infected) {
   std::stringstream ss{};
   ss << "\n[entity]\n";
 
   if (infected) {
-    ss << "[infected]" << "\n";
+    ss << "[infected]"
+       << "\n";
   }
 
   ss << "uid=" << uid << "\n";
@@ -168,19 +175,26 @@ void Seeder::generateEntities(int target, int infectedCount) {
   printableEntities_ = "";
 
   // Try to write "target" number of entities
-  for (auto &house : houses_) {
-    for (auto &inhabitant : house) {
+  for (auto& house : houses_) {
+    for (auto& inhabitant : house) {
       // Stop once target is reached
       if (entityCount_ == target) {
-        return;
+        // fixme ask if this is ok
+        goto cleanup;
       }
 
       // add one printable entity to the string. If infected count is greater
       // than zero, set infected to true and decrement it by one.
-      printableEntities_ += makePrintable_(inhabitant, entityCount_, infectedCount-- > 0);
+      printableEntities_ +=
+        makePrintable_(inhabitant, entityCount_, infectedCount-- > 0);
       ++entityCount_;
     }
   }
+
+  cleanup:
+  // Add required [count] keyword at the beginning of the string
+  printableEntities_ =
+    "[count]\n" + std::to_string(entityCount()) + "\n" + printableEntities_;
 }
 
 // Getters /////////////////////////////////////////////////////////////////////
@@ -192,4 +206,4 @@ const std::string& Seeder::printableEntities() const noexcept {
   return printableEntities_;
 }
 
-}
+}  // namespace seeder

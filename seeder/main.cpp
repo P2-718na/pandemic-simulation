@@ -62,9 +62,9 @@ int main(int argc, char* argv[]) {
 
     seeder.generateEntities(target, infectedCount);
 
-    std::ofstream of{outputPath};
+    std::ofstream os{outputPath};
 
-    of << seeder.printableEntities();
+    os << seeder.printableEntities();
   } catch (std::runtime_error& err) {
     std::cerr << "An error occurred:" << std::endl << err.what() << std::endl;
     exit(EXIT_FAILURE);

@@ -3,6 +3,7 @@
 #include <set>
 #include <stdexcept>
 #include <cassert>
+#include <iostream>
 
 #include "config.hpp"
 #include "entity.hpp"
@@ -120,20 +121,18 @@ World::World(const std::string& backgroundImagePath,
   // (See invalidCoords_ comment)
   assert(!validPosition(invalidCoords_));
 
-  // Load background image
+  // Load background_ image
   if (!backgroundImage_.loadFromFile(backgroundImagePath)) {
     throw std::runtime_error("Cannot load image from file.");
   }
 
-  // Load entities
-  if (!Parser::parseEntitiesFile(this, entitiesFilePath, entities_)) {
-    throw std::runtime_error("Error parsing entities file.");
-  }
-
-  // Load points of interest.
-  if (!Parser::parsePointsOfInterests(
-        config, backgroundImage_, parkCoords_, shopCoords_, partyCoords_)) {
-    throw std::runtime_error("Error parsing points of interest for entities.");
+  // Load entities and points of interest
+  try {
+    Parser::parseEntitiesFile(this, entitiesFilePath, entities_);
+    Parser::parsePointsOfInterests(config, backgroundImage_, parkCoords_, shopCoords_, partyCoords_);
+  } catch (...) {
+    std::cerr << "Error initialising world." << std::endl;
+    throw;
   }
 }
 
