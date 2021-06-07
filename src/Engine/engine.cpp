@@ -40,7 +40,7 @@ void Engine::startSimulation() noexcept {
   while (window_.isOpen()) {
     sf::Event event{};
     while (window_.pollEvent(event)) {
-      handleEvents_(event);
+      handleEvent_(event);
     }
 
     // Draw graphics according to refresh rate
@@ -64,7 +64,7 @@ void Engine::printMessage(const std::string& message) noexcept {
   std::cout << message << std::endl;
 }
 
-void Engine::handleEvents_(const sf::Event& event) noexcept {
+void Engine::handleEvent_(const sf::Event& event) noexcept {
   if (event.type == sf::Event::Closed) {
     // Close window. This will end the loop and close simulation.
     window_.close();

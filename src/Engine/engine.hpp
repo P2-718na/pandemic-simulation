@@ -37,7 +37,7 @@ class Engine {
   int lastDayInfectedCount_{0};
 
   // Handle all sfml events
-  void handleEvents_(sf::Event const& event) noexcept;
+  void handleEvent_(sf::Event const& event) noexcept;
 
   void handleDayLoop_() noexcept;
 
