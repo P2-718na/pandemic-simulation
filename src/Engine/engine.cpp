@@ -1,6 +1,7 @@
 #include <cmath>
 #include <vector>
 #include <iostream>
+#include <sstream>
 #include <cassert>
 #include <stdexcept>
 
@@ -49,13 +50,13 @@ void Engine::startSimulation() noexcept {
       clock_.restart();
     }
 
-    // Loop simulation world
-    world_.loop();
-
     // Print data for current day every day loop
-    if (world_.currentMinute() == config_.MINUTES_IN_A_DAY() - 1) {
+    if (world_.currentMinute() == 0) {
       handleDayLoop_();
     }
+
+    // Loop simulation world
+    world_.loop();
   }
 }
 
@@ -97,11 +98,15 @@ void Engine::handleEvents_(const sf::Event& event) noexcept {
 
 void Engine::handleDayLoop_() noexcept {
   const int newInfected = world_.infectedCount() - lastDayInfectedCount_;
-  printf(
-    "New day!\n"
-    "Total infected: %d, New Infected: %d, Dead: %d, Immune: %d\n",
-    world_.infectedCount(), newInfected, world_.deadCount(),
-    world_.immuneCount());
+
+  std::stringstream ss;
+  ss << "New day!" << std::endl
+     << "Total infected: " << world_.infectedCount()
+     << ", New infected: " << newInfected
+     << ", Dead: " << world_.deadCount()
+     << ", Immune: " << world_.immuneCount();
+
+  printMessage(ss.str());
 
   lastDayInfectedCount_ = world_.infectedCount();
 }
