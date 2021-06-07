@@ -73,25 +73,36 @@ void Engine::handleEvent_(const sf::Event& event) noexcept {
 
   // Handle key presses
   if (event.type == sf::Event::KeyReleased) {
-    if (event.key.code == sf::Keyboard::D) {
-      cycleRefreshRate_();
-      printMessage("New refresh rate: " + std::to_string(refreshRate_));
-      return;
-    }
-    if (event.key.code == sf::Keyboard::L) {
-      world_.lockdown(!world_.lockdown());
-      const std::string message =
-        world_.lockdown() ? "Lockdown enabled!" : "Lockdown disabled!";
-      printMessage(message);
-      return;
-    }
-    if (event.key.code == sf::Keyboard::K) {
-      daylightCycleEnabled ^= true;
-      const std::string message = daylightCycleEnabled
-                                  ? "Daylight cycle enabled!"
-                                  : "Daylight cycle disabled!";
-      printMessage(message);
-      return;
+    switch (event.key.code) {
+      case sf::Keyboard::D:
+        cycleRefreshRate_();
+        printMessage("New refresh rate: " + std::to_string(refreshRate_));
+        break;
+
+      case sf::Keyboard::L:
+        world_.lockdown(!world_.lockdown());
+        if (world_.lockdown()) {
+          printMessage("Lockdown enabled!");
+          break;
+        }
+
+        printMessage("Lockdown disabled!");
+        break;
+
+      case sf::Keyboard::K:
+        // Flip daylightCycleEnabled
+        daylightCycleEnabled ^= true;
+
+        if (daylightCycleEnabled) {
+          printMessage("Daylight cycle enabled!");
+          break;
+        }
+
+        printMessage("Daylight cycle disabled!");
+        break;
+
+      default:
+        break;
     }
   }
 }
