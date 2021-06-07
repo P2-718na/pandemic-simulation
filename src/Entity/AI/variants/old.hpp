@@ -1,13 +1,15 @@
-#ifndef AI_OLD_HPP
-#define AI_OLD_HPP
+#ifndef PANDEMIC_OLD_HPP
+#define PANDEMIC_OLD_HPP
 
 #include "entity.hpp"
+
+namespace  pandemic {
 
 class oldAI : public AI {
  public:
   explicit inline oldAI(Entity* parent) : AI{parent} {}
 
-  inline void operator()(int time, int day) override {
+  inline void operator()(int time, int day) noexcept override {
     if (stayHome_(day)) {
       parent_->goHome();
       return;
@@ -38,4 +40,6 @@ class oldAI : public AI {
   }
 };
 
-#endif // define OLD_HPP
+} // namespace pandemic
+
+#endif // define PANDEMIC_OLD_HPP

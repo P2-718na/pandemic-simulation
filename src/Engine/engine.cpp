@@ -1,11 +1,14 @@
 #include <cmath>
 #include <vector>
 #include <iostream>
+#include <sstream>
 #include <cassert>
 #include <stdexcept>
 
 #include "engine.hpp"
 #include "entity.hpp"
+
+namespace pandemic {
 
 // Constructor /////////////////////////////////////////////////////////////////
 Engine::Engine(
@@ -37,7 +40,7 @@ void Engine::startSimulation() noexcept {
   while (window_.isOpen()) {
     sf::Event event{};
     while (window_.pollEvent(event)) {
-      handleEvents_(event);
+      handleEvent_(event);
     }
 
     // Draw graphics according to refresh rate
@@ -45,6 +48,11 @@ void Engine::startSimulation() noexcept {
     if (elapsed.asSeconds() >= 1.f / static_cast<float>(refreshRate_)) {
       graphicsLoop_();
       clock_.restart();
+    }
+
+    // Print data for current day every day loop
+    if (world_.currentMinute() == 0) {
+      handleDayLoop_();
     }
 
     // Loop simulation world
@@ -56,7 +64,7 @@ void Engine::printMessage(const std::string& message) noexcept {
   std::cout << message << std::endl;
 }
 
-void Engine::handleEvents_(const sf::Event& event) noexcept {
+void Engine::handleEvent_(const sf::Event& event) noexcept {
   if (event.type == sf::Event::Closed) {
     // Close window. This will end the loop and close simulation.
     window_.close();
@@ -65,27 +73,53 @@ void Engine::handleEvents_(const sf::Event& event) noexcept {
 
   // Handle key presses
   if (event.type == sf::Event::KeyReleased) {
-    if (event.key.code == sf::Keyboard::D) {
-      cycleRefreshRate_();
-      printMessage("New refresh rate: " + std::to_string(refreshRate_));
-      return;
-    }
-    if (event.key.code == sf::Keyboard::L) {
-      world_.lockdown(!world_.lockdown());
-      const std::string message =
-        world_.lockdown() ? "Lockdown enabled!" : "Lockdown disabled!";
-      printMessage(message);
-      return;
-    }
-    if (event.key.code == sf::Keyboard::K) {
-      daylightCycleEnabled ^= true;
-      const std::string message = daylightCycleEnabled
-                                  ? "Daylight cycle enabled!"
-                                  : "Daylight cycle disabled!";
-      printMessage(message);
-      return;
+    switch (event.key.code) {
+      case sf::Keyboard::D:
+        cycleRefreshRate_();
+        printMessage("New refresh rate: " + std::to_string(refreshRate_));
+        break;
+
+      case sf::Keyboard::L:
+        world_.lockdown(!world_.lockdown());
+        if (world_.lockdown()) {
+          printMessage("Lockdown enabled!");
+          break;
+        }
+
+        printMessage("Lockdown disabled!");
+        break;
+
+      case sf::Keyboard::K:
+        // Flip daylightCycleEnabled
+        daylightCycleEnabled ^= true;
+
+        if (daylightCycleEnabled) {
+          printMessage("Daylight cycle enabled!");
+          break;
+        }
+
+        printMessage("Daylight cycle disabled!");
+        break;
+
+      default:
+        break;
     }
   }
+}
+
+void Engine::handleDayLoop_() noexcept {
+  const int newInfected = world_.infectedCount() - lastDayInfectedCount_;
+
+  std::stringstream ss;
+  ss << "New day!" << std::endl
+     << "Total infected: " << world_.infectedCount()
+     << ", New infected: " << newInfected
+     << ", Dead: " << world_.deadCount()
+     << ", Immune: " << world_.immuneCount();
+
+  printMessage(ss.str());
+
+  lastDayInfectedCount_ = world_.infectedCount();
 }
 
 void Engine::graphicsLoop_() noexcept {
@@ -144,14 +178,14 @@ sf::Color Engine::getEntityColour_(Entity const& entity) noexcept {
   if (entity.infected()) {
     return sf::Color::Red;
   }
-  if (entity.infectionResistance >= .99f) {
+  if (entity.immune()) {
     return sf::Color::Cyan;
   }
   return {0xaa, 0x00, 0xff};
 }
 
 float Engine::currentLightLevel_() noexcept {
-  const float b = static_cast<float>(config_.MINUTES_IN_A_DAY) / 2.f;
+  const float b = static_cast<float>(config_.MINUTES_IN_A_DAY()) / 2.f;
   const float a = M_PI / b;
   const auto x = static_cast<float>(world_.currentMinute());
 
@@ -169,3 +203,5 @@ void Engine::tintBackground_() noexcept {
   assert(tint >= 0xaa);
   backgroundSprite_.setColor({tint, tint, 0xff});
 }
+
+}  // namespace pandemic

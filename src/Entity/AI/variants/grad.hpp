@@ -1,13 +1,15 @@
-#ifndef AI_GRAD_HPP
-#define AI_GRAD_HPP
+#ifndef PANDEMIC_GRAD_HPP
+#define PANDEMIC_GRAD_HPP
 
 #include "entity.hpp"
+
+namespace pandemic {
 
 class gradAI : public AI {
  public:
   explicit inline gradAI(Entity* parent) : AI{parent} {}
 
-  inline void operator()(int time, int day) override {
+  inline void operator()(int time, int day) noexcept override {
     if (stayHome_(day)) {
       parent_->goHome();
       return;
@@ -16,7 +18,7 @@ class gradAI : public AI {
     const Config& config = parent_->config();
 
     // On weekends, behave like an university student
-    if (day >= parent_->config().DAYS_IN_A_WEEK - 2) {
+    if (day >= parent_->config().DAYS_IN_A_WEEK() - 2) {
       // Go party at night
       if (time > config.hourToMinutes(21)) {
         parent_->goParty();
@@ -60,4 +62,6 @@ class gradAI : public AI {
   }
 };
 
-#endif // define GRAD_HPP
+} // namespace pandemic
+
+#endif // define PANDEMIC_GRAD_HPP

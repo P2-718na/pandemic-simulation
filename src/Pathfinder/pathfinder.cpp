@@ -1,87 +1,67 @@
-#include "pathfinder.hpp"
-#include <stdexcept>
 #include <vector>
+#include <cassert>
 
-void Pathfinder::_init(const int &startX, const int &startY, const int &endX, const int &endY) {
-  if (this->_step != -1) {
-   throw std::runtime_error("Already initialised.");
-  }
+#include "pathfinder.hpp"
 
-  this->_startX = startX;
-  this->_startY = startY;
-  this->_endX = endX;
-  this->_endY = endY;
-  this->_step = 0;
+namespace pandemic {
 
-  _calcPath();
-}
+// Constructor /////////////////////////////////////////////////////////////////
+Pathfinder::Pathfinder(int size) {
+  // Reserve an arbitrary space for paths. This will make
+  // Pathfinder slightly faster in the beginning.
+  //path_.reserve(size);
+};
 
-bool Pathfinder::_calcPath() {
+void Pathfinder::loadPath(const Coords& startPos, const Coords& endPos) noexcept {
+  // Reset step and path
+  step_ = 0;
+  path_.clear();
+
+  const int endX = endPos.first;
+  const int endY = endPos.second;
+
+  int currentX = startPos.first;
+  int currentY = startPos.second;
+
   // don't add first node
-  // this->_path.push_back(new int[2] {this->_startX, this->_startY});
-
-  int currentX = this->_startX;
-  int currentY = this->_startY;
-
-  while (currentX != this->_endX || currentY != this->_endY) {
-    if (currentX < this->_endX) {
+  // Wile not arrived...
+  while (!(currentX == endX && currentY == endY)) {
+    if (currentX < endX) {
       ++currentX;
-    } else if (currentX > this->_endX) {
+    } else if (currentX > endX) {
       --currentX;
     }
 
-    if (currentY < this->_endY) {
+    if (currentY < endY) {
       ++currentY;
-    } else if (currentY > this->_endY) {
+    } else if (currentY > endY) {
       --currentY;
     }
 
-    this->_path.emplace_back(currentX, currentY);
+    path_.emplace_back(currentX, currentY);
+  }
+}
+
+const std::vector<Coords>& Pathfinder::getPath() const {
+  return path_;
+}
+
+const Coords& Pathfinder::step() {
+  assert(step_ != -1);
+
+  if (step_ >= path_.size()) {
+    return path_[path_.size() - 1];
   }
 
-  // add last node
-  this->_path.emplace_back(this->_endX, this->_endY);
-
-  return true;
+  // Return path_[step] and increment it.
+  return path_[step_++];
 }
 
-Pathfinder::Pathfinder() = default;
-
-Pathfinder::Pathfinder(
-  const int &startX,
-  const int &startY,
-  const int &endX,
-  const int &endY
-) {
-  this->_init(startX, startY, endX, endY);
+bool Pathfinder::arrived() {
+  // Last element in path is the destination. If we get there, we are arrived.
+  // Also, step is incremented after returning its corresponding coords in path,
+  // which means that we arrive once step == path.size.
+  return step_ >= path_.size();
 }
 
-void Pathfinder::init(
-  const int &startX,
-  const int &startY,
-  const int &endX,
-  const int &endY
-) {
-  return this->_init(startX, startY, endX, endY);
-}
-
-std::vector<std::pair<int, int>> Pathfinder::getPath() const {
-  return this->_path;
-}
-
-std::pair<int, int> Pathfinder::step() {
-  if (this->_step == -1) {
-    throw std::runtime_error("Pathfinder not initialised.");
-  }
-
-  const int totalStepCount = (int)this->_path.size();
-  if (this->_step >= totalStepCount) {
-    return this->_path[totalStepCount];
-  }
-
-  return this->_path[this->_step++];
-}
-
-bool Pathfinder::isArrived() {
-  return this->_step >= this->_path.size() - 1;
-}
+} // namespace pandemic

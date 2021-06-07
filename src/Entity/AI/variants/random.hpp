@@ -1,13 +1,15 @@
-#ifndef AI_RANDOM_HPP
-#define AI_RANDOM_HPP
+#ifndef PANDEMIC_RANDOM_HPP
+#define PANDEMIC_RANDOM_HPP
 
 #include "entity.hpp"
+
+namespace  pandemic {
 
 class randomAI : public AI {
  public:
   explicit inline randomAI(Entity* parent) : AI{parent} {}
 
-  inline void operator()(int time, int day) override {
+  inline void operator()(int time, int day) noexcept override {
     if (stayHome_(day)) {
       parent_->goHome();
       return;
@@ -19,4 +21,6 @@ class randomAI : public AI {
   }
 };
 
-#endif // define UNI_HPP
+} // namespace pandemic
+
+#endif // define PANDEMIC_UNI_HPP

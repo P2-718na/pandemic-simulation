@@ -3,8 +3,8 @@
 
 #include <utility>
 
-// namespace pandemy
+namespace pandemic {
 using Coords = std::pair<int, int>;
-//
+}
 
 #endif // define TYPES_HPP

@@ -1,24 +1,29 @@
-#ifndef PARSER_HPP
-#define PARSER_HPP
+#ifndef PANDEMIC_PARSER_HPP
+#define PANDEMIC_PARSER_HPP
 
 #include <SFML/Graphics/Image.hpp>
 #include <string>
 #include <vector>
 
 #include "types.hpp"
+#include "world.hpp"
+
+namespace pandemic {
 
 class Entity;
-class World;
 class Config;
 
-struct Parser {
-  // returns false if one of the three lists is empty.
-  static bool parsePointsOfInterests(const Config& config,
+struct World::Parser {
+  // throws if one of the three lists is empty.
+  static void parsePointsOfInterests(const Config& config,
     const sf::Image& backgroundImage, std::vector<Coords>& parkCoords,
-    std::vector<Coords>& shopCoords, std::vector<Coords>& partyCoords) noexcept;
+    std::vector<Coords>& shopCoords, std::vector<Coords>& partyCoords);
 
-  static bool parseEntitiesFile(World* parentPtr,
+  // Can throw if there is any error parsing entities file
+  static void parseEntitiesFile(World* parentPtr,
     const std::string& entitiesFile, std::vector<Entity>& entities);
 };
 
-#endif // define PARSER_HPP
+} // namespace pandemic
+
+#endif // define PANDEMIC_PARSER_HPP

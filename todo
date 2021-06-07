@@ -1,18 +1,9 @@
--covid simulation:
-    -curfew/lockdown
-
-- Check seeder, general cleanup
-
 will need to implement:
   -pathfinding algorithm (maybe not. Even a simpler "follow roads if possible" solution would be nice).
 
 General todos:
     - change cast to c++ style cast (maybe, maybe not)
-    - Add HUD to show day, infected, susceptible etc
     - Write README
-    - Add different commands (toggle lockdown, maybe edit config on the go etc...)
-    - Use lyra to parse initial arguments
-    - Rewrite main to make it tidier
 
 - general cleanup of the code.
 - check cmake includes and linking

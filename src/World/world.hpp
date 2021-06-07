@@ -1,5 +1,5 @@
-#ifndef WORLD_HPP
-#define WORLD_HPP
+#ifndef PANDEMIC_WORLD_HPP
+#define PANDEMIC_WORLD_HPP
 
 #include <vector>
 #include <string>
@@ -7,10 +7,14 @@
 
 #include "types.hpp"
 
+namespace pandemic {
+
 class Config;
 class Entity;
 
 class World {
+  struct Parser;
+
   // Current day counter. This will always increment.
   int currentDay_{0};
 
@@ -44,6 +48,8 @@ class World {
 
   // This is used in case of a lockdown: parks and parties are closed, so
   // when we call randomXXXXcoords(), we return a reference to this object.
+  // World::validPosition(invalidCoords_) must return false. (see assert
+  // in constructor).
   const Coords invalidCoords_{-1, -1};
 
   // Private methods ///////////////////////////////////////////////////////////
@@ -63,10 +69,8 @@ class World {
   // Initialize world. Loads background image from file and calls
   // parseEntitiesFile() and parsePoiintsOfInteres().
   // Throws a runtime_error if any of these functions fails.
-  World(
-    const std::string &backgroundImagePath,
-    const std::string &entitiesFilePath,
-    Config& config);
+  World(const std::string& backgroundImagePath,
+    const std::string& entitiesFilePath, Config& config);
 
   // Getters /////////////////////////////////////////////////////////////////
   // Return current day of the week.
@@ -95,9 +99,11 @@ class World {
   const Coords& randomShopCoords();
   const Coords& randomPartyCoords();
 
-  // Return reference to invalid coords, to check if a function returned them.
-  const Coords& invalidCoords() noexcept;
+  // Check if a set of coordinates is considered valid.
+  // (And if an entity can pathfind to it).
+  bool validPosition(const Coords& coords) const noexcept;
 
+  // Return size of entities vector.
   int entityCount() const noexcept;
 
   // Compute and return infected count.
@@ -106,7 +112,7 @@ class World {
   // Compute and return dead count.
   int deadCount() const noexcept;
 
-  // Compute immune count by looking at infectionResistance
+  // Compute immune count by looking at infectionResistance_
   int immuneCount() const noexcept;
 
   // Setters ///////////////////////////////////////////////////////////////////
@@ -118,4 +124,6 @@ class World {
   void loop();
 };
 
-#endif // define WORLD_HPP
+} // namespace pandemic
+
+#endif // define PANDEMIC_WORLD_HPP

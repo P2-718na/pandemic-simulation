@@ -1,13 +1,15 @@
-#ifndef AI_TEEN_HPP
-#define AI_TEEN_HPP
+#ifndef PANDEMIC_TEEN_HPP
+#define PANDEMIC_TEEN_HPP
 
 #include "entity.hpp"
+
+namespace pandemic {
 
 class teenAI : public AI {
  public:
   inline explicit teenAI(Entity* parent) : AI{parent} {}
 
-  inline void operator()(int time, int day) override {
+  inline void operator()(int time, int day) noexcept override {
     if (stayHome_(day)) {
       parent_->goHome();
       return;
@@ -16,7 +18,7 @@ class teenAI : public AI {
     const Config& config = parent_->config();
 
     // on Saturday
-    if (day == config.DAYS_IN_A_WEEK - 2) {
+    if (day == config.DAYS_IN_A_WEEK() - 2) {
       // Go party for the rest of the day
       if (time > config.hourToMinutes(20)) {
         parent_->goParty();
@@ -42,7 +44,7 @@ class teenAI : public AI {
     }
 
     // on Sunday
-    if (day == config.DAYS_IN_A_WEEK - 1) {
+    if (day == config.DAYS_IN_A_WEEK() - 1) {
       // Get back home
       if (time > config.hourToMinutes(19.5)) {
         parent_->goHome();
@@ -78,4 +80,6 @@ class teenAI : public AI {
   }
 };
 
-#endif // define TEEN_HPP
+} // namespace pandemic
+
+#endif // define PANDEMIC_TEEN_HPP

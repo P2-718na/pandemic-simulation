@@ -1,40 +1,37 @@
-#pragma once
+#ifndef PANDEMIC_PATHFINDER_HPP
+#define PANDEMIC_PATHFINDER_HPP
+
 #include <vector>
 
-class Pathfinder {
-  int _startX{};
-  int _startY{};
-  int _endX{};
-  int _endY{};
-  int _step{-1};
-  std::vector<std::pair<int, int>> _path{};
+#include "types.hpp"
 
-  void _init(
-    const int &startX,
-    const int &startY,
-    const int &endX,
-    const int &endY
-  );
-  bool _calcPath();
+namespace pandemic {
+
+class Pathfinder {
+  // Path to take to get to destination
+  std::vector<Coords> path_{};
+
+  // Current step in path_
+  int step_{-1};
 
  public:
-  // todo fratm riscrivi sta roba 🤡
-  Pathfinder();
-  Pathfinder(
-    const int &startX,
-    const int &startY,
-    const int &endX,
-    const int &endY
-  );
+  // Constructor ///////////////////////////////////////////////////////////////
+  explicit Pathfinder(int size = 0);
 
-  void init(
-    const int &startX,
-    const int &startY,
-    const int &endX,
-    const int &endY
-  );
+  // Methods ///////////////////////////////////////////////////////////////////
+  void loadPath(const Coords& startPos, const Coords& endPos) noexcept;
 
-  std::vector<std::pair<int, int>> getPath() const;
-  std::pair<int, int> step();
-  bool isArrived();
+  // Accessors /////////////////////////////////////////////////////////////////
+  // Unused, left here for testing purposes.
+  const std::vector<Coords>& getPath() const;
+
+  // Get next step in path. If arrived, return last step.
+  const Coords& step();
+
+  // True if we arrived at the last step.
+  bool arrived();
 };
+
+} // namespace pandemic
+
+#endif // define PANDEMIC_PATHFINDER_HPP

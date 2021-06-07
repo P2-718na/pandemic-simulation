@@ -1,5 +1,5 @@
-#ifndef ENGINE_HPP
-#define ENGINE_HPP
+#ifndef PANDEMIC_ENGINE_HPP
+#define PANDEMIC_ENGINE_HPP
 
 #include <SFML/Graphics.hpp>
 #include <vector>
@@ -8,6 +8,8 @@
 #include "config.hpp"
 #include "world.hpp"
 #include "entity.hpp"
+
+namespace pandemic {
 
 class Engine {
   sf::RenderWindow window_;
@@ -32,8 +34,12 @@ class Engine {
   // Draw a blue shade when it's night time.
   bool daylightCycleEnabled{true};
 
+  int lastDayInfectedCount_{0};
+
   // Handle all sfml events
-  void handleEvents_(sf::Event const& event) noexcept;
+  void handleEvent_(sf::Event const& event) noexcept;
+
+  void handleDayLoop_() noexcept;
 
   // Display the simulation. Gets called based on refresh rate.
   void graphicsLoop_() noexcept;
@@ -67,4 +73,6 @@ class Engine {
   static void printMessage(std::string const& message) noexcept;
 };
 
-#endif // define ENGINE_HPP
+} // namespace pandemic
+
+#endif // define PANDEMIC_ENGINE_HPP

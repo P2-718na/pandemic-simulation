@@ -1,11 +1,12 @@
-#include "../doctest.h"
+#include "doctest.h"
 #include "config.hpp"
+
+using pandemic::Config;
 
 TEST_CASE("Testing Config::hourToMinutes function") {
   Config config;
 
-  config.MINUTES_IN_A_DAY = 9000;
-  CHECK_EQ(config.hourToMinutes(5), 1875);
+  CHECK_EQ(config.hourToMinutes(4), 500);
 }
 
 TEST_CASE("Check Config::randInt function") {
@@ -117,6 +118,6 @@ TEST_CASE("Check Config::chanceCheck function") {
       fail++;
     }
 
-    CHECK_EQ(success / fail, doctest::Approx(3).epsilon(0.01));
+    CHECK_EQ(success / fail, doctest::Approx(3).epsilon(0.02));
   }
 }

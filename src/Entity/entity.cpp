@@ -6,63 +6,103 @@
 #include "config.hpp"
 #include "AI/variants/ai-variants.hpp"
 
-// Constructors ////////////////////////////////////////////////////////////////
-Entity::Entity(World* world, int uid, int posX, int posY)
-  : Entity(world, uid, posX, posY, "nullAI") {}
+namespace pandemic {
 
+// Constructors ////////////////////////////////////////////////////////////////
 Entity::Entity(
   World* world, int uid, int posX, int posY, const std::string& AIName)
-  : world_{world}, uid_{uid}, posX_{posX}, posY_{posY} {
-  currentAI = parseAI_(AIName);
-}
+  : world_{world}, uid_{uid}, posX_{posX}, posY_{posY}, aiPtr_{parseAI_(AIName)} {}
 
 // Getters /////////////////////////////////////////////////////////////////////
 const Config& Entity::config() const noexcept {
   return world_->config();
 }
 
-int Entity::uid() const {
+int Entity::uid() const noexcept {
   return uid_;
 }
 
-int Entity::posX() const {
+int Entity::posX() const noexcept {
   return posX_;
 }
 
-int Entity::posY() const {
+int Entity::posY() const noexcept {
   return posY_;
 }
 
-Coords Entity::pos() const {
+Coords Entity::pos() const noexcept {
   return {posX_, posY_};
 }
 
-int Entity::daysSinceLastInfection() const {
+float Entity::virusSpreadChance() const noexcept {
+  return virusSpreadChance_;
+}
+
+int Entity::daysSinceLastInfection() const noexcept {
   return daysSinceLastInfection_;
 }
 
-bool Entity::dead() const {
+bool Entity::dead() const noexcept {
   return dead_;
 }
 
-bool Entity::infected() const {
+bool Entity::infected() const noexcept {
   return infected_;
 }
 
-bool Entity::infective() const {
-  return infected_ && daysSinceLastInfection_ > config().DAYS_AFTER_INFECTIVE;
+bool Entity::infective() const noexcept {
+  return infected_ && daysSinceLastInfection_ > config().DAYS_AFTER_INFECTIVE();
 }
 
 bool Entity::quarantined() const noexcept {
   return quarantined_;
 }
 
+bool Entity::immune() const noexcept {
+  return infectionResistance_ >= 1.f;
+}
+
 // Setters /////////////////////////////////////////////////////////////////////
-void Entity::infected(bool status) {
+bool Entity::symptomsResistance(float value) noexcept {
+  if (value < 0) {
+    return false;
+  }
+
+  symptomsResistance_ = value;
+  return true;
+}
+
+bool Entity::virusSpreadChance(float value) noexcept {
+  if (value < 0) {
+    return false;
+  }
+
+  virusSpreadChance_ = value;
+  return true;
+}
+
+bool Entity::infectionResistance(float value) noexcept {
+  if (value < 0) {
+    return false;
+  }
+
+  infectionResistance_ = value;
+  return true;
+}
+
+void Entity::workLocation(Coords value) noexcept {
+  workLocation_ = std::move(value);
+}
+
+void Entity::homeLocation(Coords value) noexcept {
+  homeLocation_ = std::move(value);
+}
+
+void Entity::infected(bool status) noexcept {
   // InfectionResistance is only assigned when a person defeats virus.
   // Since a person can onluy get virus if infRes < 1, infRes here must be
   // lesser than 1.
-  assert(infectionResistance < 1);
+  assert(infectionResistance_ < 1);
 
   // Set new status.
   infected_ = status;
@@ -73,71 +113,71 @@ void Entity::infected(bool status) {
     return;
   }
 
-  // If infection is cleared, increase infectionResistance.
-  infectionResistance +=  config().INFECTION_RESISTANCE_INCREMENT ;
+  // If infection is cleared, increase infectionResistance_.
+  infectionResistance_ += config().INFECTION_RESISTANCE_INCREMENT();
 }
 
-void Entity::infective(bool status) {
+void Entity::infective(bool status) noexcept {
   // We must call infected first, since infected sets daysSinceLastInfection to 0.
   infected(status);
 
   // Make sure that all calls to infective() will return true.
   if (status) {
-    daysSinceLastInfection_ = config().DAYS_AFTER_INFECTIVE + 1;
+    daysSinceLastInfection_ = config().DAYS_AFTER_INFECTIVE() + 1;
     return;
   }
 }
 
-void Entity::quarantined(bool status) {
+void Entity::quarantined(bool status) noexcept {
   quarantined_ = status;
 }
 
 // Methods /////////////////////////////////////////////////////////////////////
-void Entity::setDestination(const Coords& destination) {
+void Entity::setDestination(const Coords& destination) noexcept {
   // Avoid unnecessary pathfinder calls if we are already at position.
   if (pos() == destination) {
     return;
   }
 
   // If the destinations is world::invalidLocation, stay still.
-  if (destination == world_->invalidCoords()) {
+  if (!world_->validPosition(destination)) {
     return;
   }
 
   // Otherwise, reset pathfinder.
-  pathfinder_ = Pathfinder{posX_, posY_, destination.first, destination.second};
+  pathfinder_.loadPath(pos(), destination);
 }
 
-void Entity::goHome() {
-  setDestination(homeLocation);
+void Entity::goHome() noexcept {
+  setDestination(homeLocation_);
 }
 
-void Entity::goWork() {
-  setDestination(workLocation);
+void Entity::goWork() noexcept {
+  setDestination(workLocation_);
 }
 
-void Entity::goWalk() {
+void Entity::goWalk() noexcept {
   setDestination(world_->randomParkCoords());
 }
 
-void Entity::goShop() {
+void Entity::goShop() noexcept {
   setDestination(world_->randomShopCoords());
 }
 
-void Entity::goParty() {
+void Entity::goParty() noexcept {
   setDestination(world_->randomPartyCoords());
 }
 
-bool Entity::tryInfect() {
+bool Entity::tryInfect() noexcept {
   // Do not infect an already infected person. (It is required to check this,
   // since infected() will reset daysSinceLastInfection).
   // "Removed" people will have their infectionChance go up.
   // Notice that we need to check for 1-infResistance, since a person with
   // infResistance of 1 will have zero chance of being infected
-  if (!infected() && Config::chanceCheck(1 - infectionResistance)) {
+  if (!infected() && Config::chanceCheck(1 - infectionResistance_)) {
     // If infRes >= 1, it means that something went wrong with chanceCheck
     // function.
-    assert(infectionResistance < 1);
+    assert(infectionResistance_ < 1);
 
     infected(true);
 
@@ -150,15 +190,15 @@ bool Entity::tryInfect() {
 }
 
 // Loops ///////////////////////////////////////////////////////////////////////
-void Entity::loop() {
+void Entity::loop() noexcept {
   // Do nothing if dead.
   if (dead()) {
     return;
   }
 
   // IF arrived to destination, call AI
-  if (pathfinder_.isArrived()) {
-    (*currentAI)(world_->currentMinute(), world_->currentDay());
+  if (pathfinder_.arrived()) {
+    (*aiPtr_)(world_->currentMinute(), world_->currentDay());
     return;
   }
 
@@ -168,7 +208,7 @@ void Entity::loop() {
   posY_ = nextStep.second;
 }
 
-void Entity::dayLoop() {
+void Entity::dayLoop() noexcept {
   // Do nothing if dead.
   if (dead()) {
     return;
@@ -176,19 +216,19 @@ void Entity::dayLoop() {
 
   // if infected, handle virus...
   if (infected()) {
-    bool resistSymptoms = Config::chanceCheck(symptomsResistance);
+    bool resistSymptoms = Config::chanceCheck(symptomsResistance_);
 
     // An entity can only die if it starts to show symptoms.
     // aka if it's infective.
     if (infective() && !resistSymptoms) {
-      if (Config::chanceCheck(config().VIRUS_DEATH_RATE)) {
+      if (Config::chanceCheck(config().VIRUS_DEATH_RATE())) {
         dead_ = true;
         return;
       }
     }
 
     // chance to lose virus.
-    if (daysSinceLastInfection_ > config().VIRUS_DURATION && resistSymptoms) {
+    if (daysSinceLastInfection_ > config().VIRUS_DURATION() && resistSymptoms) {
       infected(false);
       return;
     }
@@ -230,3 +270,5 @@ entityAI Entity::parseAI_(const std::string& AIName) {
 
   return std::make_unique<nullAI>(this);
 }
+
+}  // namespace pandemic
