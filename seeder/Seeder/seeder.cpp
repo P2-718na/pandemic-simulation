@@ -159,9 +159,9 @@ std::string Seeder::makePrintable_(
   ss << "homey=" << entity.homeLocation.second << "\n";
   ss << "workx=" << entity.workLocation.first << "\n";
   ss << "worky=" << entity.workLocation.second << "\n";
-  ss << "virus_resistance=" << entity.symptomsResistance << "\n";
+  ss << "symptoms_resistance=" << entity.symptomsResistance << "\n";
   ss << "virus_spread_chance=" << entity.virusSpreadChance << "\n";
-  ss << "infection_chance=" << entity.infectionResistance << "\n";
+  ss << "infection_resistance=" << entity.infectionResistance << "\n";
   ss << "ai=" << entity.ai << "\n";
   ss << "[/entity]\n";
 

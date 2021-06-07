@@ -81,9 +81,9 @@ void World::Parser::parseEntitiesFile(
       int uid{};
       Coords homeCoords{};
       Coords workCoords{};
-      float virus_resistance{};
-      float virus_spread_chance{};
-      float infection_chance{};
+      float symptomsResistance{};
+      float virusSpreadChance{};
+      float infectionResistance{};
       std::string ai{};
       bool infective{false};
 
@@ -157,18 +157,18 @@ void World::Parser::parseEntitiesFile(
           parsedValues.flip(4);
           continue;
         }
-        if (key == "virus_resistance") {
-          virus_resistance = atof(value.c_str());
+        if (key == "symptoms_resistance") {
+          symptomsResistance = atof(value.c_str());
           parsedValues.flip(5);
           continue;
         }
         if (key == "virus_spread_chance") {
-          virus_spread_chance = atof(value.c_str());
+          virusSpreadChance = atof(value.c_str());
           parsedValues.flip(6);
           continue;
         }
-        if (key == "infection_chance") {
-          infection_chance = atof(value.c_str());
+        if (key == "infection_resistance") {
+          infectionResistance = atof(value.c_str());
           parsedValues.flip(7);
           continue;
         }
@@ -212,16 +212,14 @@ void World::Parser::parseEntitiesFile(
       currentEntity.infective(infective);
 
       // Optional values
-      // todo change names to reflect Entity
-
       if (parsedValues.test(5)) {
-        currentEntity.symptomsResistance(virus_resistance);
+        currentEntity.symptomsResistance(symptomsResistance);
       }
       if (parsedValues.test(6)) {
-        currentEntity.virusSpreadChance(virus_spread_chance);
+        currentEntity.virusSpreadChance(virusSpreadChance);
       }
       if (parsedValues.test(7)) {
-        currentEntity.infectionResistance(infection_chance);
+        currentEntity.infectionResistance(infectionResistance);
       }
     }
   }
