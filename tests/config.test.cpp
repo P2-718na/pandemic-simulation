@@ -118,6 +118,6 @@ TEST_CASE("Check Config::chanceCheck function") {
       fail++;
     }
 
-    CHECK_EQ(success / fail, doctest::Approx(3).epsilon(0.01));
+    CHECK_EQ(success / fail, doctest::Approx(3).epsilon(0.02));
   }
 }
