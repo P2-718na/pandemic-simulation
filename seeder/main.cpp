@@ -18,8 +18,8 @@ void parseArgs(int argc, char* argv[], int& target, int& infectedCount,
              ["--infected-count"]["-i"]
                ("Number of currently infected entities")
                .required()
-             | lyra::opt( backgroundPath, "background image" )
-             ["--background"]["-b"]
+             | lyra::opt( backgroundPath, "background_ image" )
+             ["--background_"]["-b"]
                ("Background image (needed to find valid entity POIs).")
                .required()
              | lyra::opt( outputPath, "output file" )
@@ -65,7 +65,7 @@ int main(int argc, char* argv[]) {
 
     std::ofstream of{outputPath};
 
-    of << seeder.getPrintableText();
+    of << seeder.printableEntities();
   } catch (std::runtime_error& err) {
     std::cerr << "An error occurred:" << std::endl << err.what() << std::endl;
     exit(EXIT_FAILURE);

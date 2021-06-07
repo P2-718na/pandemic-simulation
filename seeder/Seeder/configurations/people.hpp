@@ -5,24 +5,15 @@
 
 #include <string>
 
+#include "seeder.hpp"
 #include "types.hpp"
 
 namespace seeder {
 
-struct seederEntity {
-  int age;
-  float symptomsResistance;
-  float virusSpreadChance;
-  float infectionResistance;
-  std::string ai;
-  pandemic::Coords homeLocation{};
-  pandemic::Coords workLocation{};
-};
-
 inline seederEntity OLD_MAN() {
-  int age = (int)randFloat(70, 95);
+  int age = (70, 95);
 
-  return {age, randFloat(0, 100 - age) / 100.f, randFloat(.02, .03),
+  return {age, Seeder::randInt(0, 100 - age) / 100.f, randFloat(.02, .03),
     randFloat(.6, .7), "oldAI"};
 }
 

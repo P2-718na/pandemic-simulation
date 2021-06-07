@@ -3,14 +3,12 @@
 // This file contains all possible housing configurations. It can be expanded,
 // but be sure to add the new configurations in seeder.cpp accordingly
 
-
 #include <vector>
 
+#include "seeder.hpp"
 #include "people.hpp"
 
 namespace seeder {
-
-using House = std::vector<seederEntity>;
 
 /* clang-format off */
 inline House FAMILY1() {

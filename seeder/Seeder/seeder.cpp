@@ -2,7 +2,9 @@
 
 #include <random>
 #include <string>
+#include <sstream>
 #include <vector>
+#include <stdexcept>
 #include <SFML/Graphics/Image.hpp>
 
 #include "seeder.hpp"
@@ -13,7 +15,12 @@ namespace seeder {
 Seeder::Seeder() noexcept = default;
 
 Seeder::Seeder(const std::string& backgroundPath) {
-  //todo
+  if (!background_.loadFromFile(backgroundPath)) {
+    throw std::runtime_error("Cannot load background_ image.");
+  }
+
+  parseBackground_();
+  populateHouses_();
 }
 
 // Methods /////////////////////////////////////////////////////////////////////
@@ -38,7 +45,7 @@ float Seeder::randFloat_(float a, float b) noexcept {
   return distrib(generator_());
 }
 
-float Seeder::randInt_(int a, int b) noexcept {
+int Seeder::randInt_(int a, int b) noexcept {
   if (b > a) {
     std::swap(a, b);
   }
@@ -48,137 +55,143 @@ float Seeder::randInt_(int a, int b) noexcept {
   return distrib(generator_());
 }
 
-}
+void Seeder::parseBackground_() {
+  // Loop through every pixel in image and load POIs into memory
+  for (int y = 0; y < background_.getSize().y; ++y) {
+    for (int x = 0; x < background_.getSize().x; ++x ) {
+      sf::Color color = background_.getPixel(x, y);
 
-void parseImage() {
-  // Loop through every pixel in image
-  for (int y = 0; y < background.getSize().y; ++y) {
-    for (int x = 0; x < background.getSize().x; ++x ) {
-      sf::Color color = background.getPixel(x, y);
-
-      if (color.r == 0xff && color.g == 0xaa && color.b == 0x00) {
-        schoolLocations.emplace_back(x, y);
+      if (color == sf::Color(0xff, 0xaa, 0x00)) {
+        schoolLocations_.emplace_back(x, y);
         continue;
       }
-      if (color.r == 0xff && color.g == 0x55 && color.b == 0x00) {
-        uniLocations.emplace_back(x, y);
+      if (color == sf::Color(0xff, 0x55, 0x00)) {
+        uniLocations_.emplace_back(x, y);
         continue;
       }
-      if (color.r == 0xff && color.g == 0xff && color.b == 0xff) {
-        houseLocations.emplace_back(x, y);
+      if (color == sf::Color(0xff, 0xff, 0xff)) {
+        houseLocations_.emplace_back(x, y);
         continue;
       }
-      if (color.r == 0x00 && color.g == 0x00 && color.b == 0xcc) {
-        workLocations.emplace_back(x, y);
+      if (color == sf::Color(0x00, 0x00, 0xcc)) {
+        workLocations_.emplace_back(x, y);
         continue;
       }
     }
   }
 
-  if (workLocations.empty() || houseLocations.empty() || schoolLocations.empty() || uniLocations.empty()) {
+  if (workLocations_.empty() || houseLocations_.empty() || schoolLocations_.empty() || uniLocations_.empty()) {
     throw std::runtime_error("Missing locations in image!");
   }
 }
 
-void populateHouses() {
-  for (auto &houseCoords : houseLocations) {
-    switch ((int)randFloat(0,  9)) {
+void Seeder::populateHouses_() {
+  for (auto &houseCoords : houseLocations_) {
+    // Generate one house with random type
+    switch (randInt_(0,  10)) {
       case 0:
-        houses.push_back(FAMILY1());
+        houses_.push_back(FAMILY1());
         break;
       case 1:
-        houses.push_back(FAMILY2());
+        houses_.push_back(FAMILY2());
         break;
       case 2:
-        houses.push_back(FAMILY3());
+        houses_.push_back(FAMILY3());
         break;
       case 3:
-        houses.push_back(COUPLE());
+        houses_.push_back(COUPLE());
         break;
       case 4:
-        houses.push_back(OLDIES());
+        houses_.push_back(OLDIES());
         break;
       case 5:
-        houses.push_back(SINGLE());
+        houses_.push_back(SINGLE());
         break;
       case 6:
-        houses.push_back(CON());
+        houses_.push_back(CON());
         break;
       case 7:
-        houses.push_back(UNI1());
+        houses_.push_back(UNI1());
         break;
       case 8:
-        houses.push_back(UNI2());
+        houses_.push_back(UNI2());
         break;
       default:
-        houses.push_back(SINGLE());
+        houses_.push_back(SINGLE());
     }
 
-    House &house = houses.back();
+    // Assign to each entity of last lastHouse generated its home location
+    // and a random work/school/uni location.
+    for (auto & inhabitant : houses_.back()) {
+      inhabitant.homeLocation = houseCoords;
 
-    // Set POI coords for house inhabitants
-    for (auto &inhab : house.inhabs) {
-      inhab.homeLocation = houseCoords;
-
-      // No work location needed for elder people
-      // and younger than 12 years
-      if (inhab.age <= 18) {
-        inhab.workLocation = randomLocation(schoolLocations);
+      // Note that school and uni locations are stored in the same
+      // "workLocation" property of an entity, since an entity can't go
+      // to school/uni and work at the same time.
+      if (inhabitant.age <= 18) {
+        inhabitant.workLocation = randomLocation_(schoolLocations_);
         continue;
       }
-      if (inhab.age <= 25) {
-        inhab.workLocation = randomLocation(uniLocations);
+      if (inhabitant.age <= 25) {
+        inhabitant.workLocation = randomLocation_(uniLocations_);
         continue;
       }
 
-      inhab.workLocation = randomLocation(workLocations);
+      inhabitant.workLocation = randomLocation_(workLocations_);
     }
   }
 }
 
-int countEntities() {
-  int count = 0;
-  for (auto &house : houses) {
-    for (auto &inhab : house.inhabs) {
-      ++count;
-    }
+std::string Seeder::makePrintable_(const seederEntity& entity, int uid, bool infected) {
+  std::stringstream ss{"\n[entity]\n"};
+
+  if (infected) {
+    ss << "[infected]" << "\n";
   }
 
-  return count;
+  ss << "uid=" << uid << "\n";
+  ss << "homex=" << entity.homeLocation.first << "\n";
+  ss << "homey=" << entity.homeLocation.second << "\n";
+  ss << "workx=" << entity.workLocation.first << "\n";
+  ss << "worky=" << entity.workLocation.second << "\n";
+  ss << "virus_resistance=" << entity.symptomsResistance << "\n";
+  ss << "virus_spread_chance=" << entity.virusSpreadChance << "\n";
+  ss << "infection_chance=" << entity.infectionResistance << "\n";
+  ss << "ai=" << entity.ai << "\n";
+  ss << "[/entity]\n";
+
+  return ss.str();
 }
 
+void Seeder::generateEntities(int target, int infectedCount) {
+  // Reset entity count and printable entities (in case someone wants to call
+  // this function more than once).
+  entityCount_ = 0;
+  printableEntities_ = "";
 
-/*
-void writeEntity(const seederEntity &entity, int uid) {
-  // (See entity format in entities.sample.txt)
-  ofs << "\n";
-  ofs << "uid=" << uid << "\n";
-  ofs << "homex=" << entity.homeLocation.first << "\n";
-  ofs << "homey=" << entity.homeLocation.second << "\n";
-  ofs << "workx=" << entity.workLocation.first << "\n";
-  ofs << "worky=" << entity.workLocation.second << "\n";
-  ofs << "virus_resistance=" << entity.symptomsResistance << "\n";
-  ofs << "virus_spread_chance=" << entity.virusSpreadChance << "\n";
-  ofs << "infection_chance=" << entity.infectionResistance << "\n";
-  ofs << "ai=" << entity.ai << "\n";
-  ofs << "[entity]\n";
-}
-
-void writeEntitiesUntilTarget() {
-  // Do not modify original target since we want to print it later
-  int target_ = target;
-
-  for (auto &house : houses) {
-    for (auto &inhab : house.inhabs) {
+  // Try to write "target" number of entities
+  for (auto &house : houses_) {
+    for (auto &inhabitant : house) {
       // Stop once target is reached
-      if (target_ == 0) {
+      if (entityCount_ == target) {
         return;
       }
 
-      // Write entity to file
-      writeEntity(inhab, target_);
-      --target_;
+      // add one printable entity to the string. If infected count is greater
+      // than zero, set infected to true and decrement it by one.
+      printableEntities_ += makePrintable_(inhabitant, entityCount_, infectedCount-- > 0);
+      ++entityCount_;
     }
   }
 }
-*/
+
+// Getters /////////////////////////////////////////////////////////////////////
+int Seeder::entityCount() const noexcept {
+  return entityCount_;
+}
+
+const std::string& Seeder::printableEntities() const noexcept {
+  return printableEntities_;
+}
+
+}

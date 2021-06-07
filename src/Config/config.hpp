@@ -20,9 +20,9 @@ class Config {
 
   // Config values /////////////////////////////////////////////////////////////
   // POI Colors
-  sf::Color PARK_COLOR_{0x00, 0xff, 0x00};
-  sf::Color SHOP_COLOR_{0xff, 0xff, 0x00};
-  sf::Color PARTY_COLOR_{0xff, 0x00, 0xff};
+  const sf::Color PARK_COLOR_{0x00, 0xff, 0x00};
+  const sf::Color SHOP_COLOR_{0xff, 0xff, 0x00};
+  const sf::Color PARTY_COLOR_{0xff, 0x00, 0xff};
 
   // Number of minutes after every day loop.
   int MINUTES_IN_A_DAY_{3000};
