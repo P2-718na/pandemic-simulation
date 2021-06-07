@@ -179,8 +179,9 @@ void Seeder::generateEntities(int target, int infectedCount) {
     for (auto& inhabitant : house) {
       // Stop once target is reached
       if (entityCount_ == target) {
-        // fixme ask if this is ok
-        goto cleanup;
+        // Go to the end of this function, since we still need to add
+        // "[count]" keyword at the beginning of the string.
+        goto breakAll;
       }
 
       // add one printable entity to the string. If infected count is greater
@@ -191,7 +192,7 @@ void Seeder::generateEntities(int target, int infectedCount) {
     }
   }
 
-  cleanup:
+  breakAll:
   // Add required [count] keyword at the beginning of the string
   printableEntities_ =
     "[count]\n" + std::to_string(entityCount()) + "\n" + printableEntities_;
