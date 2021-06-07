@@ -1,5 +1,3 @@
-// todo refactor this
-
 #include <random>
 #include <string>
 #include <sstream>
@@ -12,8 +10,7 @@
 
 namespace seeder {
 // Constructors ////////////////////////////////////////////////////////////////
-Seeder::Seeder() noexcept = default;
-
+Seeder::Seeder() = default;
 Seeder::Seeder(const std::string& backgroundPath) {
   if (!background_.loadFromFile(backgroundPath)) {
     throw std::runtime_error("Cannot load background_ image.");
@@ -26,7 +23,7 @@ Seeder::Seeder(const std::string& backgroundPath) {
 // Methods /////////////////////////////////////////////////////////////////////
 const pandemic::Coords& Seeder::randomLocation_(
   const std::vector<pandemic::Coords>& list) noexcept {
-  return list[randInt_(0, list.size())];
+  return list[randInt(0, list.size())];
 }
 
 std::default_random_engine& Seeder::generator_() noexcept {
@@ -35,8 +32,8 @@ std::default_random_engine& Seeder::generator_() noexcept {
   return generator;
 }
 
-float Seeder::randFloat_(float a, float b) noexcept {
-  if (b > a) {
+float Seeder::randFloat(float a, float b) noexcept {
+  if (b < a) {
     std::swap(a, b);
   }
 
@@ -45,8 +42,8 @@ float Seeder::randFloat_(float a, float b) noexcept {
   return distrib(generator_());
 }
 
-int Seeder::randInt_(int a, int b) noexcept {
-  if (b > a) {
+int Seeder::randInt(int a, int b) noexcept {
+  if (b < a) {
     std::swap(a, b);
   }
 
@@ -88,7 +85,7 @@ void Seeder::parseBackground_() {
 void Seeder::populateHouses_() {
   for (auto &houseCoords : houseLocations_) {
     // Generate one house with random type
-    switch (randInt_(0,  10)) {
+    switch (randInt(0, 10)) {
       case 0:
         houses_.push_back(FAMILY1());
         break;
@@ -143,7 +140,8 @@ void Seeder::populateHouses_() {
 }
 
 std::string Seeder::makePrintable_(const seederEntity& entity, int uid, bool infected) {
-  std::stringstream ss{"\n[entity]\n"};
+  std::stringstream ss{};
+  ss << "\n[entity]\n";
 
   if (infected) {
     ss << "[infected]" << "\n";

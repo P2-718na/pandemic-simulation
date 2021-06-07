@@ -5,56 +5,96 @@
 
 #include <string>
 
-#include "seeder.hpp"
+#include "../seeder.hpp"
 #include "types.hpp"
 
 namespace seeder {
 
+/* clang-format off */
 inline seederEntity OLD_MAN() {
-  int age = (70, 95);
+  int age = Seeder::randInt(70, 95);
 
-  return {age, Seeder::randInt(0, 100 - age) / 100.f, randFloat(.02, .03),
-    randFloat(.6, .7), "oldAI"};
+  return {
+    age,
+    Seeder::randFloat(0, 100 - age) / 100.f,
+    Seeder::randFloat(.02, .03),
+    Seeder::randFloat(.6, .7),
+    "oldAI"
+  };
 }
 
 inline seederEntity OLD_WOMAN() {
-  int age = (int)randFloat(70, 100);
+  int age = Seeder::randInt(70, 100);
 
-  return {age, randFloat(10, 110 - age) / 100.f, randFloat(.04, .06),
-    randFloat(.5, .6), "oldAI"};
+  return {
+    age,
+    Seeder::randFloat(10, 110 - age) / 100.f,
+    Seeder::randFloat(.04, .06),
+    Seeder::randFloat(.5, .6),
+    "oldAI"
+  };
 }
 
 inline seederEntity MAN() {
-  return {(int)randFloat(35, 70), randFloat(.6, .8), randFloat(.02, .03),
-    randFloat(.6, .7), "manAI"};
+  return {
+    Seeder::randInt(35, 70),
+    Seeder::randFloat(.6, .8),
+    Seeder::randFloat(.02, .03),
+    Seeder::randFloat(.6, .7),
+    "manAI"
+  };
 }
 
 inline seederEntity WOMAN() {
-  return {(int)randFloat(35, 70), randFloat(.65, .85), randFloat(.02, .03),
-    randFloat(.3, .4),
-    // We did it boys, we stopped gender inequality
-    "manAI"};
+  return {
+    Seeder::randInt(35, 70),
+    Seeder::randFloat(.65, .85),
+    Seeder::randFloat(.02, .03),
+    Seeder::randFloat(.3, .4),
+    "manAI"
+  };
 }
 
 inline seederEntity GRADUATE() {
-  return {(int)randFloat(25, 35), randFloat(.70, .90), randFloat(.03, .05),
-    randFloat(.7, .8), "gradAI"};
+  return {
+    Seeder::randInt(25, 35),
+    Seeder::randFloat(.70, .90),
+    Seeder::randFloat(.03, .05),
+    Seeder::randFloat(.7, .8),
+    "gradAI"
+  };
 }
 
 inline seederEntity UNI_STUDENT() {
-  return {(int)randFloat(18, 25), randFloat(.80, .95), randFloat(.025, .035),
-    randFloat(.5, .6), "uniAI"};
-};
+  return {
+    Seeder::randInt(18, 25),
+    Seeder::randFloat(.80, .95),
+    Seeder::randFloat(.025, .035),
+    Seeder::randFloat(.5, .6),
+    "uniAI"
+  };
+}
 
 inline seederEntity TEEN() {
-  return {(int)randFloat(12, 18), randFloat(.95, 1.f), randFloat(.01, .02),
-    randFloat(.5, .6), "teenAI"};
+  return {
+    Seeder::randInt(12, 18),
+    Seeder::randFloat(.95, 1.f),
+    Seeder::randFloat(.01, .02),
+    Seeder::randFloat(.5, .6),
+    "teenAI"
+  };
 }
 
 inline seederEntity NOMASK() {
-  return {(int)randFloat(35, 45), randFloat(.40, .70), randFloat(.8, 1),
-    randFloat(.7, .9), "manAI"};
+  return {
+    Seeder::randInt(35, 45),
+    Seeder::randFloat(.40, .70),
+    Seeder::randFloat(.8, 1.f),
+    Seeder::randFloat(.7, .9),
+    "manAI"
+  };
 }
+/* clang-format on */
 
 }  // namespace seeder
 

@@ -14,10 +14,9 @@ void parseArgs(int argc, char* argv[], int& target, int& infectedCount,
              ["--target"]["-t"]
                ("Try to generate the specified number of entities.")
                .required()
-             | lyra::opt( target, "infected entity count" )
+             | lyra::opt( infectedCount, "infected entity count" )
              ["--infected-count"]["-i"]
                ("Number of currently infected entities")
-               .required()
              | lyra::opt( backgroundPath, "background_ image" )
              ["--background_"]["-b"]
                ("Background image (needed to find valid entity POIs).")
@@ -48,7 +47,7 @@ void parseArgs(int argc, char* argv[], int& target, int& infectedCount,
 
 int main(int argc, char* argv[]) {
   int target{};
-  int infectedCount{};
+  int infectedCount{0};
   std::string backgroundPath{};
   std::string outputPath{};
 

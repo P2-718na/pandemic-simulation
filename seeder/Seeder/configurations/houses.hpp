@@ -5,7 +5,7 @@
 
 #include <vector>
 
-#include "seeder.hpp"
+#include "../seeder.hpp"
 #include "people.hpp"
 
 namespace seeder {

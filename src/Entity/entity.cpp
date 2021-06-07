@@ -198,6 +198,7 @@ void Entity::loop() noexcept {
 
   // IF arrived to destination, call AI
   if (pathfinder_.arrived()) {
+    // fixme this can actyakky be done without pointers. Needs to be fixed.
     (*AI_)(world_->currentMinute(), world_->currentDay());
     return;
   }

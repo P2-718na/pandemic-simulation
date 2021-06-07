@@ -42,11 +42,9 @@ class Seeder {
   // Return a random element from array of coordinates
   static const pandemic::Coords& randomLocation_(const std::vector<pandemic::Coords> &list) noexcept;
 
-  // RNG functions
+  // RNG generator
   // (See comments in config.hpp, they are the same).
   static std::default_random_engine& generator_() noexcept;
-  static float randFloat_(float a, float b) noexcept;
-  static int randInt_(int a, int b) noexcept;
 
   // Other methods
   // Load background points of interest into memory (house, work, school,
@@ -58,15 +56,19 @@ class Seeder {
   void populateHouses_();
 
   // Generate the printable text of an entity.
-  std::string makePrintable_(const seederEntity &entity, int uid, bool infected);
+  static std::string makePrintable_(const seederEntity &entity, int uid, bool infected);
 
  public:
   // Constructors //////////////////////////////////////////////////////////////
-  Seeder() noexcept;
+  Seeder();
   explicit Seeder(const std::string& backgroundPath);
 
   // Methods ///////////////////////////////////////////////////////////////////
+  // Try to generate entities in printable form.
   void generateEntities(int target, int infectedCount);
+
+  static float randFloat(float a, float b) noexcept;
+  static int randInt(int a, int b) noexcept;
 
   // Getters ///////////////////////////////////////////////////////////////////
   int entityCount() const noexcept;
