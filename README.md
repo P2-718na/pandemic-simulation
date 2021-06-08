@@ -59,7 +59,7 @@ test      # Run tests
 ```
 
 ## Running
-([tl;dr](#tldr) at the end of this section)
+([tl;dr](#tldr) at the end of this section for a quick, automatic setup).
 
 For the simulation to run, it requires a `background` and an `entities` file.
 `background` is an image which contains "points of interest" (often referred as
@@ -104,7 +104,13 @@ TODO
 TODO
 
 ### tl;dr
-TODO
+Since there are many steps to running the program, I added an helper script to
+quickly run everything. After building, run  
+```bash 
+./quick-run.sh
+```
+from the CMake build directory. (Make sure the file is executable, if needed use
+`chmod +x quick-run.sh`).
 
 --------------------------------------------------------------------------------
 
