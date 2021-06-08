@@ -19,6 +19,11 @@ class manAI : public AI {
 
     // on Saturday
     if (day == config.DAYS_IN_A_WEEK() - 2) {
+      // Get back home at night
+      if (time > config.hourToMinutes(18)) {
+        parent_->goHome();
+        return;
+      }
       // Relax
       if (time > config.hourToMinutes(15)) {
         parent_->goWalk();
