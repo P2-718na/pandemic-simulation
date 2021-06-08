@@ -2,72 +2,79 @@
   <img alt="Alma Mater Studiorum Logo" src="assets/md/unibo-logo.png">
 </div>
 
-# pandemy-simulation
-[What is this?]
-This is the second part of my coding exam [final project][2]  
-at University of Bologna, year one physics course.  
-All the code in this project (excluding external libraries) is written entirely
-by [me (Matteo Bonacini)][3].
+# pandemic-simulation
+This is my attempt at making a parametric pandemic simulation. Given a "map"
+(which is just a bitmap image with highlighted points of interest) and a list of
+"people", this program will attempt to simulate the evolution of a pandemic
+among them.  
+The goal I set for this project was to try and simulate a human-like behaviour
+for the people in my simulation, instead of relying on a random-based approach.
+I also wrote my code with expandability in mind: adding additional behaviour
+rules or simulation features is easy and it can be done by working directly on
+the existing code.
 
+This is the second part of my coding exam [final project][1] at University of
+Bologna, year one physics course. All the code in this project
+(excluding external libraries) is written entirely by [me (Matteo Bonacini)][2].
 
-[2]: https://baltig.infn.it/giaco/pf2020/-/blob/master/progetto/progetto.md
-[3]: https://github.com/P2-718na
+This is a GIF of this program running with `1000` entities in the city of
+Bologna (click to enlarge).
+<div align="center">
+  <img alt="Program running" src="assets/md/running.gif" width="400">
+</div>
 
 --------------------------------------------------------------------------------
 
 ## Dependencies
+- [Lyra](https://github.com/bfgroup/Lyra) (bundled)
 - [Doctest](https://github.com/onqtam/doctest) (bundled)
-- [CMake](https://cmake.org/) (recommended)
 - [SFML](http://https://www.sfml-dev.org/) (required)
+- [CMake](https://cmake.org/) (recommended)
 
 ## Building
-todo
-The preferred way to build this code is by using CMake.
-```shell
-mkdir build
-cd build
-cmake ..
-```
-Then, run either of these commands
-```shell
-todo
-```
-todo
+TODO
+
 
 ## Running
-This code was tested and running on _Mac OS X 10.14.6 Mojave_ and
-_Ubuntu 20.04 LTS (running on WSL)_.
+TODO
 
 ### Launch the simulation
-todo
+TODO
 
 ### Testing
-Make sure to [compile tests](#building), then run
-```shell
-todo
-```
+TODO
 
 --------------------------------------------------------------------------------
 
 ## Directory structure and components
-todo directory structure, quick overview
+TODO
+
+### Engine class
+TODO
 
 ### World class
-todo
+TODO
 
 ### Entity class
-todo
+TODO
 
 ### Pathfinder class
-todo
+TODO
 
 ### Config class
-todo
+TODO
+
+### Seeder
+TODO (See readme.md in seeder)
 
 ### Tests
-todo
+TODO (see readme.md in tests)
 
 --------------------------------------------------------------------------------
 
 ## Additional notes
+TODO (valgrind, clang tidy)
+TODO giuseppe fitting
 
+[1]: https://baltig.infn.it/giaco/pf2020/-/blob/master/progetto/progetto.md
+[2]: https://github.com/P2-718na
