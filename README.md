@@ -32,16 +32,45 @@ Bologna (click to enlarge).
 - [CMake](https://cmake.org/) (recommended)
 
 ## Building
-TODO
+The preferred way to build this code is by using CMake. Although is recommended
+to build the program in `Release` configuration for better performance, only the
+`Debug` configuration satisfies all the requirements imposed by the project
+assignment (`-g` and `-fsanitize="address"` flags are present only in the
+latter).
+```shell
+# Clone the repo
+git clone git@github.com:P2-718na/pandemic-simulation.git
 
+# Create and cd to build directory
+take pandemic-simulation/build
+
+# Prepare build files. Use "Debug" instead of "Release" to build in debug mode.
+cmake .. -DCMAKE_BUILD_TYPE=Release
+```
+This will configure all the needed files. Three executables will be generated
+(see [Running](#running) for additional information on what they do).
+```bash
+pandemic  # Pandemic simulation executable
+
+seed      # Helper program to randomly generate a list of people for the
+          # simulation
+          
+test      # Run tests
+```
 
 ## Running
+TODO
+
+### Generate list of people
 TODO
 
 ### Launch the simulation
 TODO
 
 ### Testing
+TODO
+
+### TL;DR
 TODO
 
 --------------------------------------------------------------------------------
