@@ -3,10 +3,11 @@
 </div>
 
 # pandemic-simulation
-This is my attempt at making a parametric pandemic simulation. Given a "map"
+This is my attempt at making a parametric pandemic simulation. Given a _map_
 (which is just a bitmap image with highlighted points of interest) and a list of
-"people", this program will attempt to simulate the evolution of a pandemic
-among them.  
+_people_, this program will attempt to simulate the evolution of a pandemic
+among them.
+
 The goal I set for this project was to try and simulate a human-like behaviour
 for the people in my simulation, instead of relying on a random-based approach.
 I also wrote my code with expandability in mind: adding additional behaviour
@@ -52,17 +53,49 @@ This will configure all the needed files. Three executables will be generated
 ```bash
 pandemic  # Pandemic simulation executable
 
-seed      # Helper program to randomly generate a list of people for the
-          # simulation
+seed      # Tool to randomly generate a list of people for the simulation
           
 test      # Run tests
 ```
 
 ## Running
-TODO
+([tl;dr](#tldr) at the end of this section)
 
-### Generate list of people
-TODO
+For the simulation to run, it requires a `background` and an `entities` file.
+`background` is an image which contains "points of interest" (often referred as
+_POIs_ in code and comments) such as houses, parks, shops and so on (see TODO, generate background).
+`entities` is a text file, which contains specific information for every person
+(or _entity_) in the simulation (see TODO). To keep things simpler, I already
+included an example background file, called `background.sample.bmp`, but you can
+go ahead and create your own if you prefer.
+
+The following sections will teach you how to launch the simulation correctly.
+Every command assumes that you have successfully build the program and are in
+the build directory (see [Building](#building)).
+
+This code was tested and running on _Mac OS X 10.14.6 Mojave_ and
+_Ubuntu 20.04 LTS (running on WSL with X server enabled)_.
+
+### Generate a list of people
+The `entities` file can be written manually, extrapolated from real world data
+or generated randomly. For this project, I included an utility (_seeder_) that
+can generate an arbitrary number of entities to use in the simulation.
+```bash
+# Show help on how to run the seeder
+./seed --help
+
+# Example command (generate 1000 entities, based on background.sample.bmp)
+./seed -b background.sample.bmp -t 1000 -i 5 -o entities.txt
+```
+The background file that the seeder needs to generate a list of entities is the
+same that will be used later to launch the simulation. This is because
+that the seeder needs to have a way to know where POIs are located, and the
+background image contains precisely this information.
+
+Even though this might seem redundant, I purposely chose this approach because
+of many reasons. Most notably, I wanted to keep the _simulation engine_ and
+_simulation data_ parts of my project separated. This way, one can have
+different ways to generate the entities list for the same map.
 
 ### Launch the simulation
 TODO
@@ -70,7 +103,7 @@ TODO
 ### Testing
 TODO
 
-### TL;DR
+### tl;dr
 TODO
 
 --------------------------------------------------------------------------------
