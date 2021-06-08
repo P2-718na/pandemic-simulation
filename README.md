@@ -59,7 +59,7 @@ test      # Run tests
 ```
 
 ## Running
-([tl;dr](#tldr) at the end of this section for a quick, automatic setup).
+([tl;dr](#tldr) at the end of this section for a quick, automatic running).
 
 For the simulation to run, it requires a `background` and an `entities` file.
 `background` is an image which contains "points of interest" (often referred as
@@ -98,14 +98,28 @@ _simulation data_ parts of my project separated. This way, one can have
 different ways to generate the entities list for the same map.
 
 ### Launch the simulation
-TODO
+Once you have your `entities` and `map` files ready, you can run the simulation.
+```bash
+./pandemic --background background.sample.bmp --entities entities.txt
+```
+Make sure to check the console for additional output and to have an X server
+available to display the graphics.
+
+Once the simulation is running, you can input some additional commands by
+typing on your keyboard while the windows is in focus:
+- `L` key toggles _lockdown_ status. While lockdown is active, parks will be
+      closed and entities will go outside less frequently.
+- `D` key cycles window framerate. An higher framerate will use more CPU time
+      to draw on the screen, but a lower framerate will skip some simulation
+      loops between each frame.
+- `K` key toggles daylight cycle.
 
 ### Testing
 TODO
 
 ### tl;dr
-Since there are many steps to running the program, I added an helper script to
-quickly run everything. After building, run  
+Since there are many steps to running this program, I added an helper script to
+quickly setup everything. After building, run  
 ```bash 
 ./quick-run.sh
 ```
