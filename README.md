@@ -59,7 +59,7 @@ test      # Run tests
 ```
 
 ## Running
-([tl;dr](#tldr) at the end of this section for a quick, automatic running).
+([tl;dr](#tldr) at the end of this section for a quick, automatic setup).
 
 For the simulation to run, it requires a `background` and an `entities` file.
 `background` is an image which contains "points of interest" (often referred as
@@ -115,7 +115,10 @@ typing on your keyboard while the windows is in focus:
 - `K` key toggles daylight cycle.
 
 ### Testing
-TODO
+To run tests, run
+```bash
+./test
+```
 
 ### tl;dr
 Since there are many steps to running this program, I added an helper script to
@@ -160,3 +163,6 @@ TODO giuseppe fitting
 
 [1]: https://baltig.infn.it/giaco/pf2020/-/blob/master/progetto/progetto.md
 [2]: https://github.com/P2-718na
+
+## Possible upgrades
+TODO
