@@ -1,10 +1,10 @@
+#include <cassert>
 #include <cmath>
-#include <vector>
 #include <iostream>
 #include <sstream>
-#include <cassert>
 #include <stdexcept>
 #include <string>
+#include <vector>
 
 #include "engine.hpp"
 #include "entity.hpp"
@@ -13,32 +13,34 @@ namespace pandemic {
 
 // Constructor /////////////////////////////////////////////////////////////////
 Engine::Engine(
-  std::string const& backgroundPath, std::string const& entitiesPath)
-  : world_{backgroundPath, entitiesPath, config_} {
+  const std::string& backgroundPath, const std::string& entitiesPath)
+  : world_{ backgroundPath, entitiesPath, config_ } {
+  // Try to load background image.
   if (!backgroundTexture_.loadFromImage(world_.background())) {
     throw std::runtime_error("Cannot load background texture.");
   }
 
   // Set video mode based on background size
-  const sf::VideoMode videoMode{
-    backgroundTexture_.getSize().x, backgroundTexture_.getSize().y};
+  const sf::VideoMode videoMode{ backgroundTexture_.getSize().x,
+                                 backgroundTexture_.getSize().y };
   window_.create(videoMode, "Simulation");
 
   // SFML documentation states that Sprite is initialized by taking a texture
   // reference. However, if I pass the texture to the sprite constructor
   // before the texture is initialized, the sprite doesn't update its texture.
-  // This means that this has to be initialized in constructor.
+  // This means that this has to be initialized here.
   backgroundSprite_.setTexture(backgroundTexture_);
 
-  // we must do this here instead of initialization list, because world must be
-  // initialized before
-  SFMLEntities_ =
-    std::vector<sf::CircleShape>(world_.entityCount(), sf::CircleShape{1.6, 4});
+  // Initialize SFML drawables vector after world has already been initialised.
+  SFMLEntities_ = std::vector<sf::CircleShape>(
+    world_.entityCount(),
+    sf::CircleShape{ 1.6, 4 });
 }
 
 // Methods /////////////////////////////////////////////////////////////////////
 void Engine::startSimulation() noexcept {
   while (window_.isOpen()) {
+    // Handle events
     sf::Event event{};
     while (window_.pollEvent(event)) {
       handleEvent_(event);
@@ -51,7 +53,7 @@ void Engine::startSimulation() noexcept {
       clock_.restart();
     }
 
-    // Print data for current day every day loop
+    // Print data of current day every day loop
     if (world_.currentMinute() == 0) {
       handleDayLoop_();
     }
@@ -109,17 +111,18 @@ void Engine::handleEvent_(const sf::Event& event) noexcept {
 }
 
 void Engine::handleDayLoop_() noexcept {
-  const int newInfected = world_.infectedCount() - lastDayInfectedCount_;
-
+  // Generate string with infection-related data...
   std::stringstream ss;
   ss << "New day!" << std::endl
      << "Total infected: " << world_.infectedCount()
-     << ", New infected: " << newInfected
+     << ", New infected: " << world_.infectedCount() - lastDayInfectedCount_
      << ", Dead: " << world_.deadCount()
      << ", Immune: " << world_.immuneCount();
 
+  // and print it.
   printMessage(ss.str());
 
+  // Update lastDayInfectedCount_ to be used in next day loop.
   lastDayInfectedCount_ = world_.infectedCount();
 }
 
@@ -136,20 +139,23 @@ void Engine::graphicsLoop_() noexcept {
   // Draw background image
   window_.draw(backgroundSprite_);
 
+  assert(world_.entityCount() == SFMLEntities_.size());
   // Loop through every entity and set its respective sf::CircleShape
   // color and position according to its state.
-  assert(world_.entityCount() == SFMLEntities_.size());
   for (int i = 0; i != world_.entityCount(); ++i) {
     const Entity& entity = world_.entity(i);
     sf::CircleShape& SFMLEntity = SFMLEntities_[i];
 
     SFMLEntity.setPosition(
-      static_cast<float>(entity.posX()), static_cast<float>(entity.posY()));
+      static_cast<float>(entity.posX()),
+      static_cast<float>(entity.posY()));
     SFMLEntity.setFillColor(getEntityColour_(entity));
 
+    // Draw this entity.
     window_.draw(SFMLEntity);
   }
 
+  // Display window.
   window_.display();
 }
 
@@ -170,7 +176,7 @@ void Engine::cycleRefreshRate_() noexcept {
   }
 }
 
-sf::Color Engine::getEntityColour_(Entity const& entity) noexcept {
+sf::Color Engine::getEntityColour_(const Entity& entity) noexcept {
   // These values are hard-coded here, since "config" class is for parameters
   // that are strictly related to the simulation.
   if (entity.dead()) {
@@ -182,16 +188,27 @@ sf::Color Engine::getEntityColour_(Entity const& entity) noexcept {
   if (entity.immune()) {
     return sf::Color::Cyan;
   }
-  return {0xaa, 0x00, 0xff};
+
+  // Default color is purple.
+  return { 0xaa, 0x00, 0xff };
 }
 
 float Engine::currentLightLevel_() noexcept {
+  // These are parameters to transform a cosine function to our needs.
+  // We want to get values in [0; 1], we want it to be 1 when it's
+  // midday and we want its period to be exactly a day.
+
+  // b is translation along x-axis.
   const float b = static_cast<float>(config_.MINUTES_IN_A_DAY()) / 2.f;
+
+  // a is used to change the period.
   const float a = M_PI / b;
+
+  // x is the independent variable of the function (the current minute of the
+  // day).
   const auto x = static_cast<float>(world_.currentMinute());
 
-  // Cosine function, transformed so that it is between 0 and 1.
-  // It has a peak for x=b, and period T=2b
+  // We can now build our cosine function.
   return static_cast<float>((std::cos(a * (x - b)) + 1.f)) / 2.f;
 }
 
@@ -200,9 +217,11 @@ void Engine::tintBackground_() noexcept {
   // We want to colour the sprites from 0xaa,0xaa,0xff to 0xff,0xff,0xff
   // 0x55 is the range (0xaa-0xff)
   const sf::Uint8 tint = currentLightLevel_() * (0x55) + 0xaa;
+
   assert(tint <= 0xff);
   assert(tint >= 0xaa);
-  backgroundSprite_.setColor({tint, tint, 0xff});
+
+  backgroundSprite_.setColor({ tint, tint, 0xff });
 }
 
 }  // namespace pandemic
