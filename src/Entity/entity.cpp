@@ -106,7 +106,7 @@ void Entity::homeLocation(Coords value) noexcept {
 
 void Entity::infected(bool status) noexcept {
   // InfectionResistance is only assigned when a person defeats virus.
-  // Since a person can onluy get virus if infRes < 1, infRes here must be
+  // Since a person can only get virus if infRes < 1, infRes here must be
   // lesser than 1.
   assert(infectionResistance_ < 1);
 
