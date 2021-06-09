@@ -1,23 +1,27 @@
-#include <fstream>
-#include <cassert>
 #include <bitset>
-#include <vector>
+#include <cassert>
+#include <fstream>
 #include <string>
+#include <vector>
 
-#include "parser.hpp"
 #include "config.hpp"
 #include "entity.hpp"
+#include "parser.hpp"
 
 namespace pandemic {
 
-void World::Parser::parsePointsOfInterests(const Config& config,
-  const sf::Image& backgroundImage, std::vector<Coords>& parkCoords,
-  std::vector<Coords>& shopCoords, std::vector<Coords>& partyCoords) {
+void World::Parser::parsePointsOfInterests(
+  const Config& config, const sf::Image& backgroundImage,
+  std::vector<Coords>& parkCoords, std::vector<Coords>& shopCoords,
+  std::vector<Coords>& partyCoords) {
   const int height = backgroundImage.getSize().x;
   const int width = backgroundImage.getSize().y;
 
+  // Loop through every pixel in the image.
   for (int row = 0; row < height; ++row) {
     for (int column = 0; column < width; ++column) {
+      // If the pixel colour corresponds to a specific location, save it
+      // in the corresponding array.
       sf::Color color = backgroundImage.getPixel(row, column);
 
       if (color == config.PARK_COLOR()) {
@@ -35,14 +39,18 @@ void World::Parser::parsePointsOfInterests(const Config& config,
     }
   }
 
-  // We want at least one POI in every list.
+  // We want at least one element in every list.
   if (parkCoords.empty() || shopCoords.empty() || partyCoords.empty()) {
     throw std::runtime_error("Missing points of interest in background image!");
   }
 }
 
-void World::Parser::parseEntitiesFile(World* parentPtr,
-  const std::string& entitiesFile, std::vector<Entity>& entities) {
+// This function is long and it could be probably rewritten to be clearer.
+// The best option would be to write the entities file in xml format, and
+// to include an actual xml parser library in this project.
+void World::Parser::parseEntitiesFile(
+  World* parentPtr, const std::string& entitiesFile,
+  std::vector<Entity>& entities) {
   if (!entities.empty()) {
     // Entities vector must be empty, since we must reserve all the needed
     // capacity at the beginning.
@@ -55,15 +63,16 @@ void World::Parser::parseEntitiesFile(World* parentPtr,
   // This is needed to check that the number of parsed entities corresponds to
   // [count] specified at the beginning, and to check that [count] keyword
   // appears before parsing any entities (See comment below).
-  int parsedEntities{0};
+  int parsedEntities{ 0 };
   int count;
 
+  // Loop through each line in the file
   while (std::getline(is, line)) {
     // "[count]" keyword must appear before any entity. This is necessary for
     // the program to work correctly (See comment below)
     if (line == "[count]") {
       if (parsedEntities != 0) {
-        throw std::runtime_error("[count] keyword missing");
+        throw std::runtime_error("[count] keyword missing or invalid.");
       }
       is >> count;
 
@@ -75,8 +84,8 @@ void World::Parser::parseEntitiesFile(World* parentPtr,
       continue;
     }
 
-    // Every entity begins with [/entity] tag. If we are not parsing an entity,
-    // everything else is discarded.
+    // Every entity begins with [entity] tag. If we are not parsing an entity,
+    // then skip this line.
     if (line == "[entity]") {
       // These are all the values we need to create a new entity.
       int uid{};
@@ -86,7 +95,7 @@ void World::Parser::parseEntitiesFile(World* parentPtr,
       float virusSpreadChance{};
       float infectionResistance{};
       std::string ai{};
-      bool infective{false};
+      bool infective{ false };
 
       // Store which values have been read for current entity. This will be
       // Used later to check that every required value has been read.
@@ -199,10 +208,14 @@ void World::Parser::parseEntitiesFile(World* parentPtr,
       // If AI is set, use it. Otherwise use default.
       if (parsedValues.test(8)) {
         entities.emplace_back(
-          parentPtr, uid, homeCoords.first, homeCoords.second, ai);
+          parentPtr,
+          uid,
+          homeCoords.first,
+          homeCoords.second,
+          ai);
       } else {
-        entities.emplace_back(
-          parentPtr, uid, homeCoords.first, homeCoords.second);
+        entities
+          .emplace_back(parentPtr, uid, homeCoords.first, homeCoords.second);
       }
 
       // Keep track of how many entities have been parsed.

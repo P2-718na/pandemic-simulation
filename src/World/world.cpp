@@ -1,16 +1,43 @@
-#include "world.hpp"
-
-#include <set>
-#include <stdexcept>
 #include <cassert>
 #include <iostream>
+#include <set>
+#include <stdexcept>
 #include <string>
 
+#include "Parser/parser.hpp"
 #include "config.hpp"
 #include "entity.hpp"
-#include "Parser/parser.hpp"
+#include "world.hpp"
 
 namespace pandemic {
+
+// Constructor /////////////////////////////////////////////////////////////////
+World::World(
+  const std::string& backgroundImagePath, const std::string& entitiesFilePath,
+  const Config& config)
+  : config_{ config } {
+  // (See invalidCoords_ comment)
+  assert(!validPosition(invalidCoords_));
+
+  // Load background_ image
+  if (!backgroundImage_.loadFromFile(backgroundImagePath)) {
+    throw std::runtime_error("Cannot load image from file.");
+  }
+
+  // Load entities and points of interest
+  try {
+    Parser::parseEntitiesFile(this, entitiesFilePath, entities_);
+    Parser::parsePointsOfInterests(
+      config,
+      backgroundImage_,
+      parkCoords_,
+      shopCoords_,
+      partyCoords_);
+  } catch (...) {
+    std::cerr << "Error initialising world." << std::endl;
+    throw;
+  }
+}
 
 // Loops ///////////////////////////////////////////////////////////////////////
 void World::dayLoop_() {
@@ -73,7 +100,7 @@ void World::spreadVirus_() {
     }
 
     // If an entity is an infected tile, try to infect it.
-    // Note: I considered three algorithms to make this step as efficeint
+    // Note: I considered three algorithms to make this step as efficient
     // as possible : linear std::find in a vector, binary search and
     // set::count(). The latter is the most efficient one in every case.
     // Also note that set::find() is less efficient than set::count().
@@ -85,10 +112,6 @@ void World::spreadVirus_() {
   }
 }
 
-// Disable clang tidy "function can be made const" check, since this function
-// is not actually const
-#pragma clang diagnostic push
-#pragma ide diagnostic ignored "readability-make-member-function-const"
 void World::handleQuarantine_(Entity& entity) {
   // Note: this checks are performed on dead entities as well.
   // We could add additional checks to skip dead entities, but it wouldn't
@@ -98,8 +121,9 @@ void World::handleQuarantine_(Entity& entity) {
   // If entity is infected and not quarantined, put it in quarantine.
   // All this checks are needed to avoid unwanted behaviour (e.g. an entity
   // staying in quarantine forever).
-  if (entity.infected() && !entity.quarantined()
-      && entity.daysSinceLastInfection() > config_.DAYS_AFTER_QUARANTINE()) {
+  if (
+    entity.infected() && !entity.quarantined()
+    && entity.daysSinceLastInfection() > config_.DAYS_AFTER_QUARANTINE()) {
     entity.quarantined(true);
     return;
   }
@@ -111,30 +135,6 @@ void World::handleQuarantine_(Entity& entity) {
   if (entity.quarantined() && !entity.infected() && quarantineCheckDay) {
     entity.quarantined(false);
     return;
-  }
-}
-#pragma clang diagnostic pop
-
-// Constructors ////////////////////////////////////////////////////////////////
-World::World(const std::string& backgroundImagePath,
-  const std::string& entitiesFilePath, const Config& config)
-  : config_{config} {
-  // (See invalidCoords_ comment)
-  assert(!validPosition(invalidCoords_));
-
-  // Load background_ image
-  if (!backgroundImage_.loadFromFile(backgroundImagePath)) {
-    throw std::runtime_error("Cannot load image from file.");
-  }
-
-  // Load entities and points of interest
-  try {
-    Parser::parseEntitiesFile(this, entitiesFilePath, entities_);
-    Parser::parsePointsOfInterests(
-      config, backgroundImage_, parkCoords_, shopCoords_, partyCoords_);
-  } catch (...) {
-    std::cerr << "Error initialising world." << std::endl;
-    throw;
   }
 }
 

@@ -45,12 +45,12 @@ uid=0       <-- These properties are required for every entities.
 homex=435
 homey=530
 workx=456
-worky=497
-ai=manAI    <-- End of required properties.
+worky=497   <-- End of required properties.
 
 symptoms_resistance=0.3    <-- These properties are optional (a default value
 virus_spread_chance=0.02       will be assigned).
-infection_resistance=0.8   <-- End of optional properties.
+infection_resistance=0.8
+ai=manAI                   <-- End of optional properties.
 [/entity]   <-- Each entity ends with a [/entity] keyword.
 ```
 

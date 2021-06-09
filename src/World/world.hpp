@@ -1,9 +1,9 @@
 #ifndef PANDEMIC_WORLD_HPP
 #define PANDEMIC_WORLD_HPP
 
-#include <vector>
-#include <string>
 #include <SFML/Graphics/Image.hpp>
+#include <string>
+#include <vector>
 
 #include "types.hpp"
 
@@ -13,27 +13,28 @@ class Config;
 class Entity;
 
 class World {
+  // Parser is an helper class that handles parsing background and entities
+  // file.
   struct Parser;
 
   // Current day counter. This will always increment.
-  int currentDay_{0};
+  int currentDay_{ 0 };
 
   // Current minute counter. It will be reset each day.
-  int currentMinute_{0};
+  int currentMinute_{ 0 };
 
   // Whether or not we are in a lockdown. Currently lockdown status
   // can only be set manually. It can be improved by having it startSimulation
   // automatically after x number of infected people.
   // Lockdown "closes" parks and party locations.
-  bool lockdown_{false};
+  bool lockdown_{ false };
 
   // Background image. We want this to be stored inside World and be private,
   // since we don't want to make changes to this while the simulation
   // is running.
   sf::Image backgroundImage_;
 
-  // Handler to config instance. This can be modified externally by modifying
-  // the referenced instance of config.
+  // Handler to config instance. This way config can be modified externally
   const Config& config_;
 
   // Vector containing all entities. Initialized in constructor by
@@ -47,10 +48,10 @@ class World {
   std::vector<Coords> partyCoords_;
 
   // This is used in case of a lockdown: parks and parties are closed, so
-  // when we call randomXXXXcoords(), we return a reference to this object.
+  // when we call random____coords(), we return a reference to this object.
   // World::validPosition(invalidCoords_) must return false. (see assert
   // in constructor).
-  const Coords invalidCoords_{-1, -1};
+  const Coords invalidCoords_{ -1, -1 };
 
   // Private methods ///////////////////////////////////////////////////////////
   // Day loop, called at the end of loop() once every x minutes have passed.
@@ -67,10 +68,11 @@ class World {
  public:
   // Constructors //////////////////////////////////////////////////////////////
   // Initialize world. Loads background image from file and calls
-  // parseEntitiesFile() and parsePoiintsOfInteres().
+  // parseEntitiesFile() and parsePointsOfInterest().
   // Throws a runtime_error if any of these functions fails.
-  World(const std::string& backgroundImagePath,
-    const std::string& entitiesFilePath, const Config& config);
+  World(
+    const std::string& backgroundImagePath, const std::string& entitiesFilePath,
+    const Config& config);
 
   // Getters /////////////////////////////////////////////////////////////////
   // Return current day of the week.

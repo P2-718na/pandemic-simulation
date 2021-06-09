@@ -20,8 +20,7 @@ INCLUDE_DIRECTORIES(
         "${PROJECT_SOURCE_DIR}/src/Entity"
         "${PROJECT_SOURCE_DIR}/src/World"
         "${PROJECT_SOURCE_DIR}/src/Config"
-        "${PROJECT_SOURCE_DIR}/dist"
-)
+        "${PROJECT_SOURCE_DIR}/dist")
 
 ADD_SUBDIRECTORY(src)
 ADD_SUBDIRECTORY(tests)
@@ -30,12 +29,12 @@ ADD_SUBDIRECTORY(seeder)
 CONFIGURE_FILE(assets/background.sample.bmp "${PROJECT_BINARY_DIR}" COPYONLY)
 CONFIGURE_FILE(scripts/quick-run.sh "${PROJECT_BINARY_DIR}" COPYONLY)
 
-if(NOT CMAKE_BUILD_TYPE)
+if (NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE Debug)
-endif()
+endif ()
 
 MESSAGE("-- Building using ${CMAKE_BUILD_TYPE} configuration")
 
-SET(CMAKE_CXX_FLAGS  "-Wall -Wextra")
+SET(CMAKE_CXX_FLAGS "-Wall -Wextra")
 SET(CMAKE_CXX_FLAGS_DEBUG "-g -fsanitize=\"address\"")
 SET(CMAKE_CXX_FLAGS_RELEASE "-O3 -DNDEBUG")
