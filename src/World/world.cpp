@@ -117,7 +117,7 @@ void World::handleQuarantine_(Entity& entity) {
 
 // Constructors ////////////////////////////////////////////////////////////////
 World::World(const std::string& backgroundImagePath,
-  const std::string& entitiesFilePath, Config& config)
+  const std::string& entitiesFilePath, const Config& config)
   : config_{config} {
   // (See invalidCoords_ comment)
   assert(!validPosition(invalidCoords_));

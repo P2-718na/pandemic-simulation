@@ -34,7 +34,7 @@ class World {
 
   // Handler to config instance. This can be modified externally by modifying
   // the referenced instance of config.
-  Config& config_;
+  const Config& config_;
 
   // Vector containing all entities. Initialized in constructor by
   // parsing entities file.
@@ -70,7 +70,7 @@ class World {
   // parseEntitiesFile() and parsePoiintsOfInteres().
   // Throws a runtime_error if any of these functions fails.
   World(const std::string& backgroundImagePath,
-    const std::string& entitiesFilePath, Config& config);
+    const std::string& entitiesFilePath, const Config& config);
 
   // Getters /////////////////////////////////////////////////////////////////
   // Return current day of the week.
