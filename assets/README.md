@@ -22,11 +22,46 @@ each of these colors. Additional colors are ignored.
 Note that _Road_ is currently unused, but is reserved for future possible
 upgrades.
 
+--------------------------------------------------------------------------------
+
 ## `entities` file
-TODO
+A `entities` file is a text file which contains a list of entities and their
+properties.
+
+Below is an example file with explanation (note that comments render the file
+invalid).
+
+```
+[count]     <-- [count] keyword must appear only once at the beginning
+1               of the file, followed by the number of entities that are
+                present in this file.
+              
+
+[entity]    <-- Each entity starts with a [entity] keyword.
+[infected]  <-- If the keyword [infected] appears within the entity body,
+                the entity will be infected at the start of the simulation.
+                
+uid=0       <-- These properties are required for every entities.
+homex=435
+homey=530
+workx=456
+worky=497
+ai=manAI    <-- End of required properties.
+
+symptoms_resistance=0.3    <-- These properties are optional (a default value
+virus_spread_chance=0.02       will be assigned).
+infection_resistance=0.8   <-- End of optional properties.
+[/entity]   <-- Each entity ends with a [/entity] keyword.
+```
+
+I also provided a [sample `entities` file][A]. An explanation on how each
+property affects an entity is found on [Entity] class comments.
+
+--------------------------------------------------------------------------------
 
 [World]: ../README.md#world
 [Seeder]: ../README.md#seeder
+[Entity]: ../README.md#entity
 
 [home]: md/POI/home.png
 [work]: md/POI/work.png
@@ -36,3 +71,5 @@ TODO
 [shop]: md/POI/shop.png
 [walk]: md/POI/walk.png
 [road]: md/POI/road.png
+
+[A]: entities.sample.txt
