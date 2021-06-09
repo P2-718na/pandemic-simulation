@@ -1,12 +1,5 @@
-will need to implement:
-  -pathfinding algorithm (maybe not. Even a simpler "follow roads if possible" solution would be nice).
-
 General todos:
-    - change cast to c++ style cast (maybe, maybe not)
-    - Write README
+- change cast to c++ style cast
 
 - general cleanup of the code.
 - check cmake includes and linking
-
-- on linux lags hard every 4th day. Maybe worth checking
-- valgrind memcheck smart pointers AI stuff
