@@ -3,8 +3,8 @@
 </div>
 
 # pandemic-simulation
-This is my attempt at making a parametric pandemic simulation. Given a _map_
-(which is just a bitmap image with highlighted points of interest) and a list of
+[This][0] is my attempt at making a parametric pandemic simulation. Given a
+_map_ (a bitmap image with highlighted points of interest) and a list of
 _people_, this program will attempt to simulate the evolution of a pandemic
 among them.
 
@@ -38,8 +38,9 @@ Make sure to install all the required dependencies before continuing.
 The preferred way to build this code is by using CMake. Although is recommended
 to build the program in `Release` configuration for better performance, only the
 `Debug` configuration satisfies all the requirements imposed by the project
-assignment (`-g` and `-fsanitize="address"` flags are present only in the
+assignment (`-g` and `-fsanitize="address"` flags are only present in the
 latter).
+
 ```shell
 # Clone the repo
 git clone git@github.com:P2-718na/pandemic-simulation.git
@@ -50,8 +51,10 @@ take pandemic-simulation/build
 # Prepare build files. Use "Debug" instead of "Release" to build in debug mode.
 cmake .. -DCMAKE_BUILD_TYPE=Release
 ```
+
 This will configure all the needed files. Three executables will be generated
 (see [Running] for additional information on what they do).
+
 ```bash
 pandemic  # Pandemic simulation executable
 
@@ -64,7 +67,7 @@ test      # Run tests
 ([tl;dr] at the end of this section for a quick, automatic setup).
 
 For the simulation to run, it requires a `background` and an `entities` file.
-`background` (or `map`) is an image which contains "points of interest" (often
+`background` (or `map`) is an image which contains _points of interest_ (often
 referred as _POIs_ in code and comments) such as houses, parks, shops and so on.
 `entities` is a text file, which contains specific information for every person
 (or _entity_) in the simulation. To keep things simpler, I already
@@ -75,7 +78,7 @@ You can learn how to create a `background` and an `entities` file manually
 by looking at [`background` file] and [`entities` file].
 
 The following sections will teach you how to launch the simulation correctly.
-Every command assumes that you have successfully build the program and are in
+Every command assumes that you have successfully built the program and are in
 the build directory (see [Building]).
 
 This code was tested and running on _Mac OS X 10.14.6 Mojave_ and
@@ -85,6 +88,7 @@ _Ubuntu 20.04 LTS (running on WSL with X server enabled)_.
 The `entities` file can be written manually, extrapolated from real world data
 or generated randomly. For this project, I included an utility (_seeder_) that
 can generate an arbitrary number of entities to use in the simulation.
+
 ```bash
 # Show help on how to run the seeder
 ./seed --help
@@ -92,6 +96,7 @@ can generate an arbitrary number of entities to use in the simulation.
 # Example command (generate 1000 entities, based on background.sample.bmp)
 ./seed -b background.sample.bmp -t 1000 -i 5 -o entities.txt
 ```
+
 The background file that the seeder needs to generate a list of entities is the
 same that will be used later to launch the simulation. This is because
 that the seeder needs to have a way to know where POIs are located, and the
@@ -107,6 +112,7 @@ Once you have your `entities` and `map` files ready, you can run the simulation.
 ```bash
 ./pandemic --background background.sample.bmp --entities entities.txt
 ```
+
 Make sure to check the console for additional output and to have an X server
 available to display the graphics.
 
@@ -128,9 +134,11 @@ To run tests, run
 ### tl;dr
 Since there are many steps to running this program, I added an helper script to
 quickly setup everything. After building, run  
+ 
 ```bash 
 ./quick-run.sh
 ```
+
 from the CMake build directory. (Make sure the file is executable, if needed use
 `chmod +x quick-run.sh`).
 
@@ -139,10 +147,10 @@ from the CMake build directory. (Make sure the file is executable, if needed use
 ## Components
 What follows is a quick overview of every component of this project. More
 information can be found in each component's _README.md_ file and in code
-comments.
+comments. I didn't include a detailed description of every class method, since
+the comments in the code do a sufficiently good job at explaining just that.
 
 ### Engine
-(TODO see readme)
 Class that handles drawing the simulation to screen, input and output. This is
 responsible for:
 
@@ -153,24 +161,23 @@ responsible for:
 - Handling user input
 
 For now, this is mostly just a wrapper for SFML-related code, but it can be
-expanded with more feature. Some possible upgrades are:
+expanded with more features. Some possible upgrades are:
 
 - Print message directly on the screen instead of the console
 - Add a proper GUI instead of relying on keyboard-based input
 
 ### World
-(TODO see readme)
 Class that handles the _simulation world_. This class contains the list of
 entities in the simulation, and has access to the map image. Entities can query
 the world to get POI coordinates, current time of day and current day of the
 week. This class also handles virus spread.
 
 The simulation can be stepped forward by calling the `loop()` method, which will
-advance the time, call the `loop()` method for every entity and spread the
-virus. Every `loop()` call will advance the time by one minute (arbitrary unit).
+advance the time, call the `Entity::loop()` method for every entity and spread
+the virus. Every `loop()` call will advance the time by one minute (arbitrary
+unit).
 
 ### Entity
-(TODO see readme)
 One simulation entity represents a _person_. This class handles everything
 related to that. Each `Entity` instance needs to be created inside a `World`
 object and holds a pointer to it.
@@ -200,7 +207,6 @@ Every entity also contains some additional virus-related stats
 and infective status).
 
 ### Pathfinder
-(TODO see readme)
 Class that handles pathfinding for entities. By pathfinding, I mean generating
 the list of steps an entity needs to take to get from a point to another point
 in the map. Each entity has its own pathfinder instance which can be used to

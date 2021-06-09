@@ -55,7 +55,7 @@ infection_resistance=0.8   <-- End of optional properties.
 ```
 
 I also provided a [sample `entities` file][A]. An explanation on how each
-property affects an entity is found on [Entity] class comments.
+property affects an entity is found on [Entity] class code comments.
 
 --------------------------------------------------------------------------------
 
