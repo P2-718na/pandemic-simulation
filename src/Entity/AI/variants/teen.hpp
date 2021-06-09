@@ -7,7 +7,8 @@ namespace pandemic {
 
 class teenAI : public AI {
  public:
-  inline explicit teenAI(Entity* parent) : AI{parent} {}
+  inline explicit teenAI(Entity* parent)
+    : AI{ parent } {}
 
   inline void operator()(int time, int day) noexcept override {
     if (stayHome_(day)) {

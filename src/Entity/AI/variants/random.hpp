@@ -3,11 +3,12 @@
 
 #include "entity.hpp"
 
-namespace  pandemic {
+namespace pandemic {
 
 class randomAI : public AI {
  public:
-  explicit inline randomAI(Entity* parent) : AI{parent} {}
+  explicit inline randomAI(Entity* parent)
+    : AI{ parent } {}
 
   inline void operator()(int time, int day) noexcept override {
     if (stayHome_(day)) {
@@ -17,7 +18,7 @@ class randomAI : public AI {
 
     const int x = Config::randInt(100, 700);
     const int y = Config::randInt(100, 700);
-    parent_->setDestination({x, y});
+    parent_->setDestination({ x, y });
   }
 };
 

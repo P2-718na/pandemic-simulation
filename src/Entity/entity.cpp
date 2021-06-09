@@ -1,20 +1,23 @@
-#include <string>
 #include <cassert>
 #include <memory>
+#include <string>
 #include <utility>
 
-#include "world.hpp"
-#include "entity.hpp"
-#include "config.hpp"
 #include "AI/variants/ai-variants.hpp"
+#include "config.hpp"
+#include "entity.hpp"
+#include "world.hpp"
 
 namespace pandemic {
 
 // Constructors ////////////////////////////////////////////////////////////////
 Entity::Entity(
   World* world, int uid, int posX, int posY, const std::string& AIName)
-  : world_{world}, uid_{uid}, posX_{posX}, posY_{posY}, aiPtr_{parseAI_(AIName)}
-{}
+  : world_{ world }
+  , uid_{ uid }
+  , posX_{ posX }
+  , posY_{ posY }
+  , aiPtr_{ parseAI_(AIName) } {}
 
 // Getters /////////////////////////////////////////////////////////////////////
 const Config& Entity::config() const noexcept {
@@ -34,7 +37,7 @@ int Entity::posY() const noexcept {
 }
 
 Coords Entity::pos() const noexcept {
-  return {posX_, posY_};
+  return { posX_, posY_ };
 }
 
 float Entity::virusSpreadChance() const noexcept {

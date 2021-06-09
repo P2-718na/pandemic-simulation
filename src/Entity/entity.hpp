@@ -1,8 +1,8 @@
 #ifndef PANDEMIC_ENTITY_HPP
 #define PANDEMIC_ENTITY_HPP
 
-#include <string>
 #include <memory>
+#include <string>
 
 #include "AI/ai.hpp"
 #include "pathfinder.hpp"
@@ -30,38 +30,40 @@ class Entity {
   // Infection-related stats of any entity.
   // Chance to resist virus symptoms. Affects probability of death
   // and recovery time.
-  float symptomsResistance_{.9};
+  float symptomsResistance_{ .9 };
+
   // Chance to spread virus to nearby entities.
-  float virusSpreadChance_{.05};
+  float virusSpreadChance_{ .05 };
+
   // Chance to get infected by virus spread
-  float infectionResistance_{.8};
+  float infectionResistance_{ .8 };
 
   // Entity-based Point of Interest Coordinates
   // workLocation_ can represent work, school or uni location. It's up to
   // each entity's ai to use this accordingly (e.g. teens go to school
   // only for five hours a day, so their AI will call Entity::goWork()
   // for just five hours in the morning.
-  Coords workLocation_{0, 0};
-  Coords homeLocation_{0, 0};
+  Coords workLocation_{ 0, 0 };
+  Coords homeLocation_{ 0, 0 };
 
   // Days since infection. Updated at the end of each dayLoop.
   // The value is rounded up (e.g., if an entity is infected in the last
   // minute of day 1, as soon as day 2 begins, this value will be 1).
-  int daysSinceLastInfection_{0};
+  int daysSinceLastInfection_{ 0 };
 
   // Dead status. Dead entities will do nothing and will not spread the virus.
-  bool dead_{false};
+  bool dead_{ false };
 
   // Infected status. If this is true, every day loop we check if entity can
   // defeat the virus.
   // Note that infected and infective are two separate conditions.
-  bool infected_{false};
+  bool infected_{ false };
 
   // Quarantined status.
-  bool quarantined_{false};
+  bool quarantined_{ false };
 
   // Pathfinder instance. Initialize with an arbitrary size to store paths.
-  Pathfinder pathfinder_{1000};
+  Pathfinder pathfinder_{ 1000 };
 
   // AI of the entity, called every time it reaches the end of its path.
   // This will set the new path.
@@ -73,8 +75,8 @@ class Entity {
 
  public:
   // Constructors //////////////////////////////////////////////////////////////
-  // Default entityAi is nullAi.
-  Entity(World* world, int uid, int posX, int posY,
+  Entity(
+    World* world, int uid, int posX, int posY,
     const std::string& AIName = "nullAI");
 
   // Getters ///////////////////////////////////////////////////////////////////

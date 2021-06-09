@@ -3,11 +3,12 @@
 
 #include "entity.hpp"
 
-namespace  pandemic {
+namespace pandemic {
 
 class nullAI : public AI {
  public:
-  explicit inline nullAI(Entity* parent) : AI{parent} {}
+  explicit inline nullAI(Entity* parent)
+    : AI{ parent } {}
 
   inline void operator()(int time, int day) noexcept override {}
 };
