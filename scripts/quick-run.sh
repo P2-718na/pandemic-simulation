@@ -9,10 +9,6 @@ function onError {
   exit 1;
 }
 
-# Build program
-echo "Building program..."
-make || onError
-
 # Seed entities
 echo "Generating entities file..."
 ./seed -b background.sample.bmp -t 1000 -i 5 -o entities.txt || onError
