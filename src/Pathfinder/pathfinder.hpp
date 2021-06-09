@@ -12,7 +12,7 @@ class Pathfinder {
   std::vector<Coords> path_{};
 
   // Current step in path_
-  int step_{-1};
+  int step_{ -1 };
 
  public:
   // Constructor ///////////////////////////////////////////////////////////////

@@ -1,5 +1,5 @@
-#include <vector>
 #include <cassert>
+#include <vector>
 
 #include "pathfinder.hpp"
 
@@ -9,7 +9,7 @@ namespace pandemic {
 Pathfinder::Pathfinder(int size) {
   // Reserve an arbitrary space for paths. This will make
   // Pathfinder slightly faster in the beginning.
-  // path_.reserve(size);
+  path_.reserve(size);
 }
 
 void Pathfinder::loadPath(
@@ -24,8 +24,10 @@ void Pathfinder::loadPath(
   int currentX = startPos.first;
   int currentY = startPos.second;
 
-  // don't add first node
-  // Wile not arrived...
+  // NOTICE: we don't add first node in the path.
+
+  // Wile not arrived, move current position towards destination and
+  // push it to path vector.
   while (!(currentX == endX && currentY == endY)) {
     if (currentX < endX) {
       ++currentX;
