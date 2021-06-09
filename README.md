@@ -33,6 +33,8 @@ Bologna (click to enlarge).
 - [CMake](https://cmake.org/) (recommended)
 
 ## Building
+Make sure to install all the required dependencies before continuing.
+
 The preferred way to build this code is by using CMake. Although is recommended
 to build the program in `Release` configuration for better performance, only the
 `Debug` configuration satisfies all the requirements imposed by the project
@@ -131,23 +133,93 @@ from the CMake build directory. (Make sure the file is executable, if needed use
 
 --------------------------------------------------------------------------------
 
-## Directory structure and components
-TODO
+## Components
+What follows is a quick overview of every component of this project. More
+information can be found in each component's _readme_ file and in code comments.
 
-### Engine class
-TODO
+### Engine
+(TODO see readme)
+Class that handles drawing the simulation to screen, input and output. This is
+responsible for:
 
-### World class
-TODO
+- Printing output to the console
+- Creating and updating the rendering window
+- Drawing the daylight cycle tint
+- Stepping forward the simulation
+- Handling user input
 
-### Entity class
-TODO
+For now, this is mostly just a wrapper for SFML-related code, but it can be
+expanded with more feature. Some possible upgrades are:
 
-### Pathfinder class
-TODO
+- Print message directly on the screen instead of the console
+- Add a proper GUI instead of relying on keyboard-based input
 
-### Config class
-TODO
+### World
+(TODO see readme)
+Class that handles the _simulation world_. This class contains the list of
+entities in the simulation, and has access to the map image. Entities can query
+the world to get POI coordinates, current time of day and current day of the
+week. This class also handles virus spread.
+
+The simulation can be stepped forward by calling the `loop()` method, which will
+advance the time, call the `loop()` method for every entity and spread the
+virus. Every `loop()` call will advance the time by one minute (arbitrary unit).
+
+### Entity
+(TODO see readme)
+One simulation entity represents a _person_. This class handles everything
+related to that. Each `Entity` instance needs to be created inside a `World`
+object and holds a pointer to it.
+
+One person needs to have a home, a _work location_ and a set of behaviour rules
+(referred to as _AI_ in the code). The _work location_ can actually refer to 
+three different things:
+
+1. Actual work location
+2. University location
+3. School location
+
+and each entity AI variant will handle this accordingly. I chose this approach
+because one person cannot be both a student or a working person at the same
+time, so there is no conflict in having a single variable for all of these
+POIs. In case this was not clear, I provided some examples:  
+  
+1. A person with an _university student_ AI will have its _work location_ set
+   to an university location. Its AI will call the `goWork()` method when the
+   person needs to go to university.
+2. A person with a _working man_ AI will have its _work location_ set to a
+   generic working location. Its AI will call the `goWork()` method when the
+   person needs to go to work.
+
+Every entity also contains some additional virus-related stats
+(virus spread chance, symptoms resistance, infection resistance, infected
+and infective status).
+
+### Pathfinder
+(TODO see readme)
+Class that handles pathfinding for entities. By pathfinding, I mean generating
+the list of steps an entity needs to take to get from a point to another point
+in the map. Each entity has its own pathfinder instance which can be used to
+query this data.
+
+Right now, the pathfinding algorithm is very simple: the entities can move
+horizontally, vertically or diagonally, and they go directly to the destination.
+There are neither obstacles, nor valid paths.  
+
+The original idea for this component was to implement an actual pathfinding
+algorithm, but I found it unfeasible to develop in reasonable time. I wrote an
+unfinished implementation using the A* algorithm (see PR#5), but it was too
+computationally intensive even for a small number of entities. This goal can
+certainly be achieved with another method, but I had to discard it for now.
+
+### Config
+Class that holds simulation-related parameters and handles RNG. Every `World`
+object needs a reference to a `Config` object.
+
+As of right now, there is no way to change the configuration values besides
+editing the code directly, but this class could be expanded by allowing the
+user to edit the configuration values before the simulation starts, or even
+while it is already running.
 
 ### Seeder
 TODO (See readme.md in seeder)
