@@ -2,6 +2,7 @@
 #define PANDEMIC_MAN_HPP
 
 #include "entity.hpp"
+#include "config.hpp"
 
 namespace pandemic {
 

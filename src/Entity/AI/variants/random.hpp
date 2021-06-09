@@ -2,6 +2,7 @@
 #define PANDEMIC_RANDOM_HPP
 
 #include "entity.hpp"
+#include "config.hpp"
 
 namespace pandemic {
 
