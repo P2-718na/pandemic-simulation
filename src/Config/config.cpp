@@ -16,7 +16,7 @@ Config::Config() {
 // Utils ///////////////////////////////////////////////////////////////////////
 std::default_random_engine& Config::generator_() {
   static std::random_device rd;
-  static std::default_random_engine generator{rd()};
+  static std::default_random_engine generator{ rd() };
   return generator;
 }
 
