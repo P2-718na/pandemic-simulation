@@ -72,11 +72,11 @@ included an example background file, called `background.sample.bmp`, but you can
 go ahead and create your own if you prefer.
 
 You can learn how to create a `background` and an `entities` file manually
-by reading TODO
+by looking at [`background` file] and [`entities` file].
 
 The following sections will teach you how to launch the simulation correctly.
 Every command assumes that you have successfully build the program and are in
-the build directory (see [Building](#building)).
+the build directory (see [Building]).
 
 This code was tested and running on _Mac OS X 10.14.6 Mojave_ and
 _Ubuntu 20.04 LTS (running on WSL with X server enabled)_.
@@ -226,9 +226,9 @@ user to edit the configuration values before the simulation starts, or even
 while it is already running.
 
 ### Seeder
-This is an helper program that generates an `entities` file, given a `map` file.
-See [Generate a list of people] for usage and (TODO README) for `map` file
-specifications.
+This is an helper program that generates an `entities` file, given a
+`background` file. See [Generate a list of people] for usage and
+[`background` file] for `map` file specifications.
 
 In order to generate the entities, the program looks for all the available 
 housing and working spots on the map. Then, for every house, it selects a 
@@ -297,8 +297,12 @@ See Giuseppe's work [here][7].
 
 [A]: seeder/Seeder/configurations/houses.hpp
 [B]: .clang-format
+<!-- @IGNORE PREVIOUS: link -->
 
+[Building]: #building
 [Running]: #running
 [Generate a list of people]: #generate-a-list-of-people
 [Testing]: #testing
 [tl;dr]: #tldr
+[`background` file]: assets/README.md#background-file
+[`entities` file]: assets/README.md#entities-file
