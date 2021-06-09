@@ -1,12 +1,12 @@
-#include <random>
-#include <string>
-#include <sstream>
-#include <vector>
-#include <stdexcept>
 #include <SFML/Graphics/Image.hpp>
+#include <random>
+#include <sstream>
+#include <stdexcept>
+#include <string>
+#include <vector>
 
-#include "seeder.hpp"
 #include "configurations/houses.hpp"
+#include "seeder.hpp"
 
 namespace seeder {
 // Constructors ////////////////////////////////////////////////////////////////
@@ -32,7 +32,7 @@ const pandemic::Coords& Seeder::randomLocation_(
 
 std::default_random_engine& Seeder::generator_() noexcept {
   static std::random_device rd;
-  static std::default_random_engine generator{rd()};
+  static std::default_random_engine generator{ rd() };
   return generator;
 }
 
@@ -81,8 +81,9 @@ void Seeder::parseBackground_() {
     }
   }
 
-  if (workLocations_.empty() || houseLocations_.empty()
-      || schoolLocations_.empty() || uniLocations_.empty()) {
+  if (
+    workLocations_.empty() || houseLocations_.empty()
+    || schoolLocations_.empty() || uniLocations_.empty()) {
     throw std::runtime_error("Missing locations in image!");
   }
 }
@@ -192,7 +193,7 @@ void Seeder::generateEntities(int target, int infectedCount) {
     }
   }
 
-  breakAll:
+breakAll:
   // Add required [count] keyword at the beginning of the string
   printableEntities_ =
     "[count]\n" + std::to_string(entityCount()) + "\n" + printableEntities_;
