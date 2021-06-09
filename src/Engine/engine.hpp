@@ -17,14 +17,16 @@ class Engine {
 
   sf::Sprite backgroundSprite_;
 
-  sf::Clock clock_{};
-
-  // Holds shapes for all entities to be drawn.
+  // Holds shapes for all entities in the simulation
   std::vector<sf::CircleShape> SFMLEntities_;
 
   // Hold simulation world and config.
   Config config_{};
   World world_;
+
+  // Clock used to draw the screen at specified intervals.
+  // (See refreshRate_ below)
+  sf::Clock clock_{};
 
   // RenderWindow max refresh rate in fps. Does not affect simulation speed,
   // but having a lower refresh rate makes the program run faster, since
