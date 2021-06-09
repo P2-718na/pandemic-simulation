@@ -64,12 +64,15 @@ test      # Run tests
 ([tl;dr] at the end of this section for a quick, automatic setup).
 
 For the simulation to run, it requires a `background` and an `entities` file.
-`background` is an image which contains "points of interest" (often referred as
-_POIs_ in code and comments) such as houses, parks, shops and so on (see TODO, generate background).
+`background` (or `map`) is an image which contains "points of interest" (often
+referred as _POIs_ in code and comments) such as houses, parks, shops and so on.
 `entities` is a text file, which contains specific information for every person
-(or _entity_) in the simulation (see TODO). To keep things simpler, I already
+(or _entity_) in the simulation. To keep things simpler, I already
 included an example background file, called `background.sample.bmp`, but you can
 go ahead and create your own if you prefer.
+
+You can learn how to create a `background` and an `entities` file manually
+by reading TODO
 
 The following sections will teach you how to launch the simulation correctly.
 Every command assumes that you have successfully build the program and are in
@@ -256,7 +259,7 @@ my program would suit this particular model. This is the result we got (click
 to enlarge):
 
 <div align="center">
-  <img alt="Program running" src="assets/md/fitting.gif" width="600">
+  <img alt="Program running" src="assets/md/fitting.png" width="600">
 </div>
 
 This graph contains the number of susceptible, infected and removed
