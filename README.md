@@ -5,10 +5,9 @@
 # pandemic-simulation
 [This][0] is my attempt at making a parametric pandemic simulation. Given a
 _map_ (a bitmap image with highlighted points of interest) and a list of
-_people_, this program will attempt to simulate the evolution of a pandemic
-among them.
+_people_, this program will attempt to simulate the evolution of a pandemic.
 
-The goal I set for this project was to try and simulate a human-like behaviour
+The goal I set for this project was to try and emulate a human-like behaviour
 for the people in my simulation, instead of relying on a random-based approach.
 I also wrote my code with expandability in mind: adding additional behaviour
 rules or simulation features is easy and it can be done by working directly on
@@ -29,7 +28,7 @@ Bologna (click to enlarge).
 ## Dependencies
 - [Lyra](https://github.com/bfgroup/Lyra) (bundled)
 - [Doctest](https://github.com/onqtam/doctest) (bundled)
-- [SFML](http://https://www.sfml-dev.org/) (required)
+- [SFML](http://www.sfml-dev.org/) (required)
 - [CMake](https://cmake.org/) (recommended)
 
 ## Building
@@ -66,13 +65,14 @@ test      # Run tests
 ## Running
 ([tl;dr] at the end of this section for a quick, automatic setup).
 
-For the simulation to run, it requires a `background` and an `entities` file.
+For the simulation to run, it requires a `background` and a `entities` file.
 `background` (or `map`) is an image which contains _points of interest_ (often
 referred as _POIs_ in code and comments) such as houses, parks, shops and so on.
 `entities` is a text file, which contains specific information for every person
 (or _entity_) in the simulation. To keep things simpler, I already
-included an example background file, called `background.sample.bmp`, but you can
-go ahead and create your own if you prefer.
+included an example background file, but you can go ahead and create your own if
+you prefer. You do not need to create a `entities` file, since it will be
+generated automatically (see below).
 
 You can learn how to create a `background` and an `entities` file manually
 by looking at [`background` file] and [`entities` file].
@@ -97,10 +97,10 @@ can generate an arbitrary number of entities to use in the simulation.
 ./seed -b background.sample.bmp -t 1000 -i 5 -o entities.txt
 ```
 
-The background file that the seeder needs to generate a list of entities is the
-same that will be used later to launch the simulation. This is because
-that the seeder needs to have a way to know where POIs are located, and the
-background image contains precisely this information.
+The `background` file that the seeder requires is the same that will be used
+later to launch the simulation. The reason for this is that the seeder
+needs to have a way to know where POIs are located, and the background
+image contains precisely this information.
 
 Even though this might seem redundant, I purposely chose this approach because
 of many reasons. Most notably, I wanted to keep the _simulation engine_ and
@@ -108,7 +108,9 @@ _simulation data_ parts of my project separated. This way, one can have
 different ways to generate the entities list for the same map.
 
 ### Launch the simulation
-Once you have your `entities` and `map` files ready, you can run the simulation.
+Once you have your `entities` and `background` files ready, you can run the
+simulation.
+
 ```bash
 ./pandemic --background background.sample.bmp --entities entities.txt
 ```
@@ -146,9 +148,9 @@ from the CMake build directory. (Make sure the file is executable, if needed use
 
 ## Components
 What follows is a quick overview of every component of this project. More
-information can be found in each component's _README.md_ file and in code
-comments. I didn't include a detailed description of every class method, since
-the comments in the code do a sufficiently good job at explaining just that.
+information can be found in code comments. I didn't include a detailed
+description of every class method, since the comments in the code do a
+sufficiently good job at explaining just that.
 
 ### Engine
 Class that handles drawing the simulation to screen, input and output. This is
@@ -172,13 +174,14 @@ entities in the simulation, and has access to the map image. Entities can query
 the world to get POI coordinates, current time of day and current day of the
 week. This class also handles virus spread.
 
-The simulation can be stepped forward by calling the `loop()` method, which will
-advance the time, call the `Entity::loop()` method for every entity and spread
-the virus. Every `loop()` call will advance the time by one minute (arbitrary
-unit).
+The simulation can be stepped forward by calling the `World::loop()` method,
+which will advance the time, call the `Entity::loop()` method for every entity
+and spread the virus. Every `World::loop()` call will advance the time by
+one minute (arbitrary unit). After a configurable number of minutes, a day
+passes.
 
 ### Entity
-One simulation entity represents a _person_. This class handles everything
+Each simulation entity represents a _person_. This class handles everything
 related to that. Each `Entity` instance needs to be created inside a `World`
 object and holds a pointer to it.
 
@@ -214,11 +217,11 @@ query this data.
 
 Right now, the pathfinding algorithm is very simple: the entities can move
 horizontally, vertically or diagonally, and they go directly to the destination.
-There are neither obstacles, nor valid paths.  
+There are neither obstacles, nor preferred paths.  
 
 The original idea for this component was to implement an actual pathfinding
 algorithm, but I found it unfeasible to develop in reasonable time. I wrote an
-unfinished implementation using the A* algorithm (see PR#5), but it was too
+unfinished implementation using the A* algorithm (see [#5]), but it was too
 computationally intensive even for a small number of entities. This goal can
 certainly be achieved with another method, but I had to discard it for now.
 
@@ -232,9 +235,9 @@ user to edit the configuration values before the simulation starts, or even
 while it is already running.
 
 ### Seeder
-This is an helper program that generates an `entities` file, given a
+This is an helper program that generates a `entities` file, given a
 `background` file. See [Generate a list of people] for usage and
-[`background` file] for `map` file specifications.
+[`background` file] for `background` file specifications.
 
 In order to generate the entities, the program looks for all the available 
 housing and working spots on the map. Then, for every house, it selects a 
@@ -270,11 +273,11 @@ I also run the code through _Valgrind Memcheck_ and I made sure that there are
 no memory-related errors in my code.
 
 ### SIR model fitting
-[Giuseppe][5] developed an interesting project for this same assignment. His
-program can, given some data, find out which [SIR Model][6] parameters best fit
-said data. We thought it would be interesting to see how the data generated by
-my program would suit this particular model. This is the result we got (click
-to enlarge):
+My colleague [Giuseppe][5] developed an interesting project for this same
+assignment. His program can, given some data, find out which [SIR Model][6]
+parameters best fit said data. We thought it would be interesting to see how the
+data generated by my program would suit this particular model. This is the
+result we got (click to enlarge):
 
 <div align="center">
   <img alt="Program running" src="assets/md/fitting.png" width="600">
@@ -305,6 +308,8 @@ See Giuseppe's work [here][7].
 [A]: seeder/Seeder/configurations/houses.hpp
 [B]: .clang-format
 <!-- @IGNORE PREVIOUS: link -->
+
+[#5]: https://github.com/P2-718na/pandemic-simulation/pull/5
 
 [Building]: #building
 [Running]: #running
