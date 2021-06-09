@@ -1,5 +1,5 @@
-#include "doctest.h"
 #include "config.hpp"
+#include "doctest.h"
 
 using pandemic::Config;
 
