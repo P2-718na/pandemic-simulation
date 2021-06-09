@@ -168,6 +168,16 @@ expanded with more features. Some possible upgrades are:
 - Print message directly on the screen instead of the console
 - Add a proper GUI instead of relying on keyboard-based input
 
+Follows a small legend for the entities display color.
+
+|   Color   |   Meaning   |
+|-----------|-------------|
+| ![purple] | Alive       |
+| ![red]    | Infected    |
+| ![black]  | Dead        |
+| ![cyan]   | Immune      |
+
+
 ### World
 Class that handles the _simulation world_. This class contains the list of
 entities in the simulation, and has access to the map image. Entities can query
@@ -307,7 +317,6 @@ See Giuseppe's work [here][7].
 
 [A]: seeder/Seeder/configurations/houses.hpp
 [B]: .clang-format
-<!-- @IGNORE PREVIOUS: link -->
 
 [#5]: https://github.com/P2-718na/pandemic-simulation/pull/5
 
@@ -318,3 +327,8 @@ See Giuseppe's work [here][7].
 [tl;dr]: #tldr
 [`background` file]: assets/README.md#background-file
 [`entities` file]: assets/README.md#entities-file
+
+[purple]: assets/md/entities/purple.png
+[red]: assets/md/entities/red.png
+[cyan]: assets/md/entities/cyan.png
+[black]: assets/md/entities/black.png
