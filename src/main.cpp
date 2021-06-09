@@ -23,15 +23,12 @@ int main(int argc, char* argv[]) {
 
   auto result = cli.parse({ argc, argv });
 
-  // clang tidy doesn't recognize that lyra parser can set showHelp
-  // to true. This silences the warning.
-  #pragma clang diagnostic push
-  #pragma ide diagnostic ignored "ConstantConditionsOC"
-  if (showHelp || argc == 1) { // NOLINT
+  // CLion doesn't recognize that lyra parser can set showHelp to true.
+  // Ignore "condition is always false" warning.
+  if (showHelp || argc == 1) {
     std::cout << cli;
     exit(EXIT_SUCCESS);
   }
-  #pragma clang diagnostic pop
 
   if (!result) {
     std::cerr << "Error in arguments: " << result.errorMessage() << std::endl;
