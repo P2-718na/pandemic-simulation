@@ -29,6 +29,6 @@ class AI {
 
 typedef std::unique_ptr<AI> entityAI;
 
-} // namespace pandemic
+}  // namespace pandemic
 
-#endif // define PANDEMIC_AI_HPP
+#endif  // define PANDEMIC_AI_HPP

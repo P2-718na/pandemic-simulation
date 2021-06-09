@@ -1,4 +1,5 @@
 #include <random>
+#include <utility>
 
 #include "config.hpp"
 
@@ -83,4 +84,4 @@ int Config::VIRUS_DURATION() const noexcept {
   return VIRUS_DURATION_;
 }
 
-} // namespace pandemic
+}  // namespace pandemic

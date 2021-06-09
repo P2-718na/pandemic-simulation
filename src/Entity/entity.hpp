@@ -91,7 +91,7 @@ class Entity {
   bool quarantined() const noexcept;
   bool immune() const noexcept;
 
-  // Setters ///////////////////////////////////////////////////////////////////t
+  // Setters ///////////////////////////////////////////////////////////////////
   // These methods are used only in entity initialization and for internal
   // logic. Having these methods public makes it easier to add additional
   // functionality in the future (example: increase infection resistance

@@ -1,6 +1,8 @@
 #include <fstream>
 #include <cassert>
 #include <bitset>
+#include <vector>
+#include <string>
 
 #include "parser.hpp"
 #include "config.hpp"
@@ -39,9 +41,8 @@ void World::Parser::parsePointsOfInterests(const Config& config,
   }
 }
 
-void World::Parser::parseEntitiesFile(
-  World* parentPtr, const std::string& entitiesFile,
-  std::vector<Entity>& entities) {
+void World::Parser::parseEntitiesFile(World* parentPtr,
+  const std::string& entitiesFile, std::vector<Entity>& entities) {
   if (!entities.empty()) {
     // Entities vector must be empty, since we must reserve all the needed
     // capacity at the beginning.
@@ -64,14 +65,14 @@ void World::Parser::parseEntitiesFile(
       if (parsedEntities != 0) {
         throw std::runtime_error("[count] keyword missing");
       }
-        is >> count;
+      is >> count;
 
-        // NOTE: This step is needed for the correct functioning of the program.
-        // Every entity contains an AI object, which takes a pointer to the
-        // entity itself. If we resize the vector mid initialization, all the
-        // pointers will be rendered invalid and break everything.
-        entities.reserve(count);
-        continue;
+      // NOTE: This step is needed for the correct functioning of the program.
+      // Every entity contains an AI object, which takes a pointer to the
+      // entity itself. If we resize the vector mid initialization, all the
+      // pointers will be rendered invalid and break everything.
+      entities.reserve(count);
+      continue;
     }
 
     // Every entity begins with [/entity] tag. If we are not parsing an entity,
@@ -197,9 +198,11 @@ void World::Parser::parseEntitiesFile(
       // Create new entity and set all specified values.
       // If AI is set, use it. Otherwise use default.
       if (parsedValues.test(8)) {
-        entities.emplace_back(parentPtr, uid, homeCoords.first, homeCoords.second, ai);
+        entities.emplace_back(
+          parentPtr, uid, homeCoords.first, homeCoords.second, ai);
       } else {
-        entities.emplace_back(parentPtr, uid, homeCoords.first, homeCoords.second);
+        entities.emplace_back(
+          parentPtr, uid, homeCoords.first, homeCoords.second);
       }
 
       // Keep track of how many entities have been parsed.

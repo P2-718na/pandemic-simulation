@@ -4,6 +4,7 @@
 #include <sstream>
 #include <cassert>
 #include <stdexcept>
+#include <string>
 
 #include "engine.hpp"
 #include "entity.hpp"

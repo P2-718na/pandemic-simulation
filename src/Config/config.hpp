@@ -79,9 +79,8 @@ class Config {
   float INFECTION_RESISTANCE_INCREMENT() const noexcept;
   float VIRUS_DEATH_RATE() const noexcept;
   int VIRUS_DURATION() const noexcept;
-
 };
 
-} // namespace pandemic
+}  // namespace pandemic
 
-#endif // define PANDEMIC_CONFIG_HPP
+#endif  // define PANDEMIC_CONFIG_HPP

@@ -24,6 +24,6 @@ struct World::Parser {
     const std::string& entitiesFile, std::vector<Entity>& entities);
 };
 
-} // namespace pandemic
+}  // namespace pandemic
 
-#endif // define PANDEMIC_PARSER_HPP
+#endif  // define PANDEMIC_PARSER_HPP

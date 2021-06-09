@@ -1,5 +1,7 @@
 #include <string>
 #include <cassert>
+#include <memory>
+#include <utility>
 
 #include "world.hpp"
 #include "entity.hpp"
@@ -11,7 +13,8 @@ namespace pandemic {
 // Constructors ////////////////////////////////////////////////////////////////
 Entity::Entity(
   World* world, int uid, int posX, int posY, const std::string& AIName)
-  : world_{world}, uid_{uid}, posX_{posX}, posY_{posY}, aiPtr_{parseAI_(AIName)} {}
+  : world_{world}, uid_{uid}, posX_{posX}, posY_{posY}, aiPtr_{parseAI_(AIName)}
+{}
 
 // Getters /////////////////////////////////////////////////////////////////////
 const Config& Entity::config() const noexcept {
@@ -118,7 +121,8 @@ void Entity::infected(bool status) noexcept {
 }
 
 void Entity::infective(bool status) noexcept {
-  // We must call infected first, since infected sets daysSinceLastInfection to 0.
+  // We must call infected first, since infected sets daysSinceLastInfection
+  // to 0.
   infected(status);
 
   // Make sure that all calls to infective() will return true.

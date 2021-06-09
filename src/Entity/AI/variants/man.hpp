@@ -63,6 +63,6 @@ class manAI : public AI {
   }
 };
 
-} // namespace pandemic
+}  // namespace pandemic
 
-#endif // define MAN_HPP
+#endif  // define MAN_HPP

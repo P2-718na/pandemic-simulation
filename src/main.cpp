@@ -11,11 +11,11 @@ int main(int argc, char* argv[]) {
 
   /* clang-format off */
   auto cli = lyra::help(showHelp)
-    | lyra::opt( backgroundPath, "background image" )
+    | lyra::opt(backgroundPath, "background image")
       ["-b"]["--background"]
       ("Background image (must be the one used to generate entities).")
       .required()
-    | lyra::opt( entitiesPath, "entities file" )
+    | lyra::opt(entitiesPath, "entities file")
       ["-e"]["--entities"]
       ("Entities file (generated using background image).")
       .required();

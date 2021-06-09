@@ -124,6 +124,6 @@ class World {
   void loop();
 };
 
-} // namespace pandemic
+}  // namespace pandemic
 
-#endif // define PANDEMIC_WORLD_HPP
+#endif  // define PANDEMIC_WORLD_HPP

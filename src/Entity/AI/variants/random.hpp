@@ -21,6 +21,6 @@ class randomAI : public AI {
   }
 };
 
-} // namespace pandemic
+}  // namespace pandemic
 
-#endif // define PANDEMIC_UNI_HPP
+#endif  // define PANDEMIC_UNI_HPP

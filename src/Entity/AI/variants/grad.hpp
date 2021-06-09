@@ -62,6 +62,6 @@ class gradAI : public AI {
   }
 };
 
-} // namespace pandemic
+}  // namespace pandemic
 
-#endif // define PANDEMIC_GRAD_HPP
+#endif  // define PANDEMIC_GRAD_HPP

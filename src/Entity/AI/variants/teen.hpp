@@ -80,6 +80,6 @@ class teenAI : public AI {
   }
 };
 
-} // namespace pandemic
+}  // namespace pandemic
 
-#endif // define PANDEMIC_TEEN_HPP
+#endif  // define PANDEMIC_TEEN_HPP

@@ -4,6 +4,7 @@
 #include <stdexcept>
 #include <cassert>
 #include <iostream>
+#include <string>
 
 #include "config.hpp"
 #include "entity.hpp"
@@ -129,7 +130,8 @@ World::World(const std::string& backgroundImagePath,
   // Load entities and points of interest
   try {
     Parser::parseEntitiesFile(this, entitiesFilePath, entities_);
-    Parser::parsePointsOfInterests(config, backgroundImage_, parkCoords_, shopCoords_, partyCoords_);
+    Parser::parsePointsOfInterests(
+      config, backgroundImage_, parkCoords_, shopCoords_, partyCoords_);
   } catch (...) {
     std::cerr << "Error initialising world." << std::endl;
     throw;
@@ -237,4 +239,4 @@ void World::lockdown(bool status) noexcept {
   lockdown_ = status;
 }
 
-} // namespace pandemic
+}  // namespace pandemic

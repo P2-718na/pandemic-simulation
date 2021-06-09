@@ -9,10 +9,11 @@ namespace pandemic {
 Pathfinder::Pathfinder(int size) {
   // Reserve an arbitrary space for paths. This will make
   // Pathfinder slightly faster in the beginning.
-  //path_.reserve(size);
-};
+  // path_.reserve(size);
+}
 
-void Pathfinder::loadPath(const Coords& startPos, const Coords& endPos) noexcept {
+void Pathfinder::loadPath(
+  const Coords& startPos, const Coords& endPos) noexcept {
   // Reset step and path
   step_ = 0;
   path_.clear();
@@ -64,4 +65,4 @@ bool Pathfinder::arrived() {
   return step_ >= path_.size();
 }
 
-} // namespace pandemic
+}  // namespace pandemic

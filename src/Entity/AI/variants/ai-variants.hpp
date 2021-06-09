@@ -9,4 +9,4 @@
 #include "grad.hpp"
 #include "teen.hpp"
 
-#endif // define PANDEMIC_AI_VARIANTS_HPP
+#endif  // define PANDEMIC_AI_VARIANTS_HPP

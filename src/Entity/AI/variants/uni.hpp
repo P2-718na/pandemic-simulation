@@ -26,7 +26,8 @@ class uniAI : public AI {
     // Goes to uni/party/shop/walk for the entire day.
     if (time > config.hourToMinutes(9)) {
       // Don't go to uni on weekends. Also, uni has a much higher chance of
-      // happening than other actions, since we want entities to stay there a bit.
+      // happening than other actions, since we want entities to stay there
+      // for a bit.
       switch (Config::randInt(0, weekend ? 3 : 200)) {
         case 0:
           parent_->goWalk();
@@ -47,6 +48,6 @@ class uniAI : public AI {
   }
 };
 
-} // namespace pandemic
+}  // namespace pandemic
 
-#endif // define PANDEMIC_UNI_HPP
+#endif  // define PANDEMIC_UNI_HPP

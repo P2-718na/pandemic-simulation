@@ -12,6 +12,6 @@ class nullAI : public AI {
   inline void operator()(int time, int day) noexcept override {}
 };
 
-} // namespace pandemic
+}  // namespace pandemic
 
-#endif // define PANDEMIC_NULL_HPP
+#endif  // define PANDEMIC_NULL_HPP

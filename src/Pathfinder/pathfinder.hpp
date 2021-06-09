@@ -32,6 +32,6 @@ class Pathfinder {
   bool arrived();
 };
 
-} // namespace pandemic
+}  // namespace pandemic
 
-#endif // define PANDEMIC_PATHFINDER_HPP
+#endif  // define PANDEMIC_PATHFINDER_HPP

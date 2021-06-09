@@ -40,6 +40,6 @@ class oldAI : public AI {
   }
 };
 
-} // namespace pandemic
+}  // namespace pandemic
 
-#endif // define PANDEMIC_OLD_HPP
+#endif  // define PANDEMIC_OLD_HPP

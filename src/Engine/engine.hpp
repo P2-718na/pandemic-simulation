@@ -75,6 +75,6 @@ class Engine {
   static void printMessage(std::string const& message) noexcept;
 };
 
-} // namespace pandemic
+}  // namespace pandemic
 
-#endif // define PANDEMIC_ENGINE_HPP
+#endif  // define PANDEMIC_ENGINE_HPP
