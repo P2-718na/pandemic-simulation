@@ -240,7 +240,7 @@ There are neither obstacles, nor preferred paths.
 The original idea for this component was to implement an actual pathfinding
 algorithm, but I found it unfeasible to develop in reasonable time. I wrote an
 unfinished implementation using the A* algorithm (see [#5]), but it was too
-computationally intensive even for a small number of entities. This goal can
+computationally intensive for even a small number of entities. This goal can
 certainly be achieved with another method, but I had to discard it for now.
 
 ### Config
