@@ -193,6 +193,11 @@ and spread the virus. Every `World::loop()` call will advance the time by
 one minute (arbitrary unit). After a configurable number of minutes, a day
 passes.
 
+At the end of each day, some additional calculations are performed: `World` will
+call `Entity::dayLoop()` method for each entity and it will handle quarantine
+logic. Infected entities will be put into quarantine, and quarantined entities
+that defeated the virus will be put out of quarantine.
+
 ### Entity
 Each simulation entity represents a _person_. This class handles everything
 related to that. Each `Entity` instance needs to be created inside a `World`
