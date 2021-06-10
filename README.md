@@ -34,11 +34,11 @@ Bologna (click to enlarge).
 ## Building
 Make sure to install all the required dependencies before continuing.
 
-The preferred way to build this code is by using CMake. Although is recommended
-to build the program in `Release` configuration for better performance, only the
-`Debug` configuration satisfies all the requirements imposed by the project
-assignment (`-g` and `-fsanitize="address"` flags are only present in the
-latter).
+The preferred way to build this code is by using CMake. Although it is
+recommended to build the program in `Release` configuration for better
+performance, only the `Debug` configuration satisfies all the requirements
+imposed by the project assignment (`-g` and `-fsanitize="address"` flags are
+only present in the latter).
 
 ```shell
 # Clone the repo
@@ -49,6 +49,9 @@ take pandemic-simulation/build
 
 # Prepare build files. Use "Debug" instead of "Release" to build in debug mode.
 cmake .. -DCMAKE_BUILD_TYPE=Release
+
+# Build everything
+make
 ```
 
 This will configure all the needed files. Three executables will be generated
@@ -67,7 +70,7 @@ test      # Run tests
 
 For the simulation to run, it requires a `background` and a `entities` file.
 `background` (or `map`) is an image which contains _points of interest_ (often
-referred as _POIs_ in code and comments) such as houses, parks, shops and so on.
+referred as _POIs_ in code and comments) such as houses, parks and shops.
 `entities` is a text file, which contains specific information for every person
 (or _entity_) in the simulation. To keep things simpler, I already
 included an example background file, but you can go ahead and create your own if

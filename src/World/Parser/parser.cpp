@@ -243,6 +243,10 @@ void World::Parser::parseEntitiesFile(
   if (parsedEntities != count) {
     throw std::runtime_error("Invalid [count] keyword in entities file!");
   }
+
+  if (parsedEntities == 0) {
+    throw std::runtime_error("There are no entities in this file!");
+  }
 }
 
 }  // namespace pandemic
